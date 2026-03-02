@@ -1,0 +1,86 @@
+# ========================
+# WordPress core — не зберігати в Git
+# ========================
+/wp-admin/
+/wp-includes/
+/wp-*.php
+/index.php
+/xmlrpc.php
+/license.txt
+/readme.html
+/default.php
+
+# ========================
+# Чутливі дані
+# ========================
+wp-config.php
+.env
+*.key
+
+# Документація з паролями/креденшелами — тільки локально
+CLAUDE.md
+girskalavanda.md
+skills-lock.json
+
+# Claude/agent конфіги з SSH credentials
+.claude/
+.agent/
+.agents/
+
+# ========================
+# Uploads — медіафайли тільки на сервері
+# ========================
+wp-content/uploads/
+
+# ========================
+# Сторонні плагіни — є локально і на сервері, але НЕ в git
+# Синхронізуються через: rsync з сервера (або /deploy)
+# ========================
+wp-content/plugins/elementor/
+wp-content/plugins/astra-sites/
+wp-content/plugins/ultimate-addons-for-gutenberg/
+wp-content/plugins/motopress-hotel-booking/
+wp-content/plugins/motopress-hotel-booking-lite/
+wp-content/plugins/litespeed-cache/
+wp-content/plugins/wpforms-lite/
+wp-content/plugins/hbook/
+
+# ========================
+# Тема Astra (батьківська) — не редагуємо
+# ========================
+wp-content/themes/astra/
+
+# ========================
+# Бекапи — SQL дампи і резервні копії
+# ========================
+backups/
+*.sql
+*.sql.gz
+
+# ========================
+# Кеш і тимчасові файли
+# ========================
+wp-content/cache/
+wp-content/upgrade/
+wp-content/backup-db/
+wp-content/advanced-cache.php
+wp-content/wp-cache-config.php
+*.log
+*.tmp
+
+# ========================
+# Mac системні файли
+# ========================
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# ========================
+# IDE
+# ========================
+.idea/
+.vscode/
+*.swp
+*.swo
+node_modules/
