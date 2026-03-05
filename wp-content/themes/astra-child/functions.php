@@ -59,13 +59,57 @@ function glav_body_classes( $classes ) {
 // =============================================================================
 add_filter( 'astra_the_title_enabled', 'glav_hide_title_on_templates' );
 function glav_hide_title_on_templates( $show ) {
+    // Templates assigned via WP admin
     $hide_templates = [ 'page-home.php', 'page-room.php', 'page-sauna.php' ];
     foreach ( $hide_templates as $tpl ) {
         if ( is_page_template( $tpl ) ) {
             return false;
         }
     }
+    // Slug-based templates (auto-applied by WP template hierarchy)
+    $hide_slugs = [ 'banya', 'chan', 'contact', 'rooms', 'gallery' ];
+    if ( is_page( $hide_slugs ) ) {
+        return false;
+    }
     return $show;
+}
+
+// =============================================================================
+// FIX MOBILE MENU — use same curated nav as desktop
+// =============================================================================
+// Astra's mobile menu checks has_nav_menu('mobile_menu'). If no menu is assigned
+// to that location, it falls back to wp_page_menu() listing ALL pages.
+// Fix: sync the 'mobile_menu' location to use the same menu as 'primary'.
+add_filter( 'theme_mod_nav_menu_locations', 'glav_sync_mobile_menu' );
+function glav_sync_mobile_menu( $locations ) {
+    if ( empty( $locations['mobile_menu'] ) && ! empty( $locations['primary'] ) ) {
+        $locations['mobile_menu'] = $locations['primary'];
+    }
+    return $locations;
+}
+
+// =============================================================================
+// PHONE NUMBER IN HEADER NAV
+// =============================================================================
+add_filter( 'wp_nav_menu_items', 'glav_add_phone_to_menu', 10, 2 );
+function glav_add_phone_to_menu( $items, $args ) {
+    // Add to primary and mobile menu
+    if ( ! in_array( $args->theme_location, [ 'primary', 'mobile_menu' ], true ) ) {
+        return $items;
+    }
+
+    $phone      = get_theme_mod( 'gl_phone', '' );
+    $phone_disp = get_theme_mod( 'gl_phone_display', $phone );
+
+    if ( $phone ) {
+        $items .= '<li class="menu-item menu-item-phone">'
+                 . '<a href="tel:' . esc_attr( $phone ) . '">'
+                 . '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.5 11.61a19.79 19.79 0 01-3.07-8.67A2 2 0 012.42 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.9a16 16 0 006.15 6.15l1.27-.77a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>'
+                 . esc_html( $phone_disp ?: $phone )
+                 . '</a></li>';
+    }
+
+    return $items;
 }
 
 // =============================================================================
@@ -73,16 +117,15 @@ function glav_hide_title_on_templates( $show ) {
 // =============================================================================
 
 /**
- * [gl_advantages] — секція переваг готелю
+ * [gl_advantages] — секція переваг комплексу
  */
 add_shortcode( 'gl_advantages', 'glav_sc_advantages' );
 function glav_sc_advantages( $atts ) {
     $advantages = [
-        [ 'icon' => '🌲', 'title' => 'Карпатський ліс',    'desc' => 'Готель оточений вічнозеленими карпатськими соснами. Чисте гірське повітря просто за вашими вікнами' ],
+        [ 'icon' => '🌲', 'title' => 'Карпатський ліс',    'desc' => 'Комплекс оточений вічнозеленими карпатськими соснами. Чисте гірське повітря просто за вашими вікнами' ],
         [ 'icon' => '🧖', 'title' => 'Баня та Чан',        'desc' => 'Традиційна дерев\'яна баня і гарячий чан просто неба — справжнє карпатське оздоровлення для тіла і душі' ],
-        [ 'icon' => '🍳', 'title' => 'Домашні сніданки',   'desc' => 'Щоранку свіжоприготовані сніданки з натуральних місцевих продуктів. Як вдома, тільки краще' ],
         [ 'icon' => '🏔️', 'title' => 'Вид на гори',       'desc' => 'Мальовничі карпатські краєвиди і ліс прямо з вікна вашого номера — кожен ранок як на листівці' ],
-        [ 'icon' => '🅿️', 'title' => 'Паркінг',           'desc' => 'Безкоштовна охоронювана парковка на території готелю. Зручно для тих, хто приїжджає на авто' ],
+        [ 'icon' => '🅿️', 'title' => 'Паркінг',           'desc' => 'Безкоштовна охоронювана парковка на території комплексу. Зручно для тих, хто приїжджає на авто' ],
         [ 'icon' => '💆', 'title' => 'Тиша і спокій',      'desc' => 'Ніяких клубів і гучних заходів. Тільки природа, відпочинок і атмосфера справжнього карпатського затишку' ],
     ];
 
@@ -120,7 +163,7 @@ function glav_sc_testimonials( $atts ) {
             'name'   => 'Олена Коваль',
             'date'   => 'Лютий 2026',
             'rating' => 5,
-            'text'   => 'Неймовірно затишний готель! Баня була просто казковою — ми провели там увесь вечір. Природа навколо приголомшлива, персонал дуже привітний. Обов\'язково повернемося!',
+            'text'   => 'Неймовірно затишне місце! Баня була просто казковою — ми провели там увесь вечір. Природа навколо приголомшлива, персонал дуже привітний. Обов\'язково повернемося!',
             'avatar' => 'О',
         ],
         [
@@ -134,7 +177,7 @@ function glav_sc_testimonials( $atts ) {
             'name'   => 'Наталія та Андрій',
             'date'   => 'Грудень 2025',
             'rating' => 5,
-            'text'   => 'Відмінне місце для романтичного відпочинку. Тихо, спокійно, красива природа. Сніданки дуже смачні! Розміщення зручне і чисте. Рекомендуємо всім друзям.',
+            'text'   => 'Відмінне місце для романтичного відпочинку. Тихо, спокійно, красива природа. Розміщення зручне і чисте. Рекомендуємо всім друзям.',
             'avatar' => 'Н',
         ],
         [
@@ -265,12 +308,12 @@ function glav_sc_contacts( $atts ) {
           </div>
 
           <div class="gl-contacts__map gl-animate gl-animate--delay-2">
-            <!-- Карта: Східниця, Львівська область -->
+            <!-- Карта: Гірська Лаванда, Східниця -->
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d20851.55!2d23.5120!3d49.1180!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4730e9b000000001%3A0x1!2z0KHRhdGW0LTQvdC40YbRjywg0JvRjNCy0ZbQstGB0YzQutCwINC-0LHQu9Cw0YHRgtGMLCDQo9C60YDQsNGX0L3QsA!5e0!3m2!1suk!2sua!4v1"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2606!2d23.35088!3d49.219197!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z0JPRltGA0YHRjNC60LAg0JvQsNCy0LDQvdC00LA!5e0!3m2!1suk!2sua!4v1"
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
-              title="Розташування готелю Гірська Лаванда — Східниця"
+              title="Розташування комплексу Гірська Лаванда — Східниця"
             ></iframe>
           </div>
         </div>
@@ -301,7 +344,7 @@ function glav_sc_gallery_preview( $atts ) {
         <div class="gl-gallery__header gl-animate">
           <span class="gl-section-label">Фото</span>
           <h2 class="gl-section-title">Галерея</h2>
-          <p class="gl-section-subtitle">Поглянь на наш готель очима гостей</p>
+          <p class="gl-section-subtitle">Поглянь на Гірську Лаванду очима гостей</p>
         </div>
 
         <div class="gl-gallery__grid gl-animate">
@@ -410,7 +453,7 @@ function glav_customize_register( $wp_customize ) {
 
     // Hero підзаголовок
     $wp_customize->add_setting( 'gl_hero_subtitle', [
-        'default'           => 'Парк готель · Східниця · Карпати',
+        'default'           => 'Заміський комплекс · Східниця · Карпати',
         'sanitize_callback' => 'sanitize_text_field',
     ] );
     $wp_customize->add_control( 'gl_hero_subtitle', [
@@ -463,6 +506,17 @@ function glav_customize_register( $wp_customize ) {
         'label'   => 'Facebook URL',
         'section' => 'gl_contacts',
         'type'    => 'url',
+    ] );
+
+    $wp_customize->add_setting( 'gl_telegram', [
+        'default'           => '',
+        'sanitize_callback' => 'sanitize_text_field',
+    ] );
+    $wp_customize->add_control( 'gl_telegram', [
+        'label'       => 'Telegram (username без @ або повний URL)',
+        'description' => 'Наприклад: girskalavanda або https://t.me/girskalavanda',
+        'section'     => 'gl_contacts',
+        'type'        => 'text',
     ] );
 }
 
@@ -520,42 +574,135 @@ function glav_get_room_bed_type( $room_type_id ) {
 
 /**
  * Get amenities list for a room type.
- * Повертає MPHB amenities якщо встановлені, інакше — дефолтний набір.
+ * Priority: MPHB facilities taxonomy → smart defaults.
  */
 function glav_get_room_amenities( $room_type_id ) {
 
-    // 1. Намагаємось отримати з MPHB amenity post type
-    $amenity_ids = get_post_meta( $room_type_id, 'mphb_amenities', true );
-    if ( ! empty( $amenity_ids ) ) {
-        return array_filter( array_map( 'get_the_title', (array) $amenity_ids ) );
+    // 1. MPHB facilities taxonomy (mphb_room_type_facility)
+    $facility_terms = get_the_terms( $room_type_id, 'mphb_room_type_facility' );
+    if ( $facility_terms && ! is_wp_error( $facility_terms ) && count( $facility_terms ) > 0 ) {
+        $list = wp_list_pluck( $facility_terms, 'name' );
+
+        // Append room-specific extras not captured by taxonomy
+        $title = mb_strtolower( get_the_title( $room_type_id ), 'UTF-8' );
+
+        if ( str_contains( $title, 'двопов' ) ) {
+            $list[] = 'Два поверхи';
+        }
+        if ( str_contains( $title, 'сімей' ) ) {
+            $list[] = 'Місце для дітей';
+        }
+        // Baня і чан — shared hotel facilities
+        $list[] = 'Баня та чан (спільне)';
+
+        return array_unique( $list );
     }
 
-    // 2. Smart defaults на основі назви номеру
+    // 2. Smart defaults based on room title (fallback when no taxonomy set)
     $title = mb_strtolower( get_the_title( $room_type_id ), 'UTF-8' );
 
     $base = [
-        'WiFi безкоштовний',
-        'Власний санвузол',
-        'Гаряча вода цілодобово',
-        'Домашні сніданки',
+        'Безкоштовний WI-FI',
+        'Великий LCD TV',
+        'Набір рушників',
+        'Санвузол',
         'Безкоштовний паркінг',
-        'Карпатські краєвиди',
     ];
 
-    if ( str_contains( $title, 'тераса' ) || str_contains( $title, 'апарт' ) ) {
+    if ( str_contains( $title, 'тераса' ) ) {
         $base[] = 'Власна тераса';
-        $base[] = 'Холодильник';
-        $base[] = 'Телевізор';
     }
     if ( str_contains( $title, 'сімей' ) ) {
         $base[] = 'Місце для дітей';
-        $base[] = 'Дитяче ліжко за запитом';
     }
     if ( str_contains( $title, 'двопов' ) ) {
         $base[] = 'Два поверхи';
         $base[] = 'Кухонна зона';
-        $base[] = 'Кавоварка';
+        $base[] = 'Холодильник';
+        $base[] = 'Ортопедичний матрац';
     }
+    $base[] = 'Баня та чан (спільне)';
 
     return $base;
+}
+
+// =============================================================================
+// BOOKING CONTACT DATA HELPER
+// =============================================================================
+/**
+ * Build contact data array for the booking-contact template part.
+ *
+ * @param string $wa_message  WhatsApp pre-filled message text.
+ * @return array  Data ready for get_template_part( 'template-parts/booking-contact', null, $data ).
+ */
+function glav_get_contact_data( $wa_message = '' ) {
+    $phone      = get_theme_mod( 'gl_phone', '' );
+    $phone_disp = get_theme_mod( 'gl_phone_display', $phone );
+
+    // Telegram
+    $telegram_raw = get_theme_mod( 'gl_telegram', '' );
+    $telegram_url = '';
+    if ( $telegram_raw ) {
+        $telegram_url = str_starts_with( $telegram_raw, 'http' )
+            ? $telegram_raw
+            : 'https://t.me/' . ltrim( $telegram_raw, '@/' );
+    }
+
+    // WhatsApp & Viber
+    $whatsapp_url = '';
+    $viber_url    = '';
+    if ( $phone ) {
+        $wa_phone     = preg_replace( '/[^0-9]/', '', $phone );
+        $whatsapp_url = 'https://wa.me/' . $wa_phone;
+        if ( $wa_message ) {
+            $whatsapp_url .= '?text=' . rawurlencode( $wa_message );
+        }
+        $viber_url = 'viber://contact?number=' . $wa_phone;
+    }
+
+    // Instagram (fallback to hardcoded profile if theme_mod not set)
+    $instagram_dm  = 'https://ig.me/m/girska_lavandaa';
+    $instagram_raw = get_theme_mod( 'gl_instagram', '' );
+    if ( $instagram_raw ) {
+        preg_match( '/instagram\.com\/([^\/\?#]+)/i', $instagram_raw, $m );
+        $ig_user      = isset( $m[1] ) ? trim( $m[1], '/' ) : '';
+        $instagram_dm = $ig_user ? 'https://ig.me/m/' . $ig_user : $instagram_raw;
+    }
+
+    return [
+        'phone'         => $phone,
+        'phone_display' => $phone_disp,
+        'telegram_url'  => $telegram_url,
+        'whatsapp_url'  => $whatsapp_url,
+        'viber_url'     => $viber_url,
+        'instagram_dm'  => $instagram_dm,
+    ];
+}
+
+// =============================================================================
+// (Hamburger lines are now pure CSS — no JS injection needed)
+// =============================================================================
+
+// =============================================================================
+// SCROLL-TO-TOP BUTTON
+// =============================================================================
+
+// Disable Astra's built-in scroll-to-top button (blue arrow) to avoid duplicate
+add_filter( 'astra_get_option_scroll-to-top-enable', '__return_false' );
+
+add_action( 'wp_footer', 'glav_scroll_to_top_button' );
+function glav_scroll_to_top_button() {
+    ?>
+    <button class="gl-scroll-top" id="gl-scroll-top"
+            aria-label="Прокрутити вгору"
+            title="Вгору">
+      <svg class="gl-scroll-top__progress" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+        <circle class="gl-scroll-top__progress-circle"
+                cx="25" cy="25" r="22"
+                stroke-dasharray="138.23"
+                stroke-dashoffset="138.23"></circle>
+      </svg>
+      <span class="gl-scroll-top__icon" aria-hidden="true">&#8593;</span>
+    </button>
+    <?php
 }
