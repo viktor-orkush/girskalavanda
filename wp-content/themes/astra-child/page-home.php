@@ -61,7 +61,7 @@ get_header();
        ===================================================================== -->
   <section class="gl-section gl-rooms gl-section--white" id="rooms">
     <div class="gl-container">
-      <div class="gl-rooms__header gl-animate">
+      <div class="gl-rooms__header gl-animate gl-animate--blur">
         <span class="gl-section-label">Номери</span>
         <h2 class="gl-section-title">Оберіть свій номер</h2>
         <p class="gl-section-subtitle">Кожен номер — окрема атмосфера затишку і комфорту в серці Карпат</p>
@@ -198,7 +198,7 @@ get_header();
        ===================================================================== -->
   <section class="gl-section gl-wellness" id="wellness">
     <div class="gl-container">
-      <div class="gl-wellness__header gl-animate">
+      <div class="gl-wellness__header gl-animate gl-animate--scale">
         <span class="gl-section-label">Оздоровлення</span>
         <h2 class="gl-section-title">Баня та Чан</h2>
         <p class="gl-section-subtitle">Справжнє карпатське оздоровлення — традиційна баня і чан просто неба</p>
@@ -207,7 +207,7 @@ get_header();
       <div class="gl-wellness__grid">
 
         <!-- БАНЯ -->
-        <div class="gl-wellness-card gl-wellness-card--banya gl-animate gl-animate--delay-1">
+        <div class="gl-wellness-card gl-wellness-card--banya gl-animate gl-animate--left gl-animate--delay-1">
           <div class="gl-wellness-card__img">
             <?php
             $banya_page = get_page_by_path( 'banya' ) ?: get_page_by_path( 'bania' );
@@ -237,7 +237,7 @@ get_header();
         </div>
 
         <!-- ХАМАМ -->
-        <div class="gl-wellness-card gl-wellness-card--hamam gl-animate gl-animate--delay-2">
+        <div class="gl-wellness-card gl-wellness-card--hamam gl-animate gl-animate--scale gl-animate--delay-2">
           <div class="gl-wellness-card__img">
             <?php
             $hamam_page = get_page_by_path( 'hamam' );
@@ -268,7 +268,7 @@ get_header();
         </div>
 
         <!-- ЧАН -->
-        <div class="gl-wellness-card gl-wellness-card--chan gl-animate gl-animate--delay-3">
+        <div class="gl-wellness-card gl-wellness-card--chan gl-animate gl-animate--right gl-animate--delay-3">
           <div class="gl-wellness-card__img">
             <?php
             $chan_page = get_page_by_path( 'chan' );

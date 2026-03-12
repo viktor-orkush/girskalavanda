@@ -152,14 +152,14 @@ function glav_sc_advantages( $atts ) {
     ?>
     <section class="gl-section gl-advantages" id="advantages">
       <div class="gl-container">
-        <div class="gl-advantages__header gl-animate">
+        <div class="gl-advantages__header gl-animate gl-animate--blur">
           <span class="gl-section-label">Чому обирають нас</span>
           <h2 class="gl-section-title">Наші переваги</h2>
           <p class="gl-section-subtitle">Все для вашого ідеального відпочинку в серці Карпат</p>
         </div>
         <div class="gl-advantages__grid">
           <?php foreach ( $advantages as $i => $adv ) : ?>
-          <div class="gl-advantage-item gl-animate gl-animate--delay-<?php echo min( $i + 1, 5 ); ?>">
+          <div class="gl-advantage-item gl-animate gl-animate--scale gl-animate--delay-<?php echo min( $i + 1, 5 ); ?>">
             <div class="gl-advantage-item__icon" aria-hidden="true"><?php echo $adv['icon']; ?></div>
             <h3 class="gl-advantage-item__title"><?php echo esc_html( $adv['title'] ); ?></h3>
             <p class="gl-advantage-item__desc"><?php echo esc_html( $adv['desc'] ); ?></p>
@@ -278,13 +278,13 @@ function glav_sc_gallery_preview( $atts ) {
     ?>
     <section class="gl-section gl-gallery gl-section--sand" id="gallery">
       <div class="gl-container">
-        <div class="gl-gallery__header gl-animate">
+        <div class="gl-gallery__header gl-animate gl-animate--blur">
           <span class="gl-section-label">Фото</span>
           <h2 class="gl-section-title">Галерея</h2>
           <p class="gl-section-subtitle">Поглянь на Гірську Лаванду очима гостей</p>
         </div>
 
-        <div class="gl-gallery__grid gl-animate">
+        <div class="gl-gallery__grid gl-animate gl-animate--scale">
           <?php if ( ! empty( $images ) ) : ?>
             <?php foreach ( $images as $i => $img ) :
               $src = wp_get_attachment_image_url( $img->ID, 'large' );

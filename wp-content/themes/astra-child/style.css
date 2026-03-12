@@ -211,19 +211,39 @@ h4 {
 
 /* Primary — Gold */
 .gl-btn--primary {
-  background: var(--color-gold);
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-light) 100%);
   color: var(--color-primary) !important;
   border-color: var(--color-gold);
-  box-shadow: 0 4px 20px rgba(200, 169, 81, .35);
+  box-shadow: 0 4px 20px rgba(200, 169, 81, .3);
+  position: relative;
+  overflow: hidden;
+}
+
+.gl-btn--primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--color-gold-light) 0%, #f0d78a 100%);
+  opacity: 0;
+  transition: opacity .3s ease;
+  border-radius: inherit;
 }
 
 .gl-btn--primary:hover {
-  background: var(--color-gold-light);
-  border-color: var(--color-gold-light);
-  box-shadow: 0 8px 32px rgba(200, 169, 81, .5);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(200, 169, 81, .45);
+  transform: translateY(-3px) scale(1.02);
   color: var(--color-primary) !important;
   text-decoration: none;
+}
+
+.gl-btn--primary:hover::after {
+  opacity: 1;
+}
+
+.gl-btn--primary span,
+.gl-btn--primary {
+  position: relative;
+  z-index: 1;
 }
 
 /* Accent — Lavender */
@@ -247,14 +267,17 @@ h4 {
 .gl-btn--outline {
   background: transparent;
   color: #fff !important;
-  border-color: rgba(255, 255, 255, .6);
+  border-color: rgba(255, 255, 255, .5);
+  backdrop-filter: blur(4px);
 }
 
 .gl-btn--outline:hover {
-  background: rgba(255, 255, 255, .15);
+  background: rgba(255, 255, 255, .12);
   border-color: var(--color-white);
   color: #fff !important;
   text-decoration: none;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
 }
 
 /* Outline Gold — для темних секцій */
@@ -287,6 +310,18 @@ h4 {
 .gl-btn--sm {
   padding: 10px 24px;
   font-size: 13px;
+  background: var(--color-primary);
+  color: #fff !important;
+  border-color: var(--color-primary);
+}
+
+.gl-btn--sm:hover {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(28, 58, 14, .3);
+  text-decoration: none;
+  color: #fff !important;
 }
 
 /* ==========================================================================
@@ -961,16 +996,17 @@ h4 {
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--color-white);
-  box-shadow: var(--shadow-md);
-  transition: transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, .08);
+  transition: transform .4s cubic-bezier(.22, 1, .36, 1), box-shadow .4s ease;
   position: relative;
   display: flex;
   flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, .04);
 }
 
 .gl-room-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-hover);
+  transform: translateY(-10px);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, .14);
 }
 
 .gl-room-card__img {
@@ -1163,9 +1199,10 @@ h4 {
   background: rgba(255, 255, 255, .06);
   border: 1px solid rgba(255, 255, 255, .1);
   backdrop-filter: blur(10px);
-  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+  transition: transform .4s cubic-bezier(.22, 1, .36, 1), border-color .3s ease, box-shadow .4s ease;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .gl-wellness-card:hover {
@@ -1298,18 +1335,36 @@ h4 {
 
 .gl-advantage-item {
   text-align: center;
-  padding: 36px 24px;
+  padding: 40px 28px;
   background: var(--color-white);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
-  transition: transform var(--transition), box-shadow var(--transition);
-  border: 1px solid transparent;
+  transition: transform .4s cubic-bezier(.22, 1, .36, 1), box-shadow .4s ease, border-color .3s ease;
+  border: 1px solid rgba(0, 0, 0, .04);
+  position: relative;
+}
+
+.gl-advantage-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 60%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-gold));
+  border-radius: 3px;
+  transition: transform .4s cubic-bezier(.22, 1, .36, 1);
 }
 
 .gl-advantage-item:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-8px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, .1);
   border-color: var(--color-sand-dark);
+}
+
+.gl-advantage-item:hover::after {
+  transform: translateX(-50%) scaleX(1);
 }
 
 .gl-advantage-item__icon {
@@ -2452,17 +2507,40 @@ h4 {
 }
 
 /* ==========================================================================
-   SCROLL ANIMATIONS
+   SCROLL ANIMATIONS — consolidated
    ========================================================================== */
 .gl-animate {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity .7s ease, transform .7s ease;
+  transform: translateY(24px);
+  transition: opacity .7s cubic-bezier(.22, 1, .36, 1), transform .7s cubic-bezier(.22, 1, .36, 1), filter .7s ease;
+  will-change: opacity, transform;
 }
 
 .gl-animate.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1) translateX(0);
+  filter: blur(0);
+}
+
+/* Variant: slide from left */
+.gl-animate--left {
+  transform: translateX(-30px);
+}
+
+/* Variant: slide from right */
+.gl-animate--right {
+  transform: translateX(30px);
+}
+
+/* Variant: scale up */
+.gl-animate--scale {
+  transform: scale(.92);
+}
+
+/* Variant: blur reveal */
+.gl-animate--blur {
+  transform: translateY(12px);
+  filter: blur(6px);
 }
 
 .gl-animate--delay-1 {
@@ -5878,31 +5956,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   pointer-events: none;
 }
 
-/* ==========================================================================
-   SCROLL ANIMATIONS
-   ========================================================================== */
-.gl-animate {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.gl-animate.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.gl-animate--delay-1.is-visible {
-  transition-delay: 0.1s;
-}
-
-.gl-animate--delay-2.is-visible {
-  transition-delay: 0.2s;
-}
-
-.gl-animate--delay-3.is-visible {
-  transition-delay: 0.3s;
-}
+/* (scroll animations consolidated — see main block above) */
 
 /* ==========================================================================
    RESPONSIVE — Single Room Page
@@ -6603,31 +6657,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   text-decoration: none;
 }
 
-/* --------------------------------------------------------------------------
-   Animate utility (intersection observer fade-in)
-   -------------------------------------------------------------------------- */
-.gl-animate {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity .6s ease, transform .6s ease;
-}
-
-.gl-animate.is-visible {
-  opacity: 1;
-  transform: none;
-}
-
-.gl-animate--delay-1 {
-  transition-delay: .15s;
-}
-
-.gl-animate--delay-2 {
-  transition-delay: .3s;
-}
-
-.gl-animate--delay-3 {
-  transition-delay: .45s;
-}
+/* (scroll animations consolidated — see main block above) */
 
 /* --------------------------------------------------------------------------
    Scroll-to-top button (Consolidated & Premium)
@@ -8146,5 +8176,199 @@ a.gl-contact-card__value:hover {
   .ast-header-break-point .ast-mobile-header-content,
   #ast-mobile-popup .ast-mobile-popup-inner {
     background: rgba(10, 25, 6, 0.99) !important;
+  }
+}
+
+/* ==========================================================================
+   DESIGN POLISH — Section Transitions & Decorative
+   ========================================================================== */
+
+/* Smooth spacing between rooms and wellness sections */
+.gl-section--white + .gl-wellness {
+  margin-top: -1px;
+}
+
+/* Section label — refined with dot accent */
+.gl-section-label {
+  position: relative;
+}
+
+/* Subtle hover glow for wellness cards */
+.gl-wellness-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, rgba(200, 169, 81, .3), transparent 50%, rgba(123, 94, 167, .2));
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity .4s ease;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.gl-wellness-card:hover::before {
+  opacity: 1;
+}
+
+/* Room card image overlay gradient */
+.gl-room-card__img::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0, 0, 0, .15), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Gallery section — subtle bg pattern */
+.gl-gallery {
+  position: relative;
+}
+
+/* Footer — refined styling */
+.gl-footer {
+  position: relative;
+}
+
+.gl-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+}
+
+/* Price styling enhancement */
+.gl-room-card__price-value {
+  position: relative;
+}
+
+.gl-room-card__price-value::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-gold);
+  opacity: .3;
+  border-radius: 2px;
+}
+
+/* Wellness card price — gold accent */
+.gl-wellness-card__price-value {
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hero scroll indicator — refined animation */
+.gl-hero__scroll-line {
+  animation: scrollPulse 2s cubic-bezier(.4, 0, .2, 1) infinite;
+}
+
+@keyframes scrollPulse {
+  0% { transform: scaleY(.6); opacity: .4; }
+  50% { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(.6); opacity: .4; }
+}
+
+/* Advantage icon — subtle float animation on hover */
+@keyframes floatIcon {
+  0%, 100% { transform: scale(1.1) translateY(0); }
+  50% { transform: scale(1.1) translateY(-4px); }
+}
+
+.gl-advantage-item:hover .gl-advantage-item__icon {
+  animation: floatIcon 1.5s ease-in-out infinite;
+  box-shadow: 0 16px 40px rgba(123, 94, 167, .4);
+}
+
+/* Smooth link underline animation */
+.gl-contact-item__value a {
+  position: relative;
+  text-decoration: none;
+}
+
+.gl-contact-item__value a::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width .3s ease;
+}
+
+.gl-contact-item__value a:hover::after {
+  width: 100%;
+}
+
+/* Badge pulse animation */
+.gl-hero__badge-dot {
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { opacity: .5; transform: scale(.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Rooms section — dots styling improvement */
+.gl-rooms__dot {
+  transition: all .3s cubic-bezier(.22, 1, .36, 1);
+}
+
+.gl-rooms__dot.is-active {
+  transform: scale(1.3);
+}
+
+/* Testimonial card hover */
+.gl-testimonial-card {
+  transition: transform .4s cubic-bezier(.22, 1, .36, 1), box-shadow .4s ease;
+}
+
+.gl-testimonial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, .1);
+}
+
+/* Banya page feature cards — enhanced hover */
+.gl-banya-feature-card {
+  transition: transform .4s cubic-bezier(.22, 1, .36, 1), box-shadow .4s ease, border-color .3s ease;
+}
+
+.gl-banya-feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .1);
+}
+
+/* Focus visible for accessibility */
+.gl-btn:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Smooth page transitions */
+.gl-home-page > section,
+.gl-banya-page > section {
+  position: relative;
+}
+
+/* Loading state — prevent flash of invisible content */
+@media (prefers-reduced-motion: reduce) {
+  .gl-animate {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    filter: none !important;
   }
 }

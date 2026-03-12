@@ -34,18 +34,40 @@
   const animatedEls = document.querySelectorAll('.gl-animate');
 
   if (animatedEls.length && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(
+    var animIndex = 0;
+    var observer = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
+            // Stagger siblings that appear together
+            var el = entry.target;
+            var siblings = el.parentElement.querySelectorAll('.gl-animate:not(.is-visible)');
+            var staggerBase = 0;
+            siblings.forEach(function (sib) {
+              if (sib.getBoundingClientRect().top < window.innerHeight) {
+                if (!sib.style.transitionDelay && !sib.className.match(/gl-animate--delay-/)) {
+                  sib.style.transitionDelay = staggerBase + 'ms';
+                  staggerBase += 80;
+                }
+                sib.classList.add('is-visible');
+                observer.unobserve(sib);
+              }
+            });
+            el.classList.add('is-visible');
+            observer.unobserve(el);
           }
         });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.05, rootMargin: '0px 0px -20px 0px' }
     );
     animatedEls.forEach(function (el) { observer.observe(el); });
+
+    // Safety net: reveal any still-hidden elements after 3s
+    setTimeout(function () {
+      document.querySelectorAll('.gl-animate:not(.is-visible)').forEach(function (el) {
+        el.classList.add('is-visible');
+      });
+    }, 3000);
   } else {
     // Fallback — show all
     animatedEls.forEach(function (el) { el.classList.add('is-visible'); });
