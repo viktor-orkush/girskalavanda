@@ -240,9 +240,12 @@ get_header();
         <div class="gl-wellness-card gl-wellness-card--hamam gl-animate gl-animate--delay-2">
           <div class="gl-wellness-card__img">
             <?php
-            // Хамам використовує зображення зі сторінки бані (той самий комплекс)
-            if ( $banya_img ) : ?>
-              <img src="<?php echo esc_url( $banya_img ); ?>" alt="Хамам" loading="lazy" />
+            $hamam_page = get_page_by_path( 'hamam' );
+            $hamam_img  = $hamam_page ? get_the_post_thumbnail_url( $hamam_page->ID, 'large' ) : '';
+            $final_hamam_img = $hamam_img ?: $banya_img;
+            
+            if ( $final_hamam_img ) : ?>
+              <img src="<?php echo esc_url( $final_hamam_img ); ?>" alt="Хамам" loading="lazy" />
             <?php else : ?>
               <div class="gl-wellness-card__img-placeholder">🧖</div>
             <?php endif; ?>

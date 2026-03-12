@@ -88,6 +88,25 @@ function glav_sync_mobile_menu( $locations ) {
     return $locations;
 }
 
+add_action( 'wp_head', 'glav_custom_hero_styles', 100 );
+function glav_custom_hero_styles() {
+    ?>
+    <style id="glav-hero-fix">
+        .gl-banya-hero {
+            background-image: var(--banya-hero-bg) !important;
+            background-position: center bottom !important;
+            background-size: cover !important;
+            background-repeat: no-repeat !important;
+        }
+        @media (max-width: 768px) {
+            .gl-banya-hero {
+                background-position: 50% 50% !important;
+            }
+        }
+    </style>
+    <?php
+}
+
 // =============================================================================
 // PHONE NUMBER IN HEADER NAV
 // =============================================================================

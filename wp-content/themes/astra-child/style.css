@@ -420,7 +420,6 @@ h4 {
    ========================================================================== */
 .gl-hero,
 .gl-rooms-hero,
-.gl-banya-hero,
 .gl-gallery-hero,
 .gl-contact-hero {
   position: relative;
@@ -3653,7 +3652,14 @@ body.page-template-page-home article.page {
    HERO
    ------------------------------------------------------------------ */
 .gl-banya-hero {
-  background-image: var(--banya-hero-bg);
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-image: var(--banya-hero-bg) !important;
+  background-position: center bottom !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
   /* align-items, display, overflow — зі shared hero base */
   flex-direction: column;
   justify-content: center;
@@ -7896,4 +7902,142 @@ a.gl-contact-card__value:hover {
 .ast-header-break-point.gl-header-scrolled .custom-logo,
 .ast-header-break-point.gl-header-scrolled .site-branding img {
   max-height: 38px !important;
+}
+
+/* --- Mobile Menu Fixes & HFB Improvements --- */
+#ast-mobile-popup,
+.ast-mobile-popup-drawer.active .ast-mobile-popup-inner,
+#ast-mobile-popup .ast-mobile-popup-inner {
+  background: rgba(14, 34, 8, 0.98) !important;
+  backdrop-filter: blur(24px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.4) !important;
+  border-top: 1px solid rgba(200, 169, 81, .25) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .6), inset 0 1px 0 rgba(200, 169, 81, .1) !important;
+}
+
+#ast-hf-mobile-menu .menu-item > a,
+#ast-mobile-popup .menu-link {
+  color: rgba(255, 255, 255, .95) !important;
+  font-family: var(--font-body) !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  padding: 16px 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, .12) !important;
+  background-color: transparent !important;
+  transition: color 0.3s ease, background 0.3s ease, padding-left 0.3s ease !important;
+  position: relative !important;
+}
+
+#ast-hf-mobile-menu .menu-item > a:hover,
+#ast-hf-mobile-menu .menu-link:hover,
+#ast-hf-mobile-menu .menu-item.current-menu-item > .menu-link {
+  color: var(--color-gold) !important;
+  background: rgba(200, 169, 81, .08) !important;
+  padding-left: 42px !important;
+  border-color: rgba(255, 255, 255, .12) !important;
+}
+
+/* Gold Left Border on Hover */
+#ast-hf-mobile-menu .menu-item > a::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) scaleY(0) !important;
+  width: 4px !important;
+  height: 60% !important;
+  background: var(--color-gold) !important;
+  border-radius: 0 4px 4px 0 !important;
+  transition: transform 0.3s ease !important;
+}
+
+#ast-hf-mobile-menu .menu-item > a:hover::before,
+#ast-hf-mobile-menu .menu-item.current-menu-item > a::before {
+  transform: translateY(-50%) scaleY(1) !important;
+}
+
+/* Sub-menu styling */
+#ast-hf-mobile-menu .sub-menu {
+  background: rgba(0, 0, 0, .2) !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#ast-hf-mobile-menu .sub-menu .menu-item > a {
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  color: rgba(255, 255, 255, .75) !important;
+  padding: 14px 32px 14px 52px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, .05) !important;
+}
+
+#ast-hf-mobile-menu .sub-menu .menu-item > a:hover {
+  color: var(--color-gold-light) !important;
+  background: rgba(200, 169, 81, .06) !important;
+  padding-left: 60px !important;
+}
+
+/* Sub-menu toggle arrow styling */
+#ast-hf-mobile-menu .ast-menu-toggle {
+  color: rgba(255, 255, 255, .5) !important;
+  transition: color 0.3s ease, background 0.3s ease !important;
+}
+#ast-hf-mobile-menu .menu-item:hover > .ast-menu-toggle {
+  color: var(--color-gold) !important;
+}
+
+/* Phone number & Book now styling (Targeting HFB structure) */
+#ast-hf-mobile-menu .menu-item-book-now > a {
+  background: var(--color-gold) !important;
+  color: #1a330d !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  justify-content: center !important;
+  border-radius: 8px !important;
+  margin: 20px 32px 10px !important;
+  padding: 16px 28px !important;
+  border-bottom: none !important;
+  box-shadow: 0 6px 24px rgba(200, 169, 81, .35) !important;
+}
+
+#ast-hf-mobile-menu .menu-item-book-now > a:hover {
+  background: var(--color-gold-light) !important;
+  box-shadow: 0 8px 32px rgba(200, 169, 81, .5) !important;
+  transform: translateY(-2px) !important;
+  padding-left: 28px !important;
+}
+
+#ast-hf-mobile-menu .menu-item-book-now > a::before { display: none !important; }
+
+#ast-hf-mobile-menu .menu-item-phone > a,
+#ast-hf-mobile-menu .menu-item > a[href^="tel:"] {
+  color: var(--color-gold) !important;
+  font-weight: 600 !important;
+  justify-content: center !important;
+  border-top: 1px solid rgba(200, 169, 81, .2) !important;
+  border-bottom: none !important;
+  margin-top: 10px !important;
+}
+
+#ast-hf-mobile-menu .menu-item-phone > a::before,
+#ast-hf-mobile-menu .menu-item > a[href^="tel:"]::before { display: none !important; }
+
+/* Remove standard Astra empty space padding inside popup to edge-to-edge menu */
+.ast-mobile-popup-content { padding: 0 !important; }
+#ast-hf-mobile-menu { margin: 20px 0 !important; padding: 0 !important; }
+
+/* Popup bottom decorative line */
+.ast-mobile-popup-inner::after {
+  content: '' !important;
+  display: block !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent) !important;
+  margin: 15px 60px 40px !important;
+  opacity: 0.4 !important;
 }
