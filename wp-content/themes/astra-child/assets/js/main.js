@@ -10,6 +10,14 @@
      ========================================================================= */
   const header = document.getElementById('masthead') || document.querySelector('.site-header');
 
+  function updateHeaderHeight() {
+    var h = header ? header.offsetHeight : 0;
+    document.documentElement.style.setProperty('--gl-header-height', h + 'px');
+  }
+
+  updateHeaderHeight();
+  window.addEventListener('resize', updateHeaderHeight, { passive: true });
+
   function onScroll() {
     if (!header) return;
     const scrolled = window.scrollY > 80;
@@ -302,54 +310,122 @@
   });
 
   /* =========================================================================
-     MOBILE MENU — smooth animation helper
-     Astra toggles display:none/block which breaks CSS transitions.
-     We override with max-height animation via CSS class, and hook into
-     Astra's toggle to add/remove body class.
+     MOBILE MENU — CSS-driven animation with Astra override
+     We force display:block and let CSS handle visibility via max-height/opacity.
+     Astra uses body class `ast-main-header-nav-open` to toggle menu state.
      ========================================================================= */
-  var mobileMenuContent = document.querySelector('#ast-mobile-header .ast-mobile-header-content');
-  var mobileToggle = document.querySelector('#ast-mobile-header .ast-mobile-menu-trigger-minimal');
+  var mobileMenuContent = document.querySelector('#ast-mobile-header .ast-mobile-header-content, .ast-mobile-header-content');
+  var mobileToggle = document.querySelector('#ast-mobile-header .menu-toggle, .ast-mobile-menu-trigger-minimal, .main-header-menu-toggle');
 
   if (mobileMenuContent && mobileToggle) {
-    // Override Astra's display:none with our CSS animation approach
-    // Force display:block always, control visibility via max-height + opacity
+    // Force display:block so CSS can control visibility via max-height + opacity
     mobileMenuContent.style.display = 'block';
 
-    // Watch for Astra's class changes on body to detect menu open/close
-    var menuObserver = new MutationObserver(function (mutations) {
-      mutations.forEach(function (mutation) {
-        if (mutation.attributeName === 'class') {
-          var isOpen = document.body.classList.contains('ast-main-header-nav-open');
-          if (isOpen) {
-            mobileMenuContent.style.display = 'block';
-          }
-        }
-      });
-    });
-    menuObserver.observe(document.body, { attributes: true });
-
-    // Also ensure display is always block (Astra may re-set it)
+    // Astra may reset display:none — keep overriding it
     var contentObserver = new MutationObserver(function () {
-      if (mobileMenuContent.style.display === 'none' && 
-          document.body.classList.contains('ast-main-header-nav-open')) {
+      if (mobileMenuContent.style.display !== 'block') {
         mobileMenuContent.style.display = 'block';
       }
     });
     contentObserver.observe(mobileMenuContent, { attributes: true, attributeFilter: ['style'] });
 
-    // Close menu on link click (for smooth UX)
-    mobileMenuContent.querySelectorAll('.menu-link').forEach(function (link) {
-      // Skip links with sub-menus (they toggle sub-menu instead)
+    // Close menu on link click (smooth UX — navigate then close)
+    mobileMenuContent.querySelectorAll('a.menu-link, a[href]').forEach(function (link) {
       var parent = link.closest('.menu-item');
-      if (parent && parent.classList.contains('menu-item-has-children')) return;
+      // Skip sub-menu toggle parents (they expand sub-menu)
+      if (parent && parent.classList.contains('menu-item-has-children') && !link.closest('.sub-menu')) return;
 
       link.addEventListener('click', function () {
-        // Trigger Astra's close by clicking the toggle
         if (document.body.classList.contains('ast-main-header-nav-open')) {
           mobileToggle.click();
         }
       });
     });
+
+    // Close on overlay click / scroll lock
+    document.addEventListener('click', function (e) {
+      if (!document.body.classList.contains('ast-main-header-nav-open')) return;
+      // If click is outside menu and outside toggle button
+      var header = document.querySelector('#ast-mobile-header, .ast-mobile-header-wrap');
+      if (header && !header.contains(e.target)) {
+        mobileToggle.click();
+      }
+    });
+  }
+
+  /* =========================================================================
+     ROOMS CAROUSEL
+     ========================================================================= */
+  var roomsTrack   = document.querySelector('.gl-rooms__track');
+  var roomsBtnPrev = document.querySelector('.gl-rooms__btn--prev');
+  var roomsBtnNext = document.querySelector('.gl-rooms__btn--next');
+  var roomsDotsEl  = document.getElementById('rooms-dots');
+
+  if (roomsTrack) {
+    var roomsCards   = roomsTrack.querySelectorAll('.gl-room-card');
+    var roomsTotal   = roomsCards.length;
+    var roomsCurrent = 0;
+    var roomsDots    = [];
+
+    function getRoomsPerView() {
+      if (window.innerWidth >= 1024) return 3;
+      if (window.innerWidth >= 640)  return 2;
+      return 1;
+    }
+
+    function getRoomsMax() {
+      return Math.max(0, roomsTotal - getRoomsPerView());
+    }
+
+    function roomsGoTo(idx) {
+      roomsCurrent = Math.max(0, Math.min(idx, getRoomsMax()));
+      var gap       = 28;
+      var viewport  = roomsTrack.parentElement;
+      var perView   = getRoomsPerView();
+      var cardWidth = (viewport.offsetWidth - gap * (perView - 1)) / perView;
+      roomsTrack.style.transform = 'translateX(-' + (roomsCurrent * (cardWidth + gap)) + 'px)';
+
+      roomsDots.forEach(function (d, i) {
+        d.classList.toggle('is-active', i === roomsCurrent);
+      });
+
+      if (roomsBtnPrev) roomsBtnPrev.disabled = roomsCurrent === 0;
+      if (roomsBtnNext) roomsBtnNext.disabled = roomsCurrent >= getRoomsMax();
+    }
+
+    // Generate dots
+    if (roomsDotsEl) {
+      for (var ri = 0; ri < roomsTotal; ri++) {
+        var dot = document.createElement('button');
+        dot.className = 'gl-rooms__dot';
+        dot.setAttribute('aria-label', 'Номер ' + (ri + 1));
+        (function (idx) {
+          dot.addEventListener('click', function () { roomsGoTo(idx); });
+        }(ri));
+        roomsDotsEl.appendChild(dot);
+        roomsDots.push(dot);
+      }
+    }
+
+    if (roomsBtnPrev) roomsBtnPrev.addEventListener('click', function () { roomsGoTo(roomsCurrent - 1); });
+    if (roomsBtnNext) roomsBtnNext.addEventListener('click', function () { roomsGoTo(roomsCurrent + 1); });
+
+    // Touch swipe
+    var roomsTouchX = 0;
+    roomsTrack.addEventListener('touchstart', function (e) {
+      roomsTouchX = e.touches[0].clientX;
+    }, { passive: true });
+    roomsTrack.addEventListener('touchend', function (e) {
+      var diff = roomsTouchX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) roomsGoTo(diff > 0 ? roomsCurrent + 1 : roomsCurrent - 1);
+    });
+
+    // Recalc offset on resize
+    window.addEventListener('resize', function () {
+      roomsGoTo(Math.min(roomsCurrent, getRoomsMax()));
+    }, { passive: true });
+
+    roomsGoTo(0);
   }
 
   /* =========================================================================

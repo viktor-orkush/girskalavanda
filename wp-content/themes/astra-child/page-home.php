@@ -57,7 +57,7 @@ get_header();
   </section>
 
   <!-- =====================================================================
-       ROOMS
+       ROOMS CAROUSEL
        ===================================================================== -->
   <section class="gl-section gl-rooms gl-section--white" id="rooms">
     <div class="gl-container">
@@ -67,7 +67,9 @@ get_header();
         <p class="gl-section-subtitle">Кожен номер — окрема атмосфера затишку і комфорту в серці Карпат</p>
       </div>
 
-      <div class="gl-rooms__grid">
+      <div class="gl-rooms__carousel" id="rooms-carousel">
+        <div class="gl-rooms__viewport">
+          <div class="gl-rooms__track">
         <?php
         // Отримати кімнати з MotoPress Hotel Booking
         $rooms = get_posts( [
@@ -79,7 +81,7 @@ get_header();
         ] );
 
         if ( ! empty( $rooms ) ) :
-            foreach ( $rooms as $i => $room ) :
+            foreach ( $rooms as $room ) :
                 $thumb_id  = get_post_thumbnail_id( $room->ID );
                 $thumb_url = $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'large' ) : '';
                 $price     = function_exists( 'glav_get_room_price' ) ? glav_get_room_price( $room->ID ) : 0;
@@ -88,7 +90,7 @@ get_header();
                 $permalink = get_permalink( $room->ID );
                 $excerpt   = wp_trim_words( get_post_field( 'post_excerpt', $room->ID ) ?: get_post_field( 'post_content', $room->ID ), 18 );
         ?>
-        <article class="gl-room-card gl-animate gl-animate--delay-<?php echo min( $i + 1, 5 ); ?>">
+            <article class="gl-room-card">
           <div class="gl-room-card__img">
             <?php if ( $thumb_url ) : ?>
               <img src="<?php echo esc_url( $thumb_url ); ?>"
@@ -130,7 +132,7 @@ get_header();
                 </span>
                 <span class="gl-room-card__price-night">/ ніч</span>
               </div>
-              <a href="<?php echo esc_url( $permalink ); ?>" class="gl-btn gl-btn--accent gl-btn--sm">
+              <a href="<?php echo esc_url( $permalink ); ?>" class="gl-btn gl-btn--sm">
                 Детальніше
               </a>
             </div>
@@ -146,9 +148,9 @@ get_header();
                 [ 'name' => 'Сімейні апартаменти',                'desc' => 'Ідеальний варіант для сімей з дітьми. Двоспальне ліжко + розкладний диван у просторому номері.',                         'price' => '1 500', 'capacity' => 4, 'children' => 2, 'size' => 35, 'icon' => '👨‍👩‍👧' ],
                 [ 'name' => 'Двоповерхові апартаменти з терасою', 'desc' => 'Розкішні двоповерхові апартаменти з власною терасою — максимум простору і приватності в Карпатах.',                     'price' => '2 500', 'capacity' => 4, 'children' => 0, 'size' => 70, 'icon' => '🏠' ],
             ];
-            foreach ( $fallback_rooms as $i => $room ) :
+                foreach ( $fallback_rooms as $room ) :
         ?>
-        <article class="gl-room-card gl-animate gl-animate--delay-<?php echo min( $i + 1, 5 ); ?>">
+            <article class="gl-room-card">
           <div class="gl-room-card__img">
             <div class="gl-room-card__img-placeholder"><?php echo $room['icon']; ?></div>
             <span class="gl-room-card__badge">Карпати</span>
@@ -169,7 +171,7 @@ get_header();
                 <span class="gl-room-card__price-value"><?php echo $room['price']; ?> ₴</span>
                 <span class="gl-room-card__price-night">/ ніч</span>
               </div>
-              <a href="/rooms/" class="gl-btn gl-btn--accent gl-btn--sm">Детальніше</a>
+              <a href="/rooms/" class="gl-btn gl-btn--sm">Детальніше</a>
             </div>
           </div>
         </article>
@@ -177,7 +179,17 @@ get_header();
             endforeach;
         endif;
         ?>
-      </div>
+          </div><!-- /.gl-rooms__track -->
+        </div><!-- /.gl-rooms__viewport -->
+
+        <button class="gl-rooms__btn gl-rooms__btn--prev" aria-label="Попередній номер">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button class="gl-rooms__btn gl-rooms__btn--next" aria-label="Наступний номер">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+        <div class="gl-rooms__dots" id="rooms-dots"></div>
+      </div><!-- /.gl-rooms__carousel -->
     </div>
   </section>
 
@@ -220,7 +232,7 @@ get_header();
               <span class="gl-wellness-card__price-value">від 2 500 ₴</span>
               <span class="gl-wellness-card__price-unit">/ сеанс</span>
             </div>
-            <a href="/banya/#banya-booking" class="gl-btn gl-btn--primary">Забронювати баню</a>
+            <a href="/banya/#booking-section-ready" class="gl-btn gl-btn--primary">Забронювати баню</a>
           </div>
         </div>
 
@@ -248,7 +260,7 @@ get_header();
               <span class="gl-wellness-card__price-value">від 3 000 ₴</span>
               <span class="gl-wellness-card__price-unit">/ сеанс</span>
             </div>
-            <a href="/banya/#banya-booking" class="gl-btn gl-btn--primary">Забронювати хамам</a>
+            <a href="/banya/#booking-section-ready" class="gl-btn gl-btn--primary">Забронювати хамам</a>
           </div>
         </div>
 
@@ -278,7 +290,7 @@ get_header();
               <span class="gl-wellness-card__price-value">від 2 500 ₴</span>
               <span class="gl-wellness-card__price-unit">/ сеанс</span>
             </div>
-            <a href="/chan/#chan-booking" class="gl-btn gl-btn--primary">Забронювати чан</a>
+            <a href="/chan/#booking-section-ready" class="gl-btn gl-btn--primary">Забронювати чан</a>
           </div>
         </div>
 
@@ -292,21 +304,13 @@ get_header();
   <?php echo do_shortcode( '[gl_advantages]' ); ?>
 
   <!-- =====================================================================
-       TESTIMONIALS — shortcode
-       ===================================================================== -->
-  <?php echo do_shortcode( '[gl_testimonials]' ); ?>
-
-  <!-- =====================================================================
        GALLERY PREVIEW — shortcode
        ===================================================================== -->
   <?php echo do_shortcode( '[gl_gallery_preview]' ); ?>
 
-  <!-- =====================================================================
-       CONTACTS — shortcode
-       ===================================================================== -->
-  <?php echo do_shortcode( '[gl_contacts]' ); ?>
 
-</main>
+  </main>
+
 
 <?php
 get_footer();

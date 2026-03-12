@@ -154,88 +154,6 @@ function glav_sc_advantages( $atts ) {
 }
 
 /**
- * [gl_testimonials] — секція відгуків
- */
-add_shortcode( 'gl_testimonials', 'glav_sc_testimonials' );
-function glav_sc_testimonials( $atts ) {
-    $reviews = [
-        [
-            'name'   => 'Олена Коваль',
-            'date'   => 'Лютий 2026',
-            'rating' => 5,
-            'text'   => 'Неймовірно затишне місце! Баня була просто казковою — ми провели там увесь вечір. Природа навколо приголомшлива, персонал дуже привітний. Обов\'язково повернемося!',
-            'avatar' => 'О',
-        ],
-        [
-            'name'   => 'Максим Петренко',
-            'date'   => 'Січень 2026',
-            'rating' => 5,
-            'text'   => 'Чудовий відпочинок! Чан на вулиці взимку — це щось незабутнє. Зоряне небо, пар від гарячої води, свіже карпатське повітря. Номер чистий і комфортний.',
-            'avatar' => 'М',
-        ],
-        [
-            'name'   => 'Наталія та Андрій',
-            'date'   => 'Грудень 2025',
-            'rating' => 5,
-            'text'   => 'Відмінне місце для романтичного відпочинку. Тихо, спокійно, красива природа. Розміщення зручне і чисте. Рекомендуємо всім друзям.',
-            'avatar' => 'Н',
-        ],
-        [
-            'name'   => 'Іван Мельник',
-            'date'   => 'Листопад 2025',
-            'rating' => 5,
-            'text'   => 'Приїхали сім\'єю на 3 дні. Діти в захваті від лісу навколо. Баня справді традиційна, не турецька. Господарі дуже привітні, підказали найкращі маршрути для прогулянок.',
-            'avatar' => 'І',
-        ],
-    ];
-
-    ob_start();
-    ?>
-    <section class="gl-section gl-testimonials gl-section--white" id="reviews">
-      <div class="gl-container">
-        <div class="gl-testimonials__header gl-animate">
-          <span class="gl-section-label">Гості про нас</span>
-          <h2 class="gl-section-title">Відгуки</h2>
-          <p class="gl-section-subtitle">Понад 200+ задоволених гостей довіряють нам свій відпочинок</p>
-        </div>
-
-        <div class="gl-testimonials__slider gl-animate">
-          <div class="gl-testimonials__track">
-            <?php foreach ( $reviews as $review ) : ?>
-            <div class="gl-testimonial-card">
-              <span class="gl-testimonial-card__quote">"</span>
-              <div class="gl-testimonial-card__stars">
-                <?php echo str_repeat( '★', $review['rating'] ); ?>
-              </div>
-              <p class="gl-testimonial-card__text"><?php echo esc_html( $review['text'] ); ?></p>
-              <div class="gl-testimonial-card__author">
-                <div class="gl-testimonial-card__avatar"><?php echo esc_html( $review['avatar'] ); ?></div>
-                <div>
-                  <div class="gl-testimonial-card__name"><?php echo esc_html( $review['name'] ); ?></div>
-                  <div class="gl-testimonial-card__date"><?php echo esc_html( $review['date'] ); ?></div>
-                </div>
-              </div>
-            </div>
-            <?php endforeach; ?>
-          </div>
-        </div>
-
-        <div class="gl-testimonials__nav">
-          <button class="gl-testimonials__btn gl-testimonials__btn--prev" aria-label="Попередній">&#8592;</button>
-          <div class="gl-testimonials__dots">
-            <?php for ( $i = 0; $i < count( $reviews ); $i++ ) : ?>
-            <button class="gl-testimonials__dot <?php echo $i === 0 ? 'is-active' : ''; ?>" aria-label="Відгук <?php echo $i + 1; ?>"></button>
-            <?php endfor; ?>
-          </div>
-          <button class="gl-testimonials__btn gl-testimonials__btn--next" aria-label="Наступний">&#8594;</button>
-        </div>
-      </div>
-    </section>
-    <?php
-    return ob_get_clean();
-}
-
-/**
  * [gl_contacts] — секція контактів з картою
  */
 add_shortcode( 'gl_contacts', 'glav_sc_contacts' );
@@ -517,6 +435,17 @@ function glav_customize_register( $wp_customize ) {
         'description' => 'Наприклад: girskalavanda або https://t.me/girskalavanda',
         'section'     => 'gl_contacts',
         'type'        => 'text',
+    ] );
+
+    $wp_customize->add_setting( 'gl_maps_url', [
+        'default'           => 'https://maps.app.goo.gl/s5NUR41X67xDFT5f8',
+        'sanitize_callback' => 'esc_url_raw',
+    ] );
+    $wp_customize->add_control( 'gl_maps_url', [
+        'label'       => 'Google Maps посилання',
+        'description' => 'Пряме посилання на Google Maps для готелю (використовується у футері та на сторінці контактів)',
+        'section'     => 'gl_contacts',
+        'type'        => 'url',
     ] );
 }
 

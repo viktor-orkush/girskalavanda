@@ -85,21 +85,23 @@ if ($ig_raw) {
   <!-- ======================================================================
        HERO
        ====================================================================== -->
-  <section class="gl-rooms-hero"
-           style="--rooms-hero-bg: url('<?php echo esc_url($hero_url); ?>')">
+  <section class="gl-rooms-hero" style="--rooms-hero-bg: url('<?php echo esc_url($hero_url); ?>')">
     <div class="gl-rooms-hero__overlay"></div>
 
     <div class="gl-rooms-hero__content">
       <div class="gl-container">
         <p class="gl-rooms-hero__label">Розміщення · Гірська Лаванда</p>
         <h1 class="gl-rooms-hero__title">Наші<br><em>Номери</em></h1>
-        <p class="gl-rooms-hero__subtitle">Затишні номери серед карпатських сосен — від компактних до розкішних двоповерхових апартаментів з терасою</p>
+        <p class="gl-rooms-hero__subtitle">Затишні номери серед карпатських сосен — від компактних до розкішних
+          двоповерхових апартаментів з терасою</p>
         <div class="gl-rooms-hero__actions">
           <a href="#rooms-list" class="gl-btn gl-btn--gold">Переглянути номери</a>
           <?php if ($phone): ?>
           <a href="tel:<?php echo esc_attr($phone); ?>" class="gl-btn gl-btn--outline-white">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.5 11.61a19.79 19.79 0 01-3.07-8.67A2 2 0 012.42 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.9a16 16 0 006.15 6.15l1.27-.77a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              aria-hidden="true">
+              <path
+                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.5 11.61a19.79 19.79 0 01-3.07-8.67A2 2 0 012.42 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.9a16 16 0 006.15 6.15l1.27-.77a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
             </svg>
             Зателефонувати
           </a>
@@ -109,37 +111,42 @@ endif; ?>
       </div>
     </div>
 
-    <!-- Scroll indicator -->
-    <a href="#rooms-stats" class="gl-rooms-hero__scroll" aria-label="Прокрутити донизу">
-      <span class="gl-rooms-hero__scroll-line"></span>
-    </a>
-  </section>
-
-
-  <!-- ======================================================================
-       STATS STRIP
-       ====================================================================== -->
-  <section class="gl-rooms-stats" id="rooms-stats">
-    <div class="gl-container">
-      <div class="gl-rooms-stats__grid">
-        <div class="gl-rooms-stat gl-animate">
-          <span class="gl-rooms-stat__num"><?php echo $room_count; ?></span>
-          <span class="gl-rooms-stat__label"><?php echo $room_count <= 4 ? 'типи номерів' : 'типів номерів'; ?></span>
-        </div>
-        <div class="gl-rooms-stat gl-animate gl-animate--delay-1">
-          <span class="gl-rooms-stat__num">до&nbsp;<?php echo $max_guests; ?></span>
-          <span class="gl-rooms-stat__label">гостей у номері</span>
-        </div>
-        <div class="gl-rooms-stat gl-animate gl-animate--delay-2">
-          <span class="gl-rooms-stat__num">від&nbsp;<?php echo $min_price ? number_format($min_price, 0, '.', ' ') : '—'; ?></span>
-          <span class="gl-rooms-stat__label">грн за ніч</span>
-        </div>
-        <div class="gl-rooms-stat gl-animate gl-animate--delay-3">
-          <span class="gl-rooms-stat__num">365</span>
-          <span class="gl-rooms-stat__label">днів на рік</span>
+    <!-- Stats bar — прикріплений до низу hero -->
+    <div class="gl-hero-stats-bar" id="rooms-stats">
+      <div class="gl-container">
+        <div class="gl-hero-stats-grid">
+          <div class="gl-hero-stat gl-animate">
+            <span class="gl-hero-stat__num">
+              <?php echo $room_count; ?>
+            </span>
+            <span class="gl-hero-stat__label">
+              <?php echo $room_count <= 4 ? 'типи номерів' : 'типів номерів'; ?>
+            </span>
+          </div>
+          <div class="gl-hero-stat gl-animate gl-animate--delay-1">
+            <span class="gl-hero-stat__num">до&nbsp;
+              <?php echo $max_guests; ?>
+            </span>
+            <span class="gl-hero-stat__label">гостей у номері</span>
+          </div>
+          <div class="gl-hero-stat gl-animate gl-animate--delay-2">
+            <span class="gl-hero-stat__num">від&nbsp;
+              <?php echo $min_price ? number_format($min_price, 0, '.', ' ') : '—'; ?>
+            </span>
+            <span class="gl-hero-stat__label">грн за ніч</span>
+          </div>
+          <div class="gl-hero-stat gl-animate gl-animate--delay-3">
+            <span class="gl-hero-stat__num">365</span>
+            <span class="gl-hero-stat__label">днів на рік</span>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Scroll indicator -->
+    <a href="#rooms-list" class="gl-rooms-hero__scroll" aria-label="Прокрутити до списку номерів">
+      <span class="gl-rooms-hero__scroll-line"></span>
+    </a>
   </section>
 
 
@@ -155,8 +162,8 @@ endif; ?>
       </div>
 
       <?php if (!empty($rooms)): ?>
-        <div class="gl-rooms-listing__list">
-          <?php foreach ($rooms as $i => $room):
+      <div class="gl-rooms-listing__list">
+        <?php foreach ($rooms as $i => $room):
     $room_id = $room->ID;
     $thumb_id = get_post_thumbnail_id($room_id);
     $thumb_url = $thumb_id ? wp_get_attachment_image_url($thumb_id, 'large') : '';
@@ -184,167 +191,173 @@ endif; ?>
 
     $is_reversed = $i % 2 !== 0;
 ?>
-          <article class="gl-rooms-card gl-animate <?php echo $is_reversed ? 'gl-rooms-card--reversed' : ''; ?>">
+        <article class="gl-rooms-card gl-animate <?php echo $is_reversed ? 'gl-rooms-card--reversed' : ''; ?>">
 
-            <!-- Image -->
-            <div class="gl-rooms-card__media">
-              <?php if ($thumb_url): ?>
-                <a href="<?php echo esc_url($permalink); ?>" class="gl-rooms-card__img-link">
-                  <img src="<?php echo esc_url($thumb_url); ?>"
-                       alt="<?php echo esc_attr(get_the_title($room_id)); ?>"
-                       loading="lazy" />
-                  <div class="gl-rooms-card__img-overlay">
-                    <span class="gl-rooms-card__img-overlay-text">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                      <?php echo $gallery_count > 1 ? $gallery_count . ' фото' : 'Відкрити'; ?>
-                    </span>
-                  </div>
-                </a>
-              <?php
+          <!-- Image -->
+          <div class="gl-rooms-card__media">
+            <?php if ($thumb_url): ?>
+            <a href="<?php echo esc_url($permalink); ?>" class="gl-rooms-card__img-link">
+              <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title($room_id)); ?>"
+                loading="lazy" />
+              <div class="gl-rooms-card__img-overlay">
+                <span class="gl-rooms-card__img-overlay-text">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                  </svg>
+                  <?php echo $gallery_count > 1 ? $gallery_count . ' фото' : 'Відкрити'; ?>
+                </span>
+              </div>
+            </a>
+            <?php
     else: ?>
-                <div class="gl-rooms-card__img-placeholder">
-                  <span>🛏️</span>
-                </div>
+            <div class="gl-rooms-card__img-placeholder">
+              <span>🛏️</span>
+            </div>
+            <?php
+    endif; ?>
+            <span class="gl-rooms-card__tag">Номер</span>
+          </div>
+
+          <!-- Content -->
+          <div class="gl-rooms-card__content">
+            <h3 class="gl-rooms-card__title">
+              <a href="<?php echo esc_url($permalink); ?>">
+                <?php echo esc_html(get_the_title($room_id)); ?>
+              </a>
+            </h3>
+
+            <?php if ($excerpt): ?>
+            <p class="gl-rooms-card__desc">
+              <?php echo esc_html($excerpt); ?>
+            </p>
+            <?php
+    endif; ?>
+
+            <!-- Specs pills -->
+            <div class="gl-rooms-card__specs">
+              <?php if ($adults): ?>
+              <span class="gl-rooms-card__spec">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                <?php echo $adults; ?>
+                <?php echo $children ? '+' . $children : ''; ?> гостей
+              </span>
               <?php
     endif; ?>
-              <span class="gl-rooms-card__tag">Номер</span>
+              <?php if ($size): ?>
+              <span class="gl-rooms-card__spec">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <rect x="3" y="3" width="18" height="18" rx="1" />
+                  <path d="M9 3v18M15 3v18M3 9h18M3 15h18" />
+                </svg>
+                <?php echo esc_html($size); ?> м²
+              </span>
+              <?php
+    endif; ?>
+              <?php if ($bed_type): ?>
+              <span class="gl-rooms-card__spec">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M2 4v16M2 8h20a2 2 0 0 1 2 2v10M2 12h20M22 12v8" />
+                  <path d="M6 12V10a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2" />
+                </svg>
+                <?php echo esc_html($bed_type); ?>
+              </span>
+              <?php
+    endif; ?>
+              <?php if ($view): ?>
+              <span class="gl-rooms-card__spec">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                <?php echo esc_html(ucfirst($view)); ?>
+              </span>
+              <?php
+    endif; ?>
             </div>
 
-            <!-- Content -->
-            <div class="gl-rooms-card__content">
-              <h3 class="gl-rooms-card__title">
-                <a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html(get_the_title($room_id)); ?></a>
-              </h3>
-
-              <?php if ($excerpt): ?>
-                <p class="gl-rooms-card__desc"><?php echo esc_html($excerpt); ?></p>
+            <!-- Amenities -->
+            <?php if (!empty($amenities)): ?>
+            <div class="gl-rooms-card__amenities">
+              <?php foreach (array_slice($amenities, 0, 6) as $amenity): ?>
+              <span class="gl-rooms-card__amenity">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+                <?php echo esc_html($amenity); ?>
+              </span>
               <?php
-    endif; ?>
-
-              <!-- Specs pills -->
-              <div class="gl-rooms-card__specs">
-                <?php if ($adults): ?>
-                <span class="gl-rooms-card__spec">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                  <?php echo $adults; ?><?php echo $children ? '+' . $children : ''; ?> гостей
-                </span>
-                <?php
-    endif; ?>
-                <?php if ($size): ?>
-                <span class="gl-rooms-card__spec">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
-                  <?php echo esc_html($size); ?> м²
-                </span>
-                <?php
-    endif; ?>
-                <?php if ($bed_type): ?>
-                <span class="gl-rooms-card__spec">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 4v16M2 8h20a2 2 0 0 1 2 2v10M2 12h20M22 12v8"/><path d="M6 12V10a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"/></svg>
-                  <?php echo esc_html($bed_type); ?>
-                </span>
-                <?php
-    endif; ?>
-                <?php if ($view): ?>
-                <span class="gl-rooms-card__spec">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                  <?php echo esc_html(ucfirst($view)); ?>
-                </span>
-                <?php
-    endif; ?>
-              </div>
-
-              <!-- Amenities -->
-              <?php if (!empty($amenities)): ?>
-              <div class="gl-rooms-card__amenities">
-                <?php foreach (array_slice($amenities, 0, 6) as $amenity): ?>
-                <span class="gl-rooms-card__amenity">
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  <?php echo esc_html($amenity); ?>
-                </span>
-                <?php
       endforeach; ?>
-                <?php if (count($amenities) > 6): ?>
-                <span class="gl-rooms-card__amenity gl-rooms-card__amenity--more">
-                  +<?php echo count($amenities) - 6; ?> ще
-                </span>
-                <?php
-      endif; ?>
-              </div>
+              <?php if (count($amenities) > 6): ?>
+              <span class="gl-rooms-card__amenity gl-rooms-card__amenity--more">
+                +
+                <?php echo count($amenities) - 6; ?> ще
+              </span>
               <?php
+      endif; ?>
+            </div>
+            <?php
     endif; ?>
 
-              <!-- Price + CTA -->
-              <div class="gl-rooms-card__footer">
-                <div class="gl-rooms-card__price">
-                  <span class="gl-rooms-card__price-label">від</span>
-                  <span class="gl-rooms-card__price-value">
-                    <?php echo $price ? esc_html(number_format($price, 0, '.', ' ')) . ' ₴' : 'за запитом'; ?>
-                  </span>
-                  <span class="gl-rooms-card__price-per">/ ніч</span>
-                </div>
-                <div class="gl-rooms-card__actions">
-                  <a href="<?php echo esc_url($permalink); ?>" class="gl-btn gl-btn--outline-gold gl-btn--sm">Детальніше</a>
-                  <?php if ($phone): ?>
-                  <a href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', $phone)); ?>" class="gl-btn gl-btn--primary gl-btn--sm" title="Зателефонувати">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.5 11.61a19.79 19.79 0 01-3.07-8.67A2 2 0 012.42 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.9a16 16 0 006.15 6.15l1.27-.77a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-                    Зателефонувати
-                  </a>
-                  <?php
+            <!-- Price + CTA -->
+            <div class="gl-rooms-card__footer">
+              <div class="gl-rooms-card__price">
+                <span class="gl-rooms-card__price-label">від</span>
+                <span class="gl-rooms-card__price-value">
+                  <?php echo $price ? esc_html(number_format($price, 0, '.', ' ')) . ' ₴' : 'за запитом'; ?>
+                </span>
+                <span class="gl-rooms-card__price-per">/ ніч</span>
+              </div>
+              <div class="gl-rooms-card__actions">
+                <a href="<?php echo esc_url($permalink); ?>"
+                  class="gl-btn gl-btn--outline-gold gl-btn--sm">Детальніше</a>
+                <?php if ($phone): ?>
+                <a href="tel:<?php echo esc_attr(preg_replace('/[^0-9+]/', '', $phone)); ?>"
+                  class="gl-btn gl-btn--primary gl-btn--sm" title="Зателефонувати">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    aria-hidden="true">
+                    <path
+                      d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.5 11.61a19.79 19.79 0 01-3.07-8.67A2 2 0 012.42 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.9a16 16 0 006.15 6.15l1.27-.77a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />
+                  </svg>
+                  Зателефонувати
+                </a>
+                <?php
     endif; ?>
-                </div>
               </div>
             </div>
-          </article>
-          <?php
+          </div>
+        </article>
+        <?php
   endforeach; ?>
-        </div>
+      </div>
 
       <?php
 else: ?>
-        <!-- Fallback if no rooms configured -->
-        <div class="gl-rooms-listing__empty">
-          <p>Номери ще не налаштовані. Зв'яжіться з нами для бронювання!</p>
-          <?php if ($phone): ?>
-            <a href="tel:<?php echo esc_attr($phone); ?>" class="gl-btn gl-btn--primary"><?php echo esc_html($phone_disp ?: $phone); ?></a>
-          <?php
+      <!-- Fallback if no rooms configured -->
+      <div class="gl-rooms-listing__empty">
+        <p>Номери ще не налаштовані. Зв'яжіться з нами для бронювання!</p>
+        <?php if ($phone): ?>
+        <a href="tel:<?php echo esc_attr($phone); ?>" class="gl-btn gl-btn--primary">
+          <?php echo esc_html($phone_disp ?: $phone); ?>
+        </a>
+        <?php
   endif; ?>
-        </div>
+      </div>
       <?php
 endif; ?>
     </div>
   </section>
 
 
-  <!-- ======================================================================
-       ADVANTAGES — shortcode from functions.php
-       ====================================================================== -->
-  <?php echo do_shortcode('[gl_advantages]'); ?>
 
 
-  <!-- ======================================================================
-       BOOKING CONTACT
-       ====================================================================== -->
-  <section class="gl-section gl-section--sand">
-    <div class="gl-container">
-      <div class="gl-rooms-booking gl-animate">
-        <span class="gl-section-label">Бронювання</span>
-        <h2 class="gl-section-title">Готові до відпочинку<br>в Карпатах?</h2>
-        <?php
-$contact = function_exists('glav_get_contact_data')
-  ? glav_get_contact_data('Добрий день! Хочу забронювати номер.')
-  : [
-  'phone' => $phone,
-  'phone_display' => $phone_disp,
-  'telegram_url' => $telegram_url,
-  'whatsapp_url' => $whatsapp_url,
-  'viber_url' => $viber_url,
-  'instagram_dm' => $instagram_dm,
-];
-get_template_part('template-parts/booking-contact', null, $contact);
-?>
-      </div>
-    </div>
-  </section>
+
 
 </main>
 

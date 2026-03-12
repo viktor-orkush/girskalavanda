@@ -415,6 +415,136 @@ h4 {
 }
 
 /* ==========================================================================
+   SHARED HERO BASE — спільні стилі для всіх повноекранних hero-секцій.
+   Конкретні класи нижче перевизначають тільки унікальні властивості.
+   ========================================================================== */
+.gl-hero,
+.gl-rooms-hero,
+.gl-banya-hero,
+.gl-gallery-hero,
+.gl-contact-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.gl-rooms-hero__overlay,
+.gl-banya-hero::before,
+.gl-gallery-hero__overlay,
+.gl-contact-hero__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.gl-rooms-hero__content,
+.gl-banya-hero__content,
+.gl-gallery-hero__content,
+.gl-contact-hero__content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.gl-rooms-hero__scroll,
+.gl-banya-hero__scroll,
+.gl-gallery-hero__scroll {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, .5);
+  text-decoration: none;
+}
+
+.gl-rooms-hero__scroll-line,
+.gl-banya-hero__scroll-line,
+.gl-gallery-hero__scroll-line {
+  display: block;
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, .45), transparent);
+  animation: hero-scroll-line 2s ease-in-out infinite;
+}
+
+/* ---- Shared Hero Stats Bar (bottom of hero) ---- */
+.gl-hero-stats-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  background: rgba(8, 22, 4, 0.90);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255, 255, 255, .08);
+}
+
+.gl-hero-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.gl-hero-stat {
+  text-align: center;
+  padding: 16px 24px;
+  border-right: 1px solid rgba(255, 255, 255, .12);
+}
+
+.gl-hero-stat:last-child {
+  border-right: none;
+}
+
+.gl-hero-stat__num {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  color: var(--color-gold-light);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.gl-hero-stat__label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .65);
+}
+
+/* Shared Hero Stats Bar — responsive */
+@media (max-width: 1024px) {
+  .gl-hero-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gl-hero-stat {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+    padding: 20px 16px;
+  }
+
+  .gl-hero-stat:nth-child(odd) {
+    border-right: 1px solid rgba(255, 255, 255, .1);
+  }
+
+  .gl-hero-stat:nth-last-child(-n+2) {
+    border-bottom: none;
+  }
+}
+
+/* ==========================================================================
    HERO SECTION
    ========================================================================== */
 .gl-hero {
@@ -736,10 +866,96 @@ h4 {
   margin-bottom: 60px;
 }
 
-.gl-rooms__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+.gl-rooms__carousel {
+  position: relative;
+  padding: 0 32px;
+}
+
+.gl-rooms__viewport {
+  overflow: hidden;
+}
+
+.gl-rooms__track {
+  display: flex;
   gap: 28px;
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.gl-rooms__track .gl-room-card {
+  flex: 0 0 calc((100% - 56px) / 3);
+  min-width: 0;
+}
+
+/* Prev / Next buttons */
+.gl-rooms__btn {
+  position: absolute !important;
+  top: 120px !important;
+  transform: translateY(-50%) !important;
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 0 !important;
+  border-radius: 50% !important;
+  background: var(--color-white) !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .15) !important;
+  cursor: pointer !important;
+  z-index: 2 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--color-primary) !important;
+  transition: background var(--transition), color var(--transition), box-shadow var(--transition), transform var(--transition);
+  line-height: 1;
+}
+
+.gl-rooms__btn:hover {
+  background: var(--color-primary) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 20px rgba(28, 58, 14, .3) !important;
+  transform: translateY(-50%) scale(1.06) !important;
+}
+
+.gl-rooms__btn:disabled {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.gl-rooms__btn--prev {
+  left: 0;
+}
+
+.gl-rooms__btn--next {
+  right: 0;
+}
+
+/* Dots */
+.gl-rooms__dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 36px;
+}
+
+.gl-rooms__dot {
+  width: 10px !important;
+  height: 10px !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  border-radius: 50% !important;
+  background: #d4cec6 !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.gl-rooms__dot.is-active {
+  background: var(--color-primary);
+  transform: scale(1.35);
 }
 
 .gl-room-card {
@@ -749,6 +965,8 @@ h4 {
   box-shadow: var(--shadow-md);
   transition: transform var(--transition), box-shadow var(--transition);
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .gl-room-card:hover {
@@ -801,6 +1019,9 @@ h4 {
 
 .gl-room-card__body {
   padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .gl-room-card__name {
@@ -846,7 +1067,20 @@ h4 {
   justify-content: space-between;
   border-top: 1px solid var(--color-sand-dark);
   padding-top: 18px;
-  margin-top: 4px;
+  margin-top: auto;
+}
+
+.gl-room-card__footer .gl-btn {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff !important;
+}
+
+.gl-room-card__footer .gl-btn:hover {
+  background: var(--color-primary-dark, #2D5A1A);
+  border-color: var(--color-primary-dark, #2D5A1A);
+  color: #fff !important;
+  text-decoration: none;
 }
 
 .gl-room-card__price {
@@ -919,7 +1153,7 @@ h4 {
 
 .gl-wellness__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 32px;
   position: relative;
 }
@@ -931,6 +1165,8 @@ h4 {
   border: 1px solid rgba(255, 255, 255, .1);
   backdrop-filter: blur(10px);
   transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+  display: flex;
+  flex-direction: column;
 }
 
 .gl-wellness-card:hover {
@@ -976,6 +1212,9 @@ h4 {
 
 .gl-wellness-card__body {
   padding: 32px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .gl-wellness-card__icon {
@@ -1034,6 +1273,10 @@ h4 {
 .gl-wellness-card__price-unit {
   font-size: 14px;
   color: rgba(255, 255, 255, .5);
+}
+
+.gl-wellness-card__body .gl-btn {
+  margin-top: auto;
 }
 
 /* ==========================================================================
@@ -1459,7 +1702,7 @@ h4 {
 
 .gl-footer__grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1.5fr;
   gap: 48px;
   margin-bottom: 48px;
 }
@@ -1484,6 +1727,7 @@ h4 {
 .gl-footer__social {
   display: flex;
   gap: 12px;
+  margin-top: 24px;
 }
 
 .gl-footer__social-link {
@@ -2359,8 +2603,16 @@ body.page-template-page-home article.page {
    RESPONSIVE
    ========================================================================== */
 @media (max-width: 1024px) {
-  .gl-rooms__grid {
-    grid-template-columns: repeat(2, 1fr);
+  .gl-rooms__track .gl-room-card {
+    flex: 0 0 calc((100% - 28px) / 2);
+  }
+
+  .gl-rooms__btn--prev {
+    left: 0;
+  }
+
+  .gl-rooms__btn--next {
+    right: 0;
   }
 
   .gl-contacts__grid {
@@ -2377,12 +2629,31 @@ body.page-template-page-home article.page {
   }
 
   .gl-wellness__grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
   }
 }
 
 @media (max-width: 768px) {
-  .gl-rooms__grid {
+  .gl-rooms__track .gl-room-card {
+    flex: 0 0 100%;
+  }
+
+  .gl-rooms__btn {
+    width: 40px;
+    height: 40px;
+    top: 120px;
+  }
+
+  .gl-rooms__btn--prev {
+    left: 0;
+  }
+
+  .gl-rooms__btn--next {
+    right: 0;
+  }
+
+  .gl-wellness__grid {
     grid-template-columns: 1fr;
   }
 
@@ -3382,32 +3653,36 @@ body.page-template-page-home article.page {
    HERO
    ------------------------------------------------------------------ */
 .gl-banya-hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: flex-end;
   background-image: var(--banya-hero-bg);
-  background-size: cover;
-  background-position: center;
-  overflow: hidden;
+  /* align-items, display, overflow — зі shared hero base */
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  height: 100vh;
+  height: 100svh;
 }
 
-.gl-banya-hero__overlay {
-  position: absolute;
-  inset: 0;
+body:not(.ast-theme-transparent-header) .gl-banya-hero {
+  height: 85vh;
+  height: 85svh;
+}
+
+.gl-banya-hero::before {
+  content: "";
+  /* position, inset, pointer-events — зі shared hero base */
   background:
     linear-gradient(to bottom,
-      rgba(0, 0, 0, .25) 0%,
-      rgba(0, 0, 0, .10) 30%,
-      rgba(0, 0, 0, .50) 70%,
-      rgba(15, 30, 8, .85) 100%);
-  pointer-events: none;
+      rgba(0, 0, 0, .30) 0%,
+      rgba(15, 30, 8, .55) 35%,
+      rgba(15, 30, 8, .60) 65%,
+      rgba(0, 0, 0, .35) 100%);
+  z-index: 1;
 }
 
 .gl-banya-hero__content {
-  position: relative;
-  width: 100%;
-  padding: clamp(80px, 12vw, 160px) 0 clamp(60px, 8vw, 120px);
+  /* position, z-index, width — зі shared hero base */
+  padding: clamp(60px, 8vw, 100px) 0 90px;
+  margin: auto 0;
 }
 
 .gl-banya-hero__label {
@@ -3426,6 +3701,7 @@ body.page-template-page-home article.page {
   font-size: clamp(56px, 10vw, 120px);
   font-weight: 600;
   line-height: 1;
+  white-space: nowrap;
   color: #fff !important;
   margin: 0 0 24px;
   text-shadow: 0 4px 30px rgba(0, 0, 0, .4);
@@ -3456,9 +3732,48 @@ body.page-template-page-home article.page {
 
 .gl-banya-hero__actions {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   flex-wrap: wrap;
   align-items: center;
+  margin-top: 20px;
+}
+
+.gl-banya-hero__price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: #fff;
+  margin-right: 15px;
+}
+
+.gl-banya-hero__price-from {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+.gl-banya-hero__price-amount {
+  font-family: var(--font-heading);
+  font-size: clamp(32px, 4vw, 42px);
+  font-weight: 700;
+  color: var(--color-gold-light);
+  line-height: 1;
+}
+
+.gl-banya-hero__price-currency {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-gold-light);
+}
+
+.gl-banya-hero__price-unit {
+  font-family: var(--font-body);
+  font-size: 14px;
+  opacity: 0.7;
 }
 
 /* Gold button variant */
@@ -3515,27 +3830,7 @@ body.page-template-page-home article.page {
   transform: translateY(-2px);
 }
 
-/* Scroll indicator */
-.gl-banya-hero__scroll {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: rgba(255, 255, 255, .5);
-  text-decoration: none;
-}
-
-.gl-banya-hero__scroll-line {
-  display: block;
-  width: 1px;
-  height: 48px;
-  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, .6));
-  animation: gl-scroll-pulse 2s ease-in-out infinite;
-}
+/* Scroll indicator — стилі у shared hero base */
 
 @keyframes gl-scroll-pulse {
   0% {
@@ -3552,46 +3847,13 @@ body.page-template-page-home article.page {
 }
 
 /* ------------------------------------------------------------------
-   STATS STRIP
+   STATS STRIP — uses shared .gl-hero-stats-bar / .gl-hero-stat classes
    ------------------------------------------------------------------ */
-.gl-banya-stats {
-  background: var(--color-primary);
-  padding: 0;
-}
-
-.gl-banya-stats__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.gl-banya-stat {
-  padding: clamp(28px, 4vw, 48px) clamp(16px, 3vw, 40px);
-  text-align: center;
-  border-right: 1px solid rgba(255, 255, 255, .1);
-  position: relative;
-}
-
-.gl-banya-stat:last-child {
-  border-right: none;
-}
-
-.gl-banya-stat__num {
-  display: block;
-  font-family: var(--font-heading);
-  font-size: clamp(28px, 4vw, 48px);
-  font-weight: 600;
-  color: var(--color-gold-light);
-  line-height: 1;
-  margin-bottom: 8px;
-}
-
-.gl-banya-stat__label {
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, .55);
+/* Banya scroll indicator — вище stats-bar */
+.gl-banya-hero__scroll {
+  bottom: 112px;
+  z-index: 4;
+  color: rgba(255, 255, 255, .45);
 }
 
 /* ------------------------------------------------------------------
@@ -4151,28 +4413,15 @@ body.page-template-page-home article.page {
   .gl-banya-features__grid {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  .gl-banya-stats__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .gl-banya-stat:nth-child(2) {
-    border-right: none;
-  }
-
-  .gl-banya-stat:nth-child(3) {
-    border-top: 1px solid rgba(255, 255, 255, .1);
-  }
-
-  .gl-banya-stat:nth-child(4) {
-    border-top: 1px solid rgba(255, 255, 255, .1);
-    border-right: none;
-  }
 }
 
 @media (max-width: 768px) {
   .gl-banya-hero__title {
     font-size: clamp(44px, 12vw, 80px);
+  }
+
+  .gl-banya-hero__content {
+    padding: clamp(60px, 8vw, 80px) 0 80px;
   }
 
   .gl-banya-about__grid {
@@ -4205,20 +4454,12 @@ body.page-template-page-home article.page {
   .gl-banya-booking__inner {
     grid-template-columns: 1fr;
   }
-
-  .gl-banya-stats__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media (max-width: 480px) {
   .gl-banya-hero__actions {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .gl-banya-stats__grid {
-    grid-template-columns: 1fr 1fr;
   }
 
   .gl-banya-price-card {
@@ -4252,32 +4493,27 @@ body.page-template-page-home article.page {
    HERO
    ------------------------------------------------------------------ */
 .gl-gallery-hero {
-  position: relative;
-  min-height: 85vh;
-  display: flex;
-  align-items: flex-end;
   background-image: var(--gallery-hero-bg);
-  background-size: cover;
-  background-position: center;
-  overflow: hidden;
+  /* align-items: center, min-height: 100vh — зі shared hero base */
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 96px;
+  /* місце для filters-bar знизу */
 }
 
 .gl-gallery-hero__overlay {
-  position: absolute;
-  inset: 0;
+  /* position, inset, pointer-events — зі shared hero base */
   background:
     linear-gradient(to bottom,
-      rgba(0, 0, 0, .20) 0%,
-      rgba(0, 0, 0, .10) 30%,
-      rgba(0, 0, 0, .55) 70%,
-      rgba(15, 30, 8, .88) 100%);
-  pointer-events: none;
+      rgba(0, 0, 0, .30) 0%,
+      rgba(15, 30, 8, .55) 35%,
+      rgba(15, 30, 8, .60) 65%,
+      rgba(0, 0, 0, .35) 100%);
 }
 
 .gl-gallery-hero__content {
-  position: relative;
-  width: 100%;
-  padding: clamp(80px, 12vw, 160px) 0 clamp(60px, 8vw, 120px);
+  /* position, z-index, width — зі shared hero base */
+  padding: clamp(80px, 10vw, 120px) 0;
 }
 
 .gl-gallery-hero__label {
@@ -4350,25 +4586,53 @@ body.page-template-page-home article.page {
   flex-shrink: 0;
 }
 
-/* Scroll indicator (reuses banya animation) */
+/* Scroll indicator — вище filters-bar */
 .gl-gallery-hero__scroll {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: rgba(255, 255, 255, .5);
-  text-decoration: none;
+  bottom: 112px;
+  z-index: 4;
+  color: rgba(255, 255, 255, .45);
 }
 
-.gl-gallery-hero__scroll-line {
-  display: block;
-  width: 1px;
-  height: 48px;
-  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, .6));
-  animation: gl-scroll-pulse 2s ease-in-out infinite;
+/* Filter tabs bar inside hero */
+.gl-gallery-hero__filters-bar {
+  padding: 0;
+  /* gl-hero-stats-bar вже має свій стиль, tabs задають висоту */
+}
+
+.gl-gallery-filters__tabs--hero {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 16px 0;
+}
+
+/* Dark-mode tab style for hero placement */
+.gl-gallery-tab--hero {
+  border-color: rgba(255, 255, 255, .3) !important;
+  color: rgba(255, 255, 255, .8) !important;
+  background: transparent !important;
+}
+
+.gl-gallery-tab--hero:hover {
+  border-color: rgba(255, 255, 255, .7) !important;
+  color: #fff !important;
+  background: rgba(255, 255, 255, .08) !important;
+}
+
+.gl-gallery-tab--hero.is-active {
+  background: var(--color-gold) !important;
+  border-color: var(--color-gold) !important;
+  color: var(--color-primary) !important;
+}
+
+.gl-gallery-tab--hero .gl-gallery-tab__count {
+  background: rgba(255, 255, 255, .15);
+  opacity: 1;
+}
+
+.gl-gallery-tab--hero.is-active .gl-gallery-tab__count {
+  background: rgba(28, 58, 14, .2);
 }
 
 /* ------------------------------------------------------------------
@@ -4744,7 +5008,8 @@ body.page-template-page-home article.page {
 /* Bento grid container */
 .gl-room-bento {
   position: relative;
-  height: clamp(420px, 60vh, 680px);
+  height: calc(100vh - var(--gl-header-height, 80px));
+  height: calc(100svh - var(--gl-header-height, 80px));
   overflow: hidden;
   cursor: zoom-in;
 }
@@ -5141,6 +5406,7 @@ body.page-template-page-home article.page {
   box-shadow: var(--shadow-md);
   border: 1px solid var(--color-sand-dark);
   overflow: hidden;
+  padding: 0;
 }
 
 .gl-room-booking__details {
@@ -5167,48 +5433,132 @@ body.page-template-page-home article.page {
   text-align: center;
 }
 
+/* --- Booking contact inside sidebar: strip the standalone-section chrome --- */
+.gl-room-booking__inner .gl-booking-contact {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 24px 24px 20px;
+  max-width: none;
+  margin: 0;
+  text-align: center;
+}
+
+.gl-room-booking__inner .gl-booking-contact__label,
+.gl-room-booking__inner .gl-booking-contact__phone-label {
+  font-size: 11px;
+  margin-bottom: 14px;
+}
+
+.gl-room-booking__inner .gl-booking-contact__messengers {
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.gl-room-booking__inner .gl-booking-contact__icon {
+  width: 42px;
+  height: 42px;
+}
+
+.gl-room-booking__inner .gl-booking-contact__icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.gl-room-booking__inner .gl-booking-contact__call-btn {
+  padding: 12px 20px;
+  font-size: 15px;
+  width: 100%;
+  justify-content: center;
+  border-radius: var(--radius-md);
+}
+
 /* ==========================================================================
    BOOKING CONTACT COMPONENT (template-parts/booking-contact.php)
    ========================================================================== */
+/* --- Ready for Vacation Unified Section --- */
+.gl-ready-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.gl-ready-section__pattern {
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  color: var(--color-primary);
+  pointer-events: none;
+  z-index: 0;
+  transform: rotate(-15deg);
+}
+
+.gl-ready-section__content {
+  position: relative;
+  z-index: 1;
+}
+
+.gl-ready-section__actions {
+  margin-top: 32px;
+  margin-bottom: 48px;
+}
+
+.gl-ready-section__contact {
+  margin-top: 40px;
+}
+
+/* Refined Booking Contact Block */
 .gl-booking-contact {
-  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 40px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(28, 58, 14, 0.05);
+  box-shadow: var(--shadow-sm);
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .gl-booking-contact__label,
 .gl-booking-contact__phone-label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--color-text-muted);
-  margin: 0 0 12px;
-}
-
-.gl-booking-contact__phone-label {
-  margin-top: 20px;
+  margin-bottom: 24px;
 }
 
 .gl-booking-contact__messengers {
   display: flex;
-  gap: 10px;
+  gap: 16px;
+  margin-bottom: 32px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .gl-booking-contact__icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
   color: #fff;
   text-decoration: none;
-  transition: transform var(--transition), box-shadow var(--transition);
-  flex-shrink: 0;
+  transition: all var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 
 .gl-booking-contact__icon:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-md);
   text-decoration: none;
 }
@@ -5232,52 +5582,40 @@ body.page-template-page-home article.page {
 .gl-booking-contact__call-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  padding: 16px 32px;
   background: var(--color-primary);
   color: #fff !important;
   border-radius: var(--radius-xl);
-  padding: 13px 24px;
-  font-family: var(--font-body);
-  font-size: 15px;
   font-weight: 700;
+  font-size: 18px;
   text-decoration: none;
   transition: all var(--transition);
-  box-shadow: 0 4px 16px rgba(28, 58, 14, 0.25);
-  width: 100%;
-  justify-content: center;
+  box-shadow: 0 4px 16px rgba(28, 58, 14, 0.2);
 }
 
 .gl-booking-contact__call-btn:hover {
   background: var(--color-primary-light);
   transform: translateY(-2px);
-  color: #fff !important;
+  box-shadow: 0 8px 24px rgba(28, 58, 14, 0.3);
   text-decoration: none;
-  box-shadow: 0 8px 24px rgba(28, 58, 14, 0.35);
 }
 
-/* Rooms page booking block — centered layout */
-.gl-rooms-booking {
-  text-align: center;
+.gl-booking-contact__call-btn svg {
+  color: var(--color-gold);
 }
 
-.gl-rooms-booking .gl-booking-contact {
-  padding: 0;
+@media (max-width: 768px) {
+  .gl-booking-contact {
+    padding: 30px 20px;
+  }
+
+  .gl-booking-contact__call-btn {
+    font-size: 16px;
+    padding: 14px 28px;
+  }
 }
 
-.gl-rooms-booking .gl-booking-contact__label,
-.gl-rooms-booking .gl-booking-contact__phone-label {
-  text-align: center;
-}
-
-.gl-rooms-booking .gl-booking-contact__messengers {
-  justify-content: center;
-}
-
-.gl-rooms-booking .gl-booking-contact__call-btn {
-  width: auto;
-  padding: 10px 24px;
-  font-size: 13px;
-}
 
 /* ==========================================================================
    CALENDAR SECTION
@@ -5594,9 +5932,10 @@ body.page-template-page-home article.page {
     border-radius: var(--radius-md);
   }
 
-  /* Bento: reduce thumbnail row */
+  /* Bento: повна висота і на планшеті */
   .gl-room-bento {
-    height: clamp(280px, 50vw, 420px);
+    height: calc(100vh - var(--gl-header-height, 80px));
+    height: calc(100svh - var(--gl-header-height, 80px));
   }
 
   .gl-room-bento__side {
@@ -5667,64 +6006,7 @@ body.page-template-page-home article.page {
    SCROLL-TO-TOP BUTTON
    ========================================================================= */
 
-.gl-scroll-top {
-  position: fixed;
-  bottom: 32px;
-  right: 32px;
-  z-index: 999;
-  width: 52px;
-  height: 52px;
-  padding: 0;
-  border: none;
-  border-radius: 50%;
-  background: var(--color-primary, #1C3A0E);
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(16px);
-  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, background 0.2s ease;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-}
-
-.gl-scroll-top.is-visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.gl-scroll-top:hover {
-  background: var(--color-primary-light, #2D5A1A);
-}
-
-/* SVG progress ring — positioned on top of button */
-.gl-scroll-top__progress {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-  pointer-events: none;
-}
-
-.gl-scroll-top__progress-circle {
-  fill: none;
-  stroke: var(--color-gold, #C8A951);
-  stroke-width: 3;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.1s linear;
-}
-
-/* Arrow icon */
-.gl-scroll-top__icon {
-  position: relative;
-  font-size: 20px;
-  line-height: 1;
-  font-style: normal;
-}
+/* --- Removed old gl-scroll-top block here, consolidated below --- */
 
 @media (max-width: 768px) {
   .gl-scroll-top {
@@ -5795,32 +6077,30 @@ body.page-template-page-home article.page {
    HERO
    ============================ */
 .gl-rooms-hero {
-  position: relative;
-  min-height: 80vh;
-  display: flex;
+  /* min-height: 100vh, display: flex, align-items: center, overflow, background-size — зі shared hero base */
   flex-direction: column;
   justify-content: center;
   background-image: var(--rooms-hero-bg, linear-gradient(150deg, #0d2409 0%, #1C3A0E 60%, #2D5A1A 100%));
-  background-size: cover;
   background-position: center 30%;
-  overflow: hidden;
+  /* override shared base's center */
+  padding-bottom: 96px;
+  /* місце для stats-bar знизу */
 }
 
 .gl-rooms-hero__overlay {
-  position: absolute;
-  inset: 0;
+  /* position, inset, pointer-events — зі shared hero base */
   background: linear-gradient(150deg,
       rgba(10, 28, 5, .75) 0%,
       rgba(28, 58, 14, .55) 50%,
       rgba(28, 58, 14, .70) 100%);
-  pointer-events: none;
 }
 
 .gl-rooms-hero__content {
-  position: relative;
-  z-index: 2;
-  padding: clamp(100px, 14vw, 160px) 0 clamp(80px, 10vw, 120px);
+  /* position, z-index, width — зі shared hero base */
+  padding: clamp(80px, 10vw, 120px) 0 clamp(40px, 5vw, 60px);
 }
+
+/* Stats bar — uses shared .gl-hero-stats-bar class */
 
 .gl-rooms-hero__label {
   font-family: var(--font-body);
@@ -5863,69 +6143,11 @@ body.page-template-page-home article.page {
   align-items: center;
 }
 
-/* Scroll indicator */
+/* Scroll indicator — розміщений вище stats-bar */
 .gl-rooms-hero__scroll {
-  position: absolute;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
+  bottom: 112px;
+  z-index: 4;
   color: rgba(255, 255, 255, .45);
-  text-decoration: none;
-}
-
-.gl-rooms-hero__scroll-line {
-  width: 1px;
-  height: 48px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, .45), transparent);
-  animation: scroll-line 2.2s ease-in-out infinite;
-}
-
-/* ============================
-   STATS STRIP
-   ============================ */
-.gl-rooms-stats {
-  background: var(--color-primary);
-  padding: 40px 0;
-}
-
-.gl-rooms-stats__grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-}
-
-.gl-rooms-stat {
-  text-align: center;
-  padding: 16px 24px;
-  border-right: 1px solid rgba(255, 255, 255, .12);
-}
-
-.gl-rooms-stat:last-child {
-  border-right: none;
-}
-
-.gl-rooms-stat__num {
-  display: block;
-  font-family: var(--font-heading);
-  font-size: clamp(28px, 4vw, 44px);
-  font-weight: 700;
-  color: var(--color-gold-light);
-  line-height: 1;
-  margin-bottom: 8px;
-}
-
-.gl-rooms-stat__label {
-  display: block;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, .65);
 }
 
 /* ============================
@@ -6275,29 +6497,18 @@ body.page-template-page-home article.page {
   .gl-rooms-card__media {
     min-height: 300px;
   }
-
-  .gl-rooms-stats__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .gl-rooms-stat {
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, .1);
-    padding: 20px 16px;
-  }
-
-  .gl-rooms-stat:nth-child(2n) {
-    border-right: none;
-  }
-
-  .gl-rooms-stat:nth-last-child(-n+2) {
-    border-bottom: none;
-  }
 }
 
 @media (max-width: 640px) {
   .gl-rooms-hero {
-    min-height: 70vh;
+    /* min-height: 100vh залишається зі shared base */
+    padding-bottom: 160px;
+    /* більше місця для 2x2 stats grid */
+  }
+
+  .gl-rooms-hero__scroll {
+    bottom: 176px;
+    /* вище 2-рядного stats-bar */
   }
 
   .gl-rooms-hero__actions {
@@ -6327,8 +6538,1362 @@ body.page-template-page-home article.page {
     flex: 1;
     justify-content: center;
   }
+}
 
-  .gl-rooms-stats__grid {
-    grid-template-columns: 1fr 1fr;
+@media (max-width: 640px) {
+  .gl-banya-hero {
+    height: 100vh;
+    height: 100svh;
   }
+
+  .gl-banya-hero__scroll {
+    bottom: 100px;
+  }
+}
+
+/* ==========================================================================
+   CONTACT PAGE — gl-contact-page
+   ========================================================================== */
+
+/* Full-width sections on contact page */
+.gl-contact-page {
+  width: 100%;
+}
+
+.gl-contact-page>section {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+}
+
+/* --------------------------------------------------------------------------
+   Buttons: gold & outline-white (used in hero actions)
+   -------------------------------------------------------------------------- */
+.gl-btn--gold {
+  background: var(--color-gold);
+  color: var(--color-primary) !important;
+  border-color: var(--color-gold);
+  box-shadow: 0 4px 20px rgba(200, 169, 81, .35);
+}
+
+.gl-btn--gold:hover {
+  background: var(--color-gold-light);
+  border-color: var(--color-gold-light);
+  box-shadow: 0 8px 32px rgba(200, 169, 81, .5);
+  transform: translateY(-2px);
+  color: var(--color-primary) !important;
+  text-decoration: none;
+}
+
+.gl-btn--outline-white {
+  background: transparent;
+  color: #fff !important;
+  border-color: rgba(255, 255, 255, .65);
+}
+
+.gl-btn--outline-white:hover {
+  background: rgba(255, 255, 255, .12);
+  border-color: #fff;
+  color: #fff !important;
+  text-decoration: none;
+}
+
+/* --------------------------------------------------------------------------
+   Animate utility (intersection observer fade-in)
+   -------------------------------------------------------------------------- */
+.gl-animate {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+
+.gl-animate.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.gl-animate--delay-1 {
+  transition-delay: .15s;
+}
+
+.gl-animate--delay-2 {
+  transition-delay: .3s;
+}
+
+.gl-animate--delay-3 {
+  transition-delay: .45s;
+}
+
+/* --------------------------------------------------------------------------
+   Scroll-to-top button (Consolidated & Premium)
+   -------------------------------------------------------------------------- */
+.gl-scroll-top {
+  position: fixed;
+  bottom: 36px;
+  right: 28px;
+  z-index: 999;
+  width: 56px !important;
+  height: 56px !important;
+  min-width: 56px !important;
+  min-height: 56px !important;
+  max-width: 56px !important;
+  max-height: 56px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 50% !important;
+  background: var(--color-primary);
+  color: var(--color-gold);
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+  box-sizing: border-box !important;
+  transform: translateY(16px);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .25);
+  line-height: 1 !important;
+}
+
+.gl-scroll-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.gl-scroll-top:hover {
+  background: var(--color-gold);
+  color: var(--color-primary);
+  transform: translateY(-5px) scale(1.08);
+  box-shadow: 0 12px 40px rgba(200, 169, 81, .45);
+}
+
+/* SVG progress ring — absolute centered */
+.gl-scroll-top__progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 56px !important;
+  height: 56px !important;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.gl-scroll-top__progress-circle {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.1s linear;
+}
+
+/* Arrow icon — absolute centered */
+.gl-scroll-top__icon {
+  position: relative;
+  z-index: 2;
+  font-size: 22px;
+  line-height: 1;
+  font-style: normal;
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.gl-scroll-top:hover .gl-scroll-top__icon {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .gl-scroll-top {
+    bottom: 24px;
+    right: 20px;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+  }
+
+  .gl-scroll-top__progress {
+    width: 48px !important;
+    height: 48px !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   HERO
+   -------------------------------------------------------------------------- */
+.gl-contact-hero {
+  background-image: var(--contact-hero-bg);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 96px;
+  overflow: hidden;
+}
+
+.gl-contact-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg,
+      rgba(28, 58, 14, 0.8) 0%,
+      rgba(28, 58, 14, 0.4) 50%,
+      rgba(8, 15, 5, 0.85) 100%);
+  z-index: 1;
+}
+
+.gl-contact-hero__content {
+  position: relative;
+  z-index: 2;
+  padding: clamp(80px, 9vw, 100px) 0 clamp(25px, 3.5vw, 50px);
+  text-align: left;
+}
+
+.gl-contact-hero__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--color-gold-light);
+  margin-bottom: 24px;
+}
+
+.gl-contact-hero__label::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--color-gold-light);
+  opacity: 0.6;
+}
+
+.gl-contact-hero__title {
+  font-family: var(--font-heading);
+  font-size: clamp(56px, 10vw, 120px);
+  font-weight: 600;
+  line-height: 1;
+  color: #fff;
+  margin: 0 0 24px;
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.4);
+}
+
+.gl-contact-hero__title em {
+  font-style: italic;
+  color: var(--color-gold-light);
+  font-family: var(--font-heading);
+}
+
+.gl-contact-hero__subtitle {
+  font-size: clamp(16px, 2vw, 20px);
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 520px;
+  line-height: 1.8;
+  margin: 0 0 48px;
+}
+
+.gl-contact-hero__actions {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Scroll indicator */
+.gl-contact-hero__scroll {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, .45);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.gl-contact-hero__scroll-line {
+  display: block;
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, .5), transparent);
+  animation: hero-scroll-line 2.2s ease-in-out infinite;
+}
+
+@keyframes hero-scroll-line {
+
+  0%,
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scaleY(.4);
+    opacity: .3;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   CONTACT HERO — strip at bottom
+   -------------------------------------------------------------------------- */
+/* Make room for the stats-bar at bottom of contact hero */
+.gl-contact-hero {
+  height: 100vh;
+  padding-bottom: 96px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Compensate for WP admin bar */
+.admin-bar .gl-contact-hero {
+  height: calc(100vh - 32px);
+}
+
+/* Scroll indicator — вище strip */
+.gl-contact-hero__scroll {
+  bottom: 112px;
+  z-index: 4;
+}
+
+/* Contact strip items inside dark hero */
+.gl-contact-strip__item--hero {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 20px 24px !important;
+  border-right: 1px solid rgba(255, 255, 255, .12);
+  color: #fff !important;
+}
+
+.gl-contact-strip__item--hero:last-child {
+  border-right: none;
+}
+
+.gl-contact-strip__item--hero:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  background: rgba(255, 255, 255, .06) !important;
+}
+
+.gl-contact-strip__item--hero .gl-contact-strip__icon {
+  background: rgba(255, 255, 255, .10);
+  color: var(--color-gold-light);
+}
+
+.gl-contact-strip__item--hero:hover .gl-contact-strip__icon {
+  background: rgba(255, 255, 255, .18);
+  color: var(--color-gold-light);
+}
+
+.gl-contact-strip__item--hero .gl-contact-strip__label {
+  color: rgba(255, 255, 255, .6);
+}
+
+.gl-contact-strip__item--hero .gl-contact-strip__value {
+  color: #fff;
+}
+
+/* Override grid for hero: equal columns, no gap */
+.gl-contact-hero__strip .gl-contact-strip__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+/* --------------------------------------------------------------------------
+   QUICK CONTACT STRIP (beige bar below hero)
+   -------------------------------------------------------------------------- */
+.gl-contact-strip {
+  background: var(--color-sand);
+  border-bottom: 1px solid var(--color-sand-dark);
+  padding: 32px 0;
+}
+
+.gl-contact-strip__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.gl-contact-strip__item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  color: var(--color-dark);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.gl-contact-strip__item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+  color: var(--color-dark);
+}
+
+.gl-contact-strip__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  background: rgba(28, 58, 14, .07);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background var(--transition), color var(--transition);
+}
+
+.gl-contact-strip__item:hover .gl-contact-strip__icon {
+  background: var(--color-primary);
+  color: var(--color-gold-light);
+}
+
+.gl-contact-strip__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gl-contact-strip__label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.gl-contact-strip__value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-dark);
+}
+
+/* --------------------------------------------------------------------------
+   CONTACT MAIN — info + map
+   -------------------------------------------------------------------------- */
+.gl-contact-main__header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.gl-contact-main__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* Contact detail cards */
+.gl-contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gl-contact-card {
+  display: flex;
+  gap: 24px;
+  padding: 32px;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: all var(--transition);
+}
+
+.gl-contact-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(200, 169, 81, 0.2);
+}
+
+.gl-contact-card__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-sm);
+  background: rgba(28, 58, 14, .07);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gl-contact-card__content {
+  flex: 1;
+}
+
+.gl-contact-card__title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 8px;
+}
+
+.gl-contact-card__value {
+  display: block;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--color-dark);
+  text-decoration: none;
+  line-height: 1.5;
+  margin: 0 0 6px;
+}
+
+.gl-contact-card__value--phone {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  color: var(--color-primary);
+  transition: color var(--transition);
+}
+
+.gl-contact-card__value--phone:hover {
+  color: var(--color-gold);
+}
+
+a.gl-contact-card__value:hover {
+  color: var(--color-primary);
+}
+
+.gl-contact-card__hint {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Check-in / Check-out times */
+.gl-contact-card__times {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.gl-contact-card__time {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gl-contact-card__time-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.gl-contact-card__time-value {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.gl-contact-card__time-divider {
+  width: 32px;
+  height: 1px;
+  background: var(--color-sand-dark);
+  margin-top: 12px;
+}
+
+/* Map */
+.gl-contact-map {
+  position: sticky;
+  top: 110px;
+}
+
+.gl-contact-map__wrapper {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  aspect-ratio: 4 / 3;
+}
+
+.gl-contact-map__wrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.gl-contact-map__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition), gap var(--transition);
+}
+
+.gl-contact-map__link:hover {
+  color: var(--color-gold);
+  gap: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   MESSENGER CARDS
+   -------------------------------------------------------------------------- */
+.gl-contact-messengers__header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.gl-contact-messengers__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.gl-messenger-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 40px 32px;
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: #fff;
+  transition: all var(--transition-slow);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gl-messenger-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.gl-messenger-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  text-decoration: none;
+  color: #fff;
+}
+
+.gl-messenger-card:hover::before {
+  opacity: 1;
+}
+
+.gl-messenger-card--telegram {
+  background: linear-gradient(135deg, #2AABEE 0%, #229ED9 100%);
+}
+
+.gl-messenger-card--whatsapp {
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+}
+
+.gl-messenger-card--viber {
+  background: linear-gradient(135deg, #7360F2 0%, #5C4BDD 100%);
+}
+
+.gl-messenger-card--instagram {
+  background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.gl-messenger-card__icon {
+  width: 52px;
+  height: 52px;
+  background: rgba(255, 255, 255, .2);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gl-messenger-card__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.gl-messenger-card__desc {
+  font-size: 14px;
+  color: rgba(255, 255, 255, .82);
+  margin: 0;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.gl-messenger-card__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .9);
+  margin-top: auto;
+  transition: gap var(--transition);
+}
+
+.gl-messenger-card:hover .gl-messenger-card__action {
+  gap: 10px;
+}
+
+/* --------------------------------------------------------------------------
+   DIRECTIONS SECTION
+   -------------------------------------------------------------------------- */
+.gl-contact-directions__header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.gl-contact-directions__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.gl-direction-card {
+  padding: 44px 40px;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: all var(--transition);
+}
+
+.gl-direction-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.gl-direction-card__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background: rgba(28, 58, 14, .07);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.gl-direction-card__title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--color-dark);
+  margin: 0 0 16px;
+}
+
+.gl-direction-card__list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gl-direction-card__list li {
+  font-size: 15px;
+  color: var(--color-text);
+  line-height: 1.6;
+  padding-left: 16px;
+  position: relative;
+}
+
+.gl-direction-card__list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--color-gold);
+}
+
+.gl-direction-card__note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: rgba(28, 58, 14, .06);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   FAQ ACCORDION
+   -------------------------------------------------------------------------- */
+.gl-contact-faq__header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.gl-contact-faq__list {
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.gl-faq-item {
+  border-bottom: 1px solid var(--color-sand-dark);
+}
+
+.gl-faq-item:first-child {
+  border-top: 1px solid var(--color-sand-dark);
+}
+
+.gl-faq-item__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 0;
+  cursor: pointer;
+  list-style: none;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--color-dark);
+  transition: color var(--transition);
+  user-select: none;
+}
+
+.gl-faq-item__question::-webkit-details-marker {
+  display: none;
+}
+
+.gl-faq-item__question:hover {
+  color: var(--color-primary);
+}
+
+.gl-faq-item__toggle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-sand-dark);
+  flex-shrink: 0;
+  position: relative;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.gl-faq-item__toggle::before,
+.gl-faq-item__toggle::after {
+  content: '';
+  position: absolute;
+  background: var(--color-primary);
+  border-radius: 2px;
+  transition: transform var(--transition), opacity var(--transition);
+}
+
+.gl-faq-item__toggle::before {
+  width: 12px;
+  height: 1.5px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.gl-faq-item__toggle::after {
+  width: 1.5px;
+  height: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.gl-faq-item[open] .gl-faq-item__toggle {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.gl-faq-item[open] .gl-faq-item__toggle::before,
+.gl-faq-item[open] .gl-faq-item__toggle::after {
+  background: #fff;
+}
+
+.gl-faq-item[open] .gl-faq-item__toggle::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+  opacity: 0;
+}
+
+.gl-faq-item__answer {
+  padding: 0 0 24px;
+}
+
+.gl-faq-item__answer p {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.gl-faq-item__answer a {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.gl-faq-item__answer a:hover {
+  color: var(--color-gold);
+}
+
+@media (max-width: 768px) {
+  .gl-ready-section .gl-booking-contact__call-btn {
+    width: 100%;
+    max-width: 280px;
+    justify-content: center;
+  }
+}
+
+
+@media (max-width: 992px) {
+  .gl-contact-main__grid,
+  .gl-contact-directions__grid {
+    gap: 32px;
+  }
+
+  .gl-contact-hero__strip .gl-contact-strip__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .gl-contact-strip__item--hero:nth-child(2) {
+    border-right: none;
+  }
+  .gl-contact-strip__item--hero:nth-child(1),
+  .gl-contact-strip__item--hero:nth-child(2) {
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+  }
+}
+
+@media (max-width: 768px) {
+  .gl-ready-section .gl-booking-contact__call-btn {
+    width: 100%;
+    max-width: 280px;
+    justify-content: center;
+  }
+
+  .gl-contact-main__grid,
+  .gl-contact-directions__grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .gl-contact-map {
+    position: static;
+    margin-top: 16px;
+  }
+}
+
+
+@media (max-width: 540px) {
+  .gl-contact-strip__grid,
+  .gl-contact-hero__strip .gl-contact-strip__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gl-contact-strip__item--hero {
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, .12);
+  }
+  
+  .gl-contact-strip__item--hero:last-child {
+    border-bottom: none;
+  }
+
+  .gl-contact-messengers__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gl-contact-hero__actions .gl-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ==========================================================================
+   MOBILE MENU — Стильне мобільне меню в стилі Гірська Лаванда
+   ========================================================================== */
+
+/* --- Hamburger toggle button (Old & New Astra) --- */
+.ast-header-break-point .menu-toggle,
+.ast-header-break-point .main-header-menu-toggle,
+.ast-header-break-point .ast-mobile-menu-trigger-minimal {
+  border: none !important;
+  background: transparent !important;
+  padding: 8px !important;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: center !important;
+  gap: 8px;
+  outline: none !important;
+  box-shadow: none !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: 44px;
+}
+
+/* Hamburger icon — gold for contrast */
+.ast-header-break-point .menu-toggle .ast-mobile-svg,
+.ast-header-break-point .menu-toggle svg,
+.ast-header-break-point .ast-mobile-menu-trigger-minimal .ast-mobile-svg,
+.ast-header-break-point .ast-mobile-menu-trigger-minimal svg,
+.ast-header-break-point .main-header-menu-toggle .ast-mobile-svg,
+.ast-header-break-point .main-header-menu-toggle svg {
+  fill: var(--color-gold) !important;
+  color: var(--color-gold) !important;
+  width: 28px !important;
+  height: 28px !important;
+  transition: fill 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover & Active/open state — brighter gold */
+.ast-header-break-point .menu-toggle:hover svg,
+.ast-header-break-point .ast-mobile-menu-trigger-minimal:hover svg,
+.ast-main-header-nav-open .menu-toggle svg,
+.ast-main-header-nav-open .ast-mobile-menu-trigger-minimal svg {
+  fill: var(--color-gold-light) !important;
+  color: var(--color-gold-light) !important;
+}
+
+/* Hide text label if any */
+.ast-header-break-point .menu-toggle .mobile-menu-wrap,
+.ast-header-break-point .ast-mobile-menu-trigger-minimal .ast-mobile-menu-buttons-fill {
+  display: none !important;
+}
+
+/* --- Mobile header bar spacing --- */
+.ast-header-break-point .ast-primary-header-bar,
+.ast-header-break-point .ast-mobile-header-bar {
+  padding: 10px 0 !important;
+}
+
+/* --- Mobile menu dropdown panel --- */
+.ast-header-break-point #ast-mobile-header .ast-mobile-header-content,
+.ast-header-break-point .ast-mobile-header-content,
+.ast-header-break-point .ast-mobile-header-wrap .ast-mobile-header-content {
+  background: rgba(14, 34, 8, 0.98) !important;
+  backdrop-filter: blur(24px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.4) !important;
+  border-top: 1px solid rgba(200, 169, 81, .25) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .6),
+    inset 0 1px 0 rgba(200, 169, 81, .1) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  overflow-y: auto !important;
+  max-height: 0 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  z-index: 9999 !important;
+  transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.4s ease,
+    visibility 0s 0.6s !important;
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+}
+
+/* Open state — controlled by Astra body class */
+.ast-main-header-nav-open #ast-mobile-header .ast-mobile-header-content,
+.ast-main-header-nav-open .ast-mobile-header-content {
+  max-height: 90vh !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.4s ease,
+    visibility 0s 0s !important;
+}
+
+/* --- Menu items container --- */
+.ast-header-break-point #ast-mobile-header .ast-builder-menu .main-navigation,
+.ast-header-break-point .ast-mobile-header-content .ast-builder-menu {
+  padding: 20px 0 !important;
+}
+
+.ast-header-break-point .ast-mobile-header-content ul {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* --- Individual menu items --- */
+.ast-header-break-point .ast-mobile-header-content .menu-item>a,
+.ast-header-break-point .ast-mobile-header-content .menu-link {
+  color: rgba(255, 255, 255, .95) !important;
+  font-family: var(--font-body) !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  line-height: 1.4 !important;
+  padding: 16px 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  transition: color 0.3s ease, background 0.3s ease, padding-left 0.3s ease !important;
+  position: relative !important;
+  width: 100% !important;
+}
+
+/* Border on the item row */
+.ast-header-break-point .ast-mobile-header-content .main-header-menu>.menu-item,
+.ast-header-break-point .ast-mobile-header-content .ast-nav-menu>.menu-item {
+  border-bottom: 1px solid rgba(255, 255, 255, .12) !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Gold decorative left border on hover */
+.ast-header-break-point .ast-mobile-header-content .menu-item>a:hover,
+.ast-header-break-point .ast-mobile-header-content .menu-link:hover {
+  color: var(--color-gold) !important;
+  background: rgba(200, 169, 81, .08) !important;
+  padding-left: 42px !important;
+}
+
+.ast-header-break-point .ast-mobile-header-content .menu-item>a::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) scaleY(0) !important;
+  width: 4px !important;
+  height: 60% !important;
+  background: var(--color-gold) !important;
+  border-radius: 0 4px 4px 0 !important;
+  transition: transform 0.3s ease !important;
+}
+
+.ast-header-break-point .ast-mobile-header-content .menu-item>a:hover::before {
+  transform: translateY(-50%) scaleY(1) !important;
+}
+
+/* --- Sub-menu items --- */
+.ast-header-break-point .ast-mobile-header-content .sub-menu {
+  background: rgba(0, 0, 0, .2) !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: none; /* Controlled by Astra's toggle */
+}
+
+.ast-header-break-point .ast-mobile-header-content .menu-item.ast-submenu-expanded > .sub-menu {
+  display: block !important;
+}
+
+.ast-header-break-point .ast-mobile-header-content .sub-menu .menu-item>a {
+  font-size: 16px !important;
+  font-family: var(--font-body) !important;
+  font-weight: 400 !important;
+  color: rgba(255, 255, 255, .75) !important;
+  padding: 14px 32px 14px 52px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, .05) !important;
+}
+
+.ast-header-break-point .ast-mobile-header-content .sub-menu .menu-item>a:hover {
+  color: var(--color-gold-light) !important;
+  background: rgba(200, 169, 81, .06) !important;
+  padding-left: 60px !important;
+}
+
+/* Sub-menu toggle arrow */
+.ast-header-break-point .ast-mobile-header-content .ast-menu-toggle {
+  color: rgba(255, 255, 255, .5) !important;
+  border: none !important;
+  padding: 0 25px !important;
+  position: absolute !important;
+  right: 0 !important;
+  top: 0 !important;
+  height: 56px !important; /* Match top-level link height */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  z-index: 2;
+}
+
+.ast-header-break-point .ast-mobile-header-content .ast-menu-toggle svg {
+  fill: currentColor !important;
+  width: 14px !important;
+  height: 14px !important;
+  transition: transform 0.3s ease !important;
+}
+
+.ast-header-break-point .ast-mobile-header-content .menu-item.ast-submenu-expanded>.ast-menu-toggle svg {
+  transform: rotate(180deg) !important;
+}
+
+/* --- "Забронювати" button in mobile menu --- */
+.ast-header-break-point .ast-mobile-header-content .menu-item-book-now>a {
+  background: var(--color-gold) !important;
+  color: #1a330d !important; /* Dark green for contrast on gold */
+  font-family: var(--font-body) !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  letter-spacing: 0.8px !important;
+  text-align: center !important;
+  justify-content: center !important;
+  border-radius: 8px !important;
+  margin: 20px 32px 10px !important;
+  padding: 16px 28px !important;
+  border-bottom: none !important;
+  box-shadow: 0 6px 24px rgba(200, 169, 81, .35) !important;
+  width: auto !important;
+}
+
+.ast-header-break-point .ast-mobile-header-content .menu-item-book-now>a:hover {
+  background: var(--color-gold-light) !important;
+  box-shadow: 0 8px 32px rgba(200, 169, 81, .5) !important;
+  transform: translateY(-2px) !important;
+  padding-left: 28px !important;
+}
+
+.ast-header-break-point .ast-mobile-header-content .menu-item-book-now>a::before {
+  display: none !important;
+}
+
+/* --- Phone number in mobile menu --- */
+.ast-header-break-point .ast-mobile-header-content .menu-item-phone>a,
+.ast-header-break-point .ast-mobile-header-content .menu-item>a[href^="tel:"] {
+  color: var(--color-gold) !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+  justify-content: center !important;
+  padding: 18px 32px !important;
+  border-top: 1px solid rgba(200, 169, 81, .2) !important;
+  margin-top: 10px !important;
+}
+
+.ast-header-break-point .ast-mobile-header-content .menu-item-phone>a::before,
+.ast-header-break-point .ast-mobile-header-content .menu-item>a[href^="tel:"]::before {
+  display: none !important;
+}
+
+/* --- Bottom decorative line --- */
+.ast-header-break-point .ast-mobile-header-content::after {
+  content: '' !important;
+  display: block !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent) !important;
+  margin: 15px 60px 30px !important;
+  opacity: 0.4 !important;
+}
+
+/* --- Override Astra mobile header background --- */
+.ast-header-break-point .ast-main-header-wrap,
+.ast-header-break-point .main-header-bar-wrap,
+.ast-header-break-point .ast-mobile-header-wrap,
+.ast-header-break-point .ast-mobile-header-bar {
+  background: transparent !important;
+}
+
+/* Scrolled state for mobile header */
+.ast-header-break-point.gl-header-scrolled #ast-mobile-header .ast-primary-header-bar,
+.ast-header-break-point.gl-header-scrolled .ast-mobile-header-bar {
+  background: rgba(28, 58, 14, 0.98) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+}
+
+/* --- Astra resets for mobile --- */
+.ast-header-break-point .ast-mobile-header-content[style*="display: block"] {
+  display: block !important;
+}
+
+/* Reset Astra item heights and flex */
+.ast-header-break-point .ast-mobile-header-content .main-header-menu>.menu-item,
+.ast-header-break-point .ast-mobile-header-content .ast-nav-menu>.menu-item {
+  height: auto !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
+.ast-header-break-point .ast-mobile-header-content .main-header-menu,
+.ast-header-break-point .ast-mobile-header-content .ast-nav-menu {
+  flex-direction: column !important;
+  display: flex !important;
+  width: 100% !important;
+  background: transparent !important;
+}
+
+/* Fix for content-align-flex-start alignment */
+.ast-header-break-point .ast-mobile-header-content.content-align-flex-start .main-header-menu,
+.ast-header-break-point .ast-mobile-header-content.content-align-flex-start .ast-nav-menu {
+  align-items: stretch !important;
+}
+
+.ast-header-break-point .ast-mobile-header-content.content-align-flex-start .menu-item > a {
+  justify-content: flex-start !important;
+}
+
+/* --- Stagger animation for menu items --- */
+.ast-main-header-nav-open .ast-mobile-header-content .menu-item {
+  animation: gl-menu-item-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+.ast-main-header-nav-open .ast-mobile-header-content .menu-item:nth-child(1)  { animation-delay: 0.10s; }
+.ast-main-header-nav-open .ast-mobile-header-content .menu-item:nth-child(2)  { animation-delay: 0.15s; }
+.ast-main-header-nav-open .ast-mobile-header-content .menu-item:nth-child(3)  { animation-delay: 0.20s; }
+.ast-main-header-nav-open .ast-mobile-header-content .menu-item:nth-child(4)  { animation-delay: 0.25s; }
+.ast-main-header-nav-open .ast-mobile-header-content .menu-item:nth-child(5)  { animation-delay: 0.30s; }
+.ast-main-header-nav-open .ast-mobile-header-content .menu-item:nth-child(6)  { animation-delay: 0.35s; }
+.ast-main-header-nav-open .ast-mobile-header-content .menu-item:nth-child(7)  { animation-delay: 0.40s; }
+.ast-main-header-nav-open .ast-mobile-header-content .menu-item:nth-child(8)  { animation-delay: 0.45s; }
+.ast-main-header-nav-open .ast-mobile-header-content .menu-item:nth-child(9)  { animation-delay: 0.50s; }
+.ast-main-header-nav-open .ast-mobile-header-content .menu-item:nth-child(10) { animation-delay: 0.55s; }
+
+@keyframes gl-menu-item-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Disable stagger for sub-menu items */
+.ast-main-header-nav-open .ast-mobile-header-content .sub-menu .menu-item {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+/* --- Logo size on mobile --- */
+.ast-header-break-point .custom-logo,
+.ast-header-break-point .site-branding img,
+.ast-header-break-point .ast-site-logo-img {
+  max-height: 48px !important;
+}
+
+.ast-header-break-point.gl-header-scrolled .custom-logo,
+.ast-header-break-point.gl-header-scrolled .site-branding img {
+  max-height: 38px !important;
 }

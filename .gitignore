@@ -19,6 +19,7 @@ wp-config.php
 
 # Документація з паролями/креденшелами — тільки локально
 CLAUDE.md
+GEMINI.md
 girskalavanda.md
 skills-lock.json
 
