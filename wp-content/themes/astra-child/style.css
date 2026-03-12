@@ -8041,3 +8041,110 @@ a.gl-contact-card__value:hover {
   margin: 15px 60px 40px !important;
   opacity: 0.4 !important;
 }
+
+/* ==========================================================================
+   MOBILE OPTIMIZATIONS (ADDED FOR RESPONSIVENESS)
+   ========================================================================== */
+@media (max-width: 767px) {
+  /* 1. Typography & Readability */
+  .gl-hero__title,
+  .gl-banya-hero__title {
+    font-size: clamp(32px, 8vw, 44px) !important;
+  }
+  
+  .gl-section-title,
+  .gl-banya-about__title {
+    font-size: clamp(26px, 6vw, 34px) !important;
+  }
+  
+  /* Give the logo breathing room in header */
+  .custom-logo,
+  .site-branding img,
+  .ast-site-logo-img {
+    max-height: 40px !important;
+  }
+  
+  .site-branding {
+    margin-right: auto;
+  }
+
+  /* 2. Hide Unnecessary Elements */
+  /* Hide the scroll indicator on hero sections because it overlaps with buttons */
+  .gl-hero__scroll,
+  .gl-rooms-hero__scroll,
+  .gl-banya-hero__scroll,
+  .gl-gallery-hero__scroll {
+    display: none !important;
+  }
+
+  /* 3. Layout Stacking (Fixing 2-Column issues) */
+  /* Force 1-column layout for Advantages & Gallery */
+  .gl-advantages__grid,
+  .gl-gallery__grid,
+  .gl-wellness__grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .gl-gallery__grid {
+    grid-template-rows: auto !important;
+  }
+  
+  /* Reset grid span issue on mobile gallery */
+  .gl-gallery__grid > * {
+    grid-row: auto !important;
+  }
+
+  /* Stacking the buttons horizontally sometimes causes overlap, make them full width / stacked */
+  .gl-room-card__footer,
+  .gl-rooms-card__actions,
+  .gl-hero__actions,
+  .gl-banya-hero__actions {
+    flex-direction: column !important;
+    width: 100%;
+    display: flex !important;
+    align-items: stretch !important;
+  }
+  
+  .gl-room-card__footer .gl-btn,
+  .gl-rooms-card__actions .gl-btn,
+  .gl-hero__actions .gl-btn,
+  .gl-banya-hero__actions .gl-btn {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  /* Prevent last button from having margin */
+  .gl-room-card__footer .gl-btn:last-child,
+  .gl-rooms-card__actions .gl-btn:last-child,
+  .gl-hero__actions .gl-btn:last-child,
+  .gl-banya-hero__actions .gl-btn:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Form inputs in the booking widget to prevent tiny inputs */
+  .mphb_sc_search-form input[type="text"],
+  .mphb_sc_search-form select {
+    font-size: 16px !important; /* Prevents iOS auto-zoom on forms */
+  }
+
+  /* Banya & Chan massive icons */
+  .gl-banya-feature-card__icon {
+    width: 48px !important;
+    height: 48px !important;
+    margin: 0 auto 16px !important;
+  }
+  
+  .gl-banya-about__img-badge {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  
+  /* 4. Navigation Contrast */
+  /* Ensure the mobile overlay menu is very dark */
+  .ast-header-break-point #ast-mobile-header .ast-mobile-header-content,
+  .ast-header-break-point .ast-mobile-header-content,
+  #ast-mobile-popup .ast-mobile-popup-inner {
+    background: rgba(10, 25, 6, 0.99) !important;
+  }
+}
