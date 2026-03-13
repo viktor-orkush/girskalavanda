@@ -18,14 +18,14 @@ get_header();
   }
   $has_photo  = ! empty( $hero_image );
   ?>
-  <section class="gl-hero gl-hero--with-booking" id="hero" <?php if ( $has_photo ) : ?> style="--gl-hero-bg: url('<?php echo esc_url( $hero_image ); ?>')"<?php endif; ?>>
+  <section class="gl-hero" id="hero" <?php if ( $has_photo ) : ?> style="--gl-hero-bg: url('<?php echo esc_url( $hero_image ); ?>')"<?php endif; ?>>
 
     <!-- Фонове фото або градієнт -->
     <div class="gl-hero__bg"></div>
 
     <!-- Контент -->
     <div class="gl-hero__content">
-      <div class="gl-hero__badge">
+      <div class="gl-hero__badge gl-animate gl-animate--blur">
         <span class="gl-hero__badge-dot"></span>
         Відкрито до бронювання
       </div>
@@ -34,13 +34,13 @@ get_header();
       $hero_title    = get_theme_mod( 'gl_hero_title', "Гірська Лаванда" );
       $hero_subtitle = get_theme_mod( 'gl_hero_subtitle', 'Заміський комплекс · Східниця · Карпати' );
       ?>
-      <h1 class="gl-hero__title">
-        <?php echo esc_html( str_replace( "\n", " ", $hero_title ) ); ?>
+      <h1 class="gl-hero__title gl-animate gl-animate--blur">
+        <?php echo nl2br( esc_html( $hero_title ) ); ?>
       </h1>
-      <p class="gl-hero__subtitle"><?php echo esc_html( $hero_subtitle ); ?></p>
-      <p class="gl-hero__desc">Затишний відпочинок серед карпатських сосен. Традиційна баня, гарячий чан просто неба — все для справжнього відновлення</p>
+      <p class="gl-hero__subtitle gl-animate gl-animate--blur gl-animate--delay-1"><?php echo esc_html( $hero_subtitle ); ?></p>
+      <p class="gl-hero__desc gl-animate gl-animate--blur gl-animate--delay-2">Затишний відпочинок серед карпатських сосен. Традиційна баня, гарячий чан просто неба — все для справжнього відновлення</p>
 
-      <div class="gl-hero__actions">
+      <div class="gl-hero__actions gl-animate gl-animate--blur gl-animate--delay-3">
         <a href="/rooms/" class="gl-btn gl-btn--primary">
           Забронювати номер
         </a>

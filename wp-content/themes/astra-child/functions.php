@@ -272,14 +272,27 @@ function glav_sc_contacts( $atts ) {
  */
 add_shortcode( 'gl_gallery_preview', 'glav_sc_gallery_preview' );
 function glav_sc_gallery_preview( $atts ) {
-    // Отримати 5 медіафайлів (відповідає макету: 1 велике зліва + 2×2 справа)
-    $images = get_posts( [
+    // Отримати медіафайли (беремо більше, щоб відфільтрувати логотипи та кропи)
+    $all_images = get_posts( [
         'post_type'      => 'attachment',
         'post_mime_type' => 'image',
-        'posts_per_page' => 5,
+        'posts_per_page' => 12, // беремо із запасом
         'orderby'        => 'date',
         'order'          => 'DESC',
     ] );
+
+    $images = [];
+    if ( ! empty( $all_images ) ) {
+        foreach ( $all_images as $img ) {
+            $filename = basename( get_attached_file( $img->ID ) );
+            // Пропускаємо логотипи, кропи та занадто малі фото
+            if ( stripos( $filename, 'logo' ) !== false || stripos( $filename, 'cropped' ) !== false ) {
+                continue;
+            }
+            $images[] = $img;
+            if ( count( $images ) >= 5 ) break;
+        }
+    }
 
     ob_start();
     ?>

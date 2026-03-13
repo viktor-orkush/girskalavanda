@@ -705,7 +705,7 @@ h4 {
   justify-content: center;
   text-align: center;
   overflow: hidden;
-  background-color: var(--color-primary);
+  background-color: #081604;
   background-image: var(--gl-hero-bg);
   background-size: cover;
   background-position: center;
@@ -717,7 +717,7 @@ h4 {
   background:
     radial-gradient(ellipse at 65% 25%, rgba(74, 140, 63, .35) 0%, transparent 55%),
     radial-gradient(ellipse at 20% 80%, rgba(8, 22, 4, .55) 0%, transparent 50%),
-    linear-gradient(150deg, #0a1c06 0%, var(--color-primary) 40%, var(--color-primary-light) 70%, #162C09 100%);
+    linear-gradient(150deg, #0a1c06 0%, #081604 40%, #1c3a0e 70%, #162C09 100%);
   background-size: cover;
   background-position: center 30%;
   filter: brightness(.75);
@@ -747,15 +747,16 @@ h4 {
   transform: scale(1);
 }
 
-/* Gradient overlay - improved for text readability */
+/* Enhanced Gradient overlay for premium feel */
 .gl-hero::after {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(to bottom,
-      rgba(28, 58, 14, .4) 0%,
-      rgba(28, 58, 14, .2) 40%,
-      rgba(10, 22, 5, .75) 100%);
+      rgba(8, 22, 4, .5) 0%,
+      rgba(8, 22, 4, .2) 30%,
+      rgba(8, 22, 4, .4) 70%,
+      #081604 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -771,74 +772,65 @@ h4 {
 .gl-hero__badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(200, 169, 81, .15);
-  border: 1px solid var(--color-gold);
+  gap: 10px;
+  background: rgba(200, 169, 81, .1);
+  border: 1px solid rgba(200, 169, 81, .4);
   color: var(--color-gold-light);
-  padding: 8px 20px;
+  padding: 10px 24px;
   border-radius: var(--radius-xl);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
-  margin-bottom: 28px;
-  backdrop-filter: blur(8px);
+  margin-bottom: 32px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, .2);
 }
 
 .gl-hero__badge-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--color-gold);
-  animation: pulse-dot 2s infinite;
+  box-shadow: 0 0 10px var(--color-gold);
 }
 
-@keyframes pulse-dot {
-
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: .5;
-    transform: scale(1.4);
-  }
+.gl-hero__desc {
+  font-size: clamp(16px, 1.8vw, 18px);
+  color: rgba(255, 255, 255, .85);
+  margin: 0 auto 56px;
+  max-width: 600px;
+  line-height: 1.8;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, .2);
 }
 
 .gl-hero__title {
   font-family: var(--font-heading);
-  font-size: clamp(32px, 7vw, 96px);
+  font-size: clamp(40px, 8vw, 96px);
   font-weight: 700;
-  line-height: 1.1;
-  white-space: nowrap;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  white-space: normal;
   background: linear-gradient(135deg, var(--color-white) 0%, var(--color-gold-light) 50%, var(--color-gold) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin: 0 auto 10px;
-  padding: 0 0.2em;
-  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, .4));
-  max-width: 100%;
+  margin: 0 auto 15px;
+  padding: 0 0.1em;
+  filter: drop-shadow(0 4px 30px rgba(0, 0, 0, .5));
+  max-width: 1200px;
 }
 
 .gl-hero__subtitle {
   font-family: var(--font-heading);
-  font-size: clamp(18px, 3vw, 28px);
+  font-size: clamp(18px, 3.5vw, 32px);
   font-weight: 300;
   font-style: italic;
-  color: rgba(255, 255, 255, .9);
-  margin: 0 0 36px;
-  letter-spacing: 1px;
-}
-
-.gl-hero__desc {
-  font-size: 16px;
-  color: rgba(255, 255, 255, .8);
-  margin: 0 auto 48px;
-  max-width: 520px;
-  line-height: 1.8;
+  color: rgba(255, 255, 255, .95);
+  margin: 0 0 40px;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, .3);
 }
 
 .gl-hero__actions {
@@ -899,6 +891,21 @@ h4 {
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid rgba(200, 169, 81, .3);
   padding: 20px clamp(20px, 5vw, 60px);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, .3);
+}
+
+.gl-hero-search .mphb-checkout-form {
+  gap: 20px !important;
+}
+
+.gl-hero-search .mphb-datepicker-wrap input {
+  font-weight: 600 !important;
+  color: var(--color-primary) !important;
+}
+
+.gl-hero-search .mphb-datepicker-wrap label {
+  color: var(--color-gold-light) !important;
+  opacity: .9;
 }
 
 .gl-hero__booking-inner {
@@ -997,6 +1004,42 @@ h4 {
 /* Зсув hero scroll indicator коли є booking strip */
 .gl-hero--with-booking .gl-hero__scroll {
   bottom: 130px;
+}
+
+@media (max-width: 991px) {
+  .gl-hero__booking {
+    padding: 15px 20px;
+  }
+
+  .gl-hero__booking-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .gl-hero__booking-label {
+    text-align: center;
+    margin-bottom: 5px;
+  }
+
+  .gl-hero--with-booking .gl-hero__scroll {
+    display: none; /* Ховаємо скрол на планшетах/мобілках якщо є бронювання, бо забагато всього */
+  }
+}
+
+@media (max-width: 768px) {
+  .gl-hero {
+    min-height: auto;
+    padding: 120px 0 60px;
+    display: block;
+  }
+
+  .gl-hero__booking {
+    position: relative;
+    margin-top: 40px;
+    background: var(--color-primary);
+    border-top: 1px solid rgba(200, 169, 81, .2);
+  }
 }
 
 /* ==========================================================================
@@ -2121,6 +2164,11 @@ h4 {
 .gl-animate--blur {
   transform: translateY(12px);
   filter: blur(6px);
+}
+
+/* Variant: slide up from bottom */
+.gl-animate--slide-up {
+  transform: translateY(40px);
 }
 
 .gl-animate--delay-1 {
@@ -5885,8 +5933,8 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 
 @media (max-width: 640px) {
   .gl-rooms-hero {
-    padding-bottom: 160px;
-    /* більше місця для 2x2 stats grid */
+    padding-bottom: 0;
+    /* Space now handled by relative positioning of stats bar */
   }
 
   .gl-rooms-hero__scroll {
@@ -6789,6 +6837,26 @@ a.gl-contact-card__value:hover {
 }
 
 @media (max-width: 768px) {
+  .gl-contact-hero {
+    height: auto;
+    min-height: 100vh;
+    padding-bottom: 0;
+    justify-content: flex-start;
+  }
+
+  .gl-contact-hero__content {
+    padding-top: 120px;
+    padding-bottom: 60px;
+  }
+
+  .gl-contact-hero__title {
+    font-size: clamp(38px, 12vw, 64px);
+  }
+
+  .gl-contact-hero__scroll {
+    display: none; /* Hide to avoid overlap with contact strip */
+  }
+
   .gl-ready-section .gl-booking-contact__call-btn {
     width: 100%;
     max-width: 280px;
@@ -6809,18 +6877,46 @@ a.gl-contact-card__value:hover {
 
 
 @media (max-width: 540px) {
-  .gl-contact-strip__grid,
-  .gl-contact-hero__strip .gl-contact-strip__grid {
+  .gl-contact-strip__grid {
     grid-template-columns: 1fr;
   }
 
+  /* Keep contact strip in 2 columns on hero for compactness */
+  .gl-contact-hero__strip .gl-contact-strip__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .gl-contact-strip__item--hero {
+    padding: 16px 12px !important;
+    border-right: 1px solid rgba(255, 255, 255, .12) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, .12) !important;
+  }
+
+  .gl-contact-strip__item--hero:nth-child(2n) {
     border-right: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, .12);
   }
   
-  .gl-contact-strip__item--hero:last-child {
-    border-bottom: none;
+  .gl-contact-strip__item--hero:nth-last-child(-n+2) {
+    border-bottom: none !important;
+  }
+
+  .gl-contact-strip__item--hero .gl-contact-strip__icon {
+    width: 32px;
+    height: 32px;
+    gap: 0;
+  }
+
+  .gl-contact-strip__item--hero .gl-contact-strip__icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .gl-contact-strip__item--hero .gl-contact-strip__label {
+    font-size: 9px;
+  }
+
+  .gl-contact-strip__item--hero .gl-contact-strip__value {
+    font-size: 12px;
   }
 
   .gl-contact-messengers__grid {
@@ -7196,6 +7292,39 @@ a.gl-contact-card__value:hover {
   max-height: 38px !important;
 }
 
+/* --- Ensure Site Title is in one line on Mobile --- */
+.ast-header-break-point .site-branding,
+.ast-header-break-point .ast-site-identity,
+.ast-header-break-point .ast-site-title-wrap,
+#ast-mobile-popup .ast-site-identity,
+#ast-mobile-popup .ast-site-title-wrap {
+  white-space: nowrap !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  max-width: 85% !important;
+  overflow: visible !important;
+}
+
+.ast-header-break-point .ast-site-title-wrap .ast-site-title,
+.ast-header-break-point .ast-site-title-wrap .site-title,
+.ast-header-break-point .ast-site-title-wrap .ast-site-name,
+.ast-header-break-point .site-title a,
+.ast-header-break-point .ast-site-name a,
+#ast-mobile-popup .ast-site-title-wrap .ast-site-title,
+#ast-mobile-popup .ast-site-title-wrap .site-title,
+#ast-mobile-popup .site-title a {
+  font-size: clamp(14px, 4.2vw, 17px) !important;
+  line-height: 1.2 !important;
+  display: block !important;
+  margin-left: 8px !important;
+}
+
+.ast-header-break-point .site-branding .custom-logo-link {
+  flex-shrink: 0 !important;
+}
+
 /* --- Mobile Menu Fixes & HFB Improvements --- */
 #ast-mobile-popup,
 .ast-mobile-popup-drawer.active .ast-mobile-popup-inner,
@@ -7430,21 +7559,33 @@ a.gl-contact-card__value:hover {
     padding: 40px 0 60px !important;
   }
 
-  /* Ensure hero doesn't cut off content and stats bar doesn't overlap */
+  /* Ensure hero doesn't cut off content and stats bar doesn't overlap on mobile */
+  /* Targeted at all hero-like sections on the site */
+  .gl-hero,
+  .gl-rooms-hero,
+  .gl-gallery-hero,
+  .gl-contact-hero,
   .gl-banya-hero {
     height: auto !important;
     min-height: 100svh !important;
     display: flex !important;
     flex-direction: column !important;
+    padding-bottom: 0 !important;
+    justify-content: flex-start !important;
   }
 
-  .gl-hero-stats-bar {
+  .gl-hero-stats-bar,
+  .gl-gallery-hero__filters-bar,
+  .gl-contact-hero__strip {
     position: relative !important;
     bottom: auto !important;
     left: auto !important;
     right: auto !important;
     width: 100% !important;
-    background: rgba(8, 22, 4, 0.95) !important;
+    z-index: 5 !important;
+    background: #081604 !important; /* Solid background on mobile to look separate */
+    margin-top: auto !important;
+    border-top: 1px solid rgba(255, 255, 255, .1) !important;
   }
 }
 
