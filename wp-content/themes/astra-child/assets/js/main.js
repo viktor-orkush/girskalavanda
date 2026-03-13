@@ -34,7 +34,6 @@
   const animatedEls = document.querySelectorAll('.gl-animate');
 
   if (animatedEls.length && 'IntersectionObserver' in window) {
-    var animIndex = 0;
     var observer = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
@@ -74,14 +73,26 @@
   }
 
   /* =========================================================================
-     HERO PARALLAX
+     HERO PARALLAX (Optimized with requestAnimationFrame)
      ========================================================================= */
   const heroBg = document.querySelector('.gl-hero__bg');
-  if (heroBg) {
+  if (heroBg && window.innerWidth > 768) {
     heroBg.classList.add('gl-hero__bg--loaded');
-    window.addEventListener('scroll', function () {
-      const scrollY = window.scrollY;
+    
+    let scrollY = 0;
+    let ticking = false;
+
+    function updateParallax() {
       heroBg.style.transform = 'scale(1.05) translateY(' + (scrollY * 0.3) + 'px)';
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+      scrollY = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
     }, { passive: true });
   }
 
@@ -97,7 +108,6 @@
     let current = 0;
     const cards = track.querySelectorAll('.gl-testimonial-card');
     const total = cards.length;
-    const perView = window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3;
 
     function getMax() {
       return Math.max(0, total - (window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3));

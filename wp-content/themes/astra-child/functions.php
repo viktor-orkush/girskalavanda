@@ -5,6 +5,21 @@
  */
 
 // =============================================================================
+// PERFORMANCE: LCP
+// =============================================================================
+
+/**
+ * Preload the Hero Image for better LCP (Largest Contentful Paint).
+ */
+add_action( 'wp_head', 'glav_preload_hero_image', 1 );
+function  glav_preload_hero_image() {
+    $hero_image = get_theme_mod( 'gl_hero_image', '' );
+    if ( is_front_page() && $hero_image ) {
+        echo '<link rel="preload" as="image" href="' . esc_url( $hero_image ) . '" />';
+    }
+}
+
+// =============================================================================
 // ENQUEUE STYLES & SCRIPTS
 // =============================================================================
 add_action( 'wp_enqueue_scripts', 'glav_enqueue_assets' );
@@ -15,19 +30,11 @@ function glav_enqueue_assets() {
         get_template_directory_uri() . '/style.css'
     );
 
-    // Google Fonts
-    wp_enqueue_style(
-        'gl-google-fonts',
-        'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Nunito+Sans:wght@300;400;600;700;800&display=swap',
-        [],
-        null
-    );
-
-    // Child theme CSS
+    // Child theme CSS (fonts included via style.css)
     wp_enqueue_style(
         'astra-child-style',
         get_stylesheet_directory_uri() . '/style.css',
-        [ 'astra-theme-css', 'gl-google-fonts' ],
+        [ 'astra-theme-css' ],
         wp_get_theme()->get( 'Version' )
     );
 
@@ -60,7 +67,7 @@ function glav_body_classes( $classes ) {
 add_filter( 'astra_the_title_enabled', 'glav_hide_title_on_templates' );
 function glav_hide_title_on_templates( $show ) {
     // Templates assigned via WP admin
-    $hide_templates = [ 'page-home.php', 'page-room.php', 'page-sauna.php' ];
+    $hide_templates = [ 'page-home.php' ];
     foreach ( $hide_templates as $tpl ) {
         if ( is_page_template( $tpl ) ) {
             return false;
@@ -265,11 +272,11 @@ function glav_sc_contacts( $atts ) {
  */
 add_shortcode( 'gl_gallery_preview', 'glav_sc_gallery_preview' );
 function glav_sc_gallery_preview( $atts ) {
-    // Отримати 6 останніх медіафайлів з uploads
+    // Отримати 5 медіафайлів (відповідає макету: 1 велике зліва + 2×2 справа)
     $images = get_posts( [
         'post_type'      => 'attachment',
         'post_mime_type' => 'image',
-        'posts_per_page' => 6,
+        'posts_per_page' => 5,
         'orderby'        => 'date',
         'order'          => 'DESC',
     ] );
@@ -287,15 +294,14 @@ function glav_sc_gallery_preview( $atts ) {
         <div class="gl-gallery__grid gl-animate gl-animate--scale">
           <?php if ( ! empty( $images ) ) : ?>
             <?php foreach ( $images as $i => $img ) :
-              $src = wp_get_attachment_image_url( $img->ID, 'large' );
-              $full= wp_get_attachment_image_url( $img->ID, 'full' );
+              $full = wp_get_attachment_image_url( $img->ID, 'full' );
             ?>
               <div class="gl-gallery__item" data-src="<?php echo esc_url( $full ); ?>">
-                <img src="<?php echo esc_url( $src ); ?>"
-                     alt="<?php echo esc_attr( $img->post_title ); ?>"
-                     loading="lazy" />
+                <?php echo wp_get_attachment_image( $img->ID, 'large', false, [ 'loading' => 'lazy' ] ); ?>
                 <div class="gl-gallery__item-overlay">
-                  <span class="gl-gallery__item-overlay-icon">🔍</span>
+                  <span class="gl-gallery__item-overlay-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                  </span>
                 </div>
               </div>
             <?php endforeach; ?>
@@ -305,9 +311,9 @@ function glav_sc_gallery_preview( $atts ) {
             $gradients    = [
               'linear-gradient(135deg,#1C3A0E,#4a8c3f)',
               'linear-gradient(135deg,#5C1F00,#9B3A0E)',
-              'linear-gradient(135deg,#7B5EA7,#9B7FC7)',
+              'linear-gradient(135deg,#2D5A1A,#4a8c3f)',
               'linear-gradient(135deg,#0E2147,#1A3D7C)',
-              'linear-gradient(135deg,#2D5A1A,#7B5EA7)',
+              'linear-gradient(135deg,#1C3A0E,#2D5A1A)',
               'linear-gradient(135deg,#C8A951,#9B3A0E)',
             ];
             foreach ( $placeholders as $i => $ph ) : ?>
@@ -333,6 +339,90 @@ function glav_sc_gallery_preview( $atts ) {
       <img class="gl-lightbox__img" src="" alt="Фото галереї" />
       <button class="gl-lightbox__next" aria-label="Наступне фото">&#8594;</button>
     </div>
+    <?php
+    return ob_get_clean();
+}
+
+/**
+ * [gl_testimonials] — секція відгуків гостей
+ */
+add_shortcode( 'gl_testimonials', 'glav_sc_testimonials' );
+function glav_sc_testimonials( $atts ) {
+    $reviews = [
+        [
+            'name'   => 'Оксана М.',
+            'date'   => 'Лютий 2026',
+            'init'   => 'О',
+            'stars'  => 5,
+            'text'   => 'Надзвичайно затишне місце! Баня з чаном — це щось неймовірне після прогулянки у горах. Номер просторий, чисто, персонал уважний. Обовʼязково повернемося влітку.',
+        ],
+        [
+            'name'   => 'Андрій та Юля',
+            'date'   => 'Грудень 2025',
+            'init'   => 'А',
+            'stars'  => 5,
+            'text'   => 'Провели тут новорічні свята — і не пожалкували. Карпатська природа, тиша, неймовірний хамам. Відчуваєш справжній відпочинок. Дякуємо команді за увагу до деталей!',
+        ],
+        [
+            'name'   => 'Тетяна К.',
+            'date'   => 'Жовтень 2025',
+            'init'   => 'Т',
+            'stars'  => 5,
+            'text'   => 'Бронювала двоповерхові апартаменти для сімʼї. Дуже комфортно, є все необхідне. Вид на ліс з тераси — просто казка. Дітям дуже сподобалося, особливо гарячий чан під відкритим небом.',
+        ],
+        [
+            'name'   => 'Роман Г.',
+            'date'   => 'Серпень 2025',
+            'init'   => 'Р',
+            'stars'  => 5,
+            'text'   => 'Ідеальне місце для відновлення сил. Повна тиша, чисте гірське повітря і справжня карпатська атмосфера. Традиційна баня з березовими віниками — окремий вид мистецтва.',
+        ],
+    ];
+
+    ob_start();
+    ?>
+    <section class="gl-section gl-testimonials gl-section--dark" id="testimonials">
+      <div class="gl-container">
+        <div class="gl-testimonials__header gl-animate gl-animate--blur">
+          <span class="gl-section-label">Відгуки</span>
+          <h2 class="gl-section-title">Що кажуть гості</h2>
+          <p class="gl-section-subtitle">Щирі враження тих, хто вже відпочив у Гірській Лаванді</p>
+        </div>
+
+        <div class="gl-testimonials__slider">
+          <div class="gl-testimonials__track">
+            <?php foreach ( $reviews as $r ) : ?>
+            <div class="gl-testimonial-card gl-animate gl-animate--scale">
+              <span class="gl-testimonial-card__quote">&ldquo;</span>
+              <div class="gl-testimonial-card__stars"><?php echo str_repeat( '★', $r['stars'] ); ?></div>
+              <p class="gl-testimonial-card__text"><?php echo esc_html( $r['text'] ); ?></p>
+              <div class="gl-testimonial-card__author">
+                <div class="gl-testimonial-card__avatar"><?php echo esc_html( $r['init'] ); ?></div>
+                <div>
+                  <div class="gl-testimonial-card__name"><?php echo esc_html( $r['name'] ); ?></div>
+                  <div class="gl-testimonial-card__date"><?php echo esc_html( $r['date'] ); ?></div>
+                </div>
+              </div>
+            </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+
+        <nav class="gl-testimonials__nav" aria-label="Навігація відгуків">
+          <button class="gl-testimonials__btn gl-testimonials__btn--prev" aria-label="Попередній відгук">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div class="gl-testimonials__dots">
+            <?php foreach ( $reviews as $i => $r ) : ?>
+            <button class="gl-testimonials__dot<?php echo $i === 0 ? ' is-active' : ''; ?>" aria-label="Відгук <?php echo $i + 1; ?>"></button>
+            <?php endforeach; ?>
+          </div>
+          <button class="gl-testimonials__btn gl-testimonials__btn--next" aria-label="Наступний відгук">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </nav>
+      </div>
+    </section>
     <?php
     return ob_get_clean();
 }
@@ -626,10 +716,6 @@ function glav_get_contact_data( $wa_message = '' ) {
         'instagram_dm'  => $instagram_dm,
     ];
 }
-
-// =============================================================================
-// (Hamburger lines are now pure CSS — no JS injection needed)
-// =============================================================================
 
 // =============================================================================
 // SCROLL-TO-TOP BUTTON

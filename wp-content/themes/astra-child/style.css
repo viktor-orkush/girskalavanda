@@ -8,8 +8,72 @@ Template:     astra
 Version:      2.6.0
 License:      GNU General Public License v2 or later
 License URI:  http://www.gnu.org/licenses/gpl-2.0.html
-Text Domain:  astra-child
+/* Domain:  astra-child
 */
+
+/* ==========================================================================
+   LOCAL FONTS
+   ========================================================================== */
+
+/* Cormorant Garamond */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('assets/fonts/cormorant-garamond-v16-latin_cyrillic-regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('assets/fonts/cormorant-garamond-v16-latin_cyrillic-italic.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('assets/fonts/cormorant-garamond-v16-latin_cyrillic-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('assets/fonts/cormorant-garamond-v16-latin_cyrillic-700.woff2') format('woff2');
+}
+
+/* Nunito Sans */
+@font-face {
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('assets/fonts/nunito-sans-v15-latin_cyrillic-regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('assets/fonts/nunito-sans-v15-latin_cyrillic-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('assets/fonts/nunito-sans-v15-latin_cyrillic-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('assets/fonts/nunito-sans-v15-latin_cyrillic-800.woff2') format('woff2');
+}
 
 /* ==========================================================================
    DESIGN TOKENS
@@ -19,18 +83,18 @@ Text Domain:  astra-child
   /* темно-зелений (ліс) */
   --color-primary-light: #2D5A1A;
   /* зелений світліший */
-  --color-accent: #7B5EA7;
-  /* лавандовий */
-  --color-accent-light: #9B7FC7;
-  /* лавандовий світліший */
+  --color-accent: #C8A951;
+  /* золотий */
+  --color-accent-light: #E8C97B;
+  /* золотий світліший */
   --color-gold: #C8A951;
   /* золотий */
   --color-gold-light: #E8C97B;
   /* золотий світліший */
-  --color-sand: #F5F0E8;
-  /* бежевий фон */
-  --color-sand-dark: #EDE5D5;
-  /* бежевий темніший */
+  --color-sand: #F2F4F1;
+  /* гірський туман (нейтральний сіро-зелений) */
+  --color-sand-dark: #E6EAE4;
+  /* темніший відтінок туману */
   --color-white: #FFFFFF;
   --color-dark: #1A1A1A;
   --color-text: #333333;
@@ -206,7 +270,6 @@ h4 {
   border: 2px solid transparent;
   cursor: pointer;
   transition: all var(--transition);
-  white-space: nowrap;
 }
 
 /* Primary — Gold */
@@ -251,13 +314,13 @@ h4 {
   background: var(--color-accent);
   color: #fff !important;
   border-color: var(--color-accent);
-  box-shadow: 0 4px 20px rgba(123, 94, 167, .3);
+  box-shadow: 0 4px 20px rgba(200, 169, 81, .3);
 }
 
 .gl-btn--accent:hover {
   background: var(--color-accent-light);
   border-color: var(--color-accent-light);
-  box-shadow: 0 8px 32px rgba(123, 94, 167, .45);
+  box-shadow: 0 8px 32px rgba(200, 169, 81, .45);
   transform: translateY(-2px);
   color: #fff !important;
   text-decoration: none;
@@ -387,6 +450,51 @@ h4 {
   box-shadow: 0 4px 16px rgba(200, 169, 81, .4) !important;
 }
 
+/* --- New Menu Animations & Active States --- */
+.ast-nav-menu > li > a {
+  position: relative !important;
+  transition: color 0.3s ease !important;
+  padding-bottom: 8px !important; /* Space for the underline */
+}
+
+/* Sliding underline effect */
+.ast-nav-menu > li > a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--color-gold);
+  transition: width 0.3s ease, left 0.3s ease;
+  pointer-events: none;
+}
+
+/* Hover and Active states underline */
+.ast-nav-menu > li:hover > a::after,
+.ast-nav-menu > li.current-menu-item > a::after,
+.ast-nav-menu > li.current-menu-ancestor > a::after {
+  width: 100%;
+  left: 0;
+}
+
+/* Active item text color */
+.ast-nav-menu > li.current-menu-item > a,
+.ast-nav-menu > li.current-menu-ancestor > a {
+  color: var(--color-gold-light) !important;
+}
+
+/* Hover text color highlight */
+.ast-nav-menu > li:hover > a {
+  color: var(--color-gold) !important;
+}
+
+/* Disable underline for the "Book Now" button */
+.ast-nav-menu > li.menu-item-book-now > a::after {
+  display: none !important;
+}
+/* --- End Menu Animations --- */
+
 .menu-item-book-now>a:hover,
 .nav-book-now>a:hover {
   background: var(--color-gold-light) !important;
@@ -443,10 +551,18 @@ h4 {
 .ast-nav-menu .sub-menu li>a:hover,
 .main-navigation .sub-menu li>a:hover,
 .gl-header-transparent .ast-nav-menu .sub-menu a:hover,
-.gl-header-scrolled .ast-nav-menu .sub-menu a:hover {
+.gl-header-scrolled .ast-nav-menu .sub-menu a:hover,
+.ast-nav-menu .sub-menu li.current-menu-item > a {
   color: var(--color-primary) !important;
   background: var(--color-sand) !important;
   text-decoration: none !important;
+  border-left: 3px solid var(--color-gold) !important;
+  padding-left: 19px !important; /* adjust for border */
+}
+
+.ast-nav-menu .sub-menu li>a {
+  transition: all 0.3s ease !important;
+  border-left: 0 solid var(--color-gold) !important;
 }
 
 /* ==========================================================================
@@ -589,54 +705,75 @@ h4 {
   justify-content: center;
   text-align: center;
   overflow: hidden;
-  background: var(--color-primary);
+  background-color: var(--color-primary);
+  background-image: var(--gl-hero-bg);
+  background-size: cover;
+  background-position: center;
 }
 
 .gl-hero__bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(150deg, #0d2409 0%, #1C3A0E 40%, #2D5A1A 70%, #4a3070 100%);
+  background:
+    radial-gradient(ellipse at 65% 25%, rgba(74, 140, 63, .35) 0%, transparent 55%),
+    radial-gradient(ellipse at 20% 80%, rgba(8, 22, 4, .55) 0%, transparent 50%),
+    linear-gradient(150deg, #0a1c06 0%, var(--color-primary) 40%, var(--color-primary-light) 70%, #162C09 100%);
   background-size: cover;
   background-position: center 30%;
   filter: brightness(.75);
   transform: scale(1.05);
   transition: transform 8s ease;
+  z-index: 0;
+}
+
+/* Якщо є реальне фото в CSS змінній — ховаємо градієнт або адаптуємо */
+.gl-hero[style*="--gl-hero-bg"] .gl-hero__bg {
+  background: none;
+  background-color: transparent;
+}
+
+/* Subtle grain texture */
+.gl-hero__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 300px 300px;
+  pointer-events: none;
 }
 
 .gl-hero__bg--loaded {
   transform: scale(1);
 }
 
-/* Якщо є реальне фото — перекриває градієнт */
-.gl-hero__bg[style*="background-image"] {
-  filter: brightness(.55);
-}
-
-/* Gradient overlay */
+/* Gradient overlay - improved for text readability */
 .gl-hero::after {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(to bottom,
-      rgba(28, 58, 14, .2) 0%,
-      rgba(28, 58, 14, .1) 40%,
-      rgba(28, 58, 14, .5) 100%);
+      rgba(28, 58, 14, .4) 0%,
+      rgba(28, 58, 14, .2) 40%,
+      rgba(10, 22, 5, .75) 100%);
   pointer-events: none;
+  z-index: 1;
 }
 
 .gl-hero__content {
   position: relative;
   z-index: 2;
-  padding: 0 clamp(20px, 5vw, 80px);
-  max-width: 900px;
+  padding: 0 clamp(20px, 5vw, 60px);
+  max-width: 1100px;
+  overflow: visible;
 }
 
 .gl-hero__badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(200, 169, 81, .2);
-  border: 1px solid rgba(200, 169, 81, .5);
+  background: rgba(200, 169, 81, .15);
+  border: 1px solid var(--color-gold);
   color: var(--color-gold-light);
   padding: 8px 20px;
   border-radius: var(--radius-xl);
@@ -672,12 +809,18 @@ h4 {
 
 .gl-hero__title {
   font-family: var(--font-heading);
-  font-size: clamp(44px, 8vw, 96px);
+  font-size: clamp(32px, 7vw, 96px);
   font-weight: 700;
-  line-height: 1.05;
-  color: #fff;
-  margin: 0 0 10px;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, .3);
+  line-height: 1.1;
+  white-space: nowrap;
+  background: linear-gradient(135deg, var(--color-white) 0%, var(--color-gold-light) 50%, var(--color-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 auto 10px;
+  padding: 0 0.2em;
+  filter: drop-shadow(0 4px 20px rgba(0, 0, 0, .4));
+  max-width: 100%;
 }
 
 .gl-hero__subtitle {
@@ -685,14 +828,14 @@ h4 {
   font-size: clamp(18px, 3vw, 28px);
   font-weight: 300;
   font-style: italic;
-  color: rgba(255, 255, 255, .85);
+  color: rgba(255, 255, 255, .9);
   margin: 0 0 36px;
   letter-spacing: 1px;
 }
 
 .gl-hero__desc {
   font-size: 16px;
-  color: rgba(255, 255, 255, .75);
+  color: rgba(255, 255, 255, .8);
   margin: 0 auto 48px;
   max-width: 520px;
   line-height: 1.8;
@@ -715,7 +858,7 @@ h4 {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  color: rgba(255, 255, 255, .5);
+  color: rgba(255, 255, 255, .6);
   font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;
@@ -726,7 +869,7 @@ h4 {
 .gl-hero__scroll-line {
   width: 1px;
   height: 48px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, .5), transparent);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, .6), transparent);
   animation: scroll-line 2.2s ease-in-out infinite;
 }
 
@@ -744,17 +887,17 @@ h4 {
   }
 }
 
-/* Hero booking strip */
+/* Hero booking strip - Improved contrast and constants */
 .gl-hero__booking {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 3;
-  background: rgba(255, 255, 255, .10);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid rgba(255, 255, 255, .15);
+  background: rgba(28, 58, 14, .85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(200, 169, 81, .3);
   padding: 20px clamp(20px, 5vw, 60px);
 }
 
@@ -798,7 +941,7 @@ h4 {
 .gl-hero__booking .mphb-checkout-form input[type="text"],
 .gl-hero__booking .mphb-checkout-form input[type="number"],
 .gl-hero__booking .mphb-checkout-form select {
-  background: rgba(255, 255, 255, .95);
+  background: var(--color-white);
   border: 1px solid rgba(255, 255, 255, .3);
   border-radius: var(--radius-md);
   padding: 11px 16px;
@@ -821,7 +964,7 @@ h4 {
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, .7);
+  color: rgba(255, 255, 255, .8);
   margin-bottom: 6px;
   display: block;
 }
@@ -854,38 +997,6 @@ h4 {
 /* Зсув hero scroll indicator коли є booking strip */
 .gl-hero--with-booking .gl-hero__scroll {
   bottom: 130px;
-}
-
-/* Hero stats */
-.gl-hero__stats {
-  position: absolute;
-  bottom: 100px;
-  right: clamp(20px, 5vw, 80px);
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.gl-hero__stat {
-  text-align: right;
-  color: rgba(255, 255, 255, .9);
-}
-
-.gl-hero__stat-number {
-  font-family: var(--font-heading);
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--color-gold-light);
-  line-height: 1;
-}
-
-.gl-hero__stat-label {
-  font-size: 11px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, .6);
-  margin-top: 4px;
 }
 
 /* ==========================================================================
@@ -1013,7 +1124,7 @@ h4 {
   position: relative;
   height: 240px;
   overflow: hidden;
-  background: linear-gradient(135deg, #2D5A1A 0%, #4a8c3f 50%, #7B5EA7 100%);
+  background: linear-gradient(135deg, #2D5A1A 0%, #4a8c3f 50%, #C8A951 100%);
 }
 
 .gl-room-card__img img {
@@ -1158,7 +1269,7 @@ h4 {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 10% 50%, rgba(123, 94, 167, .25) 0%, transparent 50%),
+    radial-gradient(circle at 10% 50%, rgba(200, 169, 81, .25) 0%, transparent 50%),
     radial-gradient(circle at 90% 50%, rgba(200, 169, 81, .1) 0%, transparent 50%);
   pointer-events: none;
 }
@@ -1319,7 +1430,7 @@ h4 {
    ADVANTAGES / FEATURES SECTION
    ========================================================================== */
 .gl-advantages {
-  background: var(--color-sand);
+  background: var(--color-white);
 }
 
 .gl-advantages__header {
@@ -1352,7 +1463,7 @@ h4 {
   transform: translateX(-50%) scaleX(0);
   width: 60%;
   height: 3px;
-  background: linear-gradient(90deg, var(--color-accent), var(--color-gold));
+  background: linear-gradient(90deg, var(--color-primary), var(--color-gold));
   border-radius: 3px;
   transition: transform .4s cubic-bezier(.22, 1, .36, 1);
 }
@@ -1371,19 +1482,19 @@ h4 {
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-light) 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px;
   font-size: 28px;
-  box-shadow: 0 8px 24px rgba(123, 94, 167, .25);
+  box-shadow: 0 8px 24px rgba(28, 58, 14, .22);
   transition: transform var(--transition), box-shadow var(--transition);
 }
 
 .gl-advantage-item:hover .gl-advantage-item__icon {
   transform: scale(1.1) rotate(-5deg);
-  box-shadow: 0 12px 32px rgba(123, 94, 167, .35);
+  box-shadow: 0 12px 32px rgba(28, 58, 14, .35);
 }
 
 .gl-advantage-item__title {
@@ -1405,12 +1516,29 @@ h4 {
    TESTIMONIALS
    ========================================================================== */
 .gl-testimonials {
-  background: var(--color-white);
+  background: var(--color-primary);
 }
 
 .gl-testimonials__header {
   text-align: center;
   margin-bottom: 60px;
+}
+
+.gl-testimonials__header .gl-section-title {
+  color: #fff;
+}
+
+.gl-testimonials__header .gl-section-label {
+  color: var(--color-gold-light);
+}
+
+.gl-testimonials__header .gl-section-label::before,
+.gl-testimonials__header .gl-section-label::after {
+  background: var(--color-gold-light);
+}
+
+.gl-testimonials__header .gl-section-subtitle {
+  color: rgba(255, 255, 255, .7);
 }
 
 .gl-testimonials__slider {
@@ -1425,14 +1553,14 @@ h4 {
 }
 
 .gl-testimonial-card {
-  min-width: calc(33.333% - 19px);
-  background: var(--color-sand);
+  flex: 0 0 calc((100% - 56px) / 3);
+  min-width: 0;
+  background: var(--color-white);
   border-radius: var(--radius-lg);
   padding: 36px;
   position: relative;
-  border: 1px solid var(--color-sand-dark);
+  border: 1px solid rgba(255, 255, 255, .12);
   transition: transform var(--transition), box-shadow var(--transition);
-  flex-shrink: 0;
 }
 
 .gl-testimonial-card:hover {
@@ -1508,23 +1636,25 @@ h4 {
 }
 
 .gl-testimonials__btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 2px solid var(--color-accent);
-  background: transparent;
-  color: var(--color-accent);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 0 !important;
+  border-radius: 50% !important;
+  border: 2px solid var(--color-accent) !important;
+  background: transparent !important;
+  color: var(--color-accent) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  line-height: 1;
   transition: all var(--transition);
 }
 
 .gl-testimonials__btn:hover {
-  background: var(--color-accent);
-  color: #fff;
+  background: var(--color-accent) !important;
+  color: #fff !important;
 }
 
 .gl-testimonials__dots {
@@ -1533,27 +1663,31 @@ h4 {
 }
 
 .gl-testimonials__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--color-sand-dark);
-  cursor: pointer;
+  width: 10px !important;
+  height: 10px !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, .3) !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  line-height: 1;
+  flex-shrink: 0;
   transition: all var(--transition);
-  border: none;
-  padding: 0;
 }
 
 .gl-testimonials__dot.is-active {
-  background: var(--color-accent);
-  width: 24px;
-  border-radius: 4px;
+  background: var(--color-accent) !important;
+  width: 24px !important;
+  border-radius: 4px !important;
 }
 
 /* ==========================================================================
    GALLERY PREVIEW
    ========================================================================== */
 .gl-gallery {
-  background: var(--color-sand);
+  background: var(--color-white);
 }
 
 .gl-gallery__header {
@@ -1605,6 +1739,15 @@ h4 {
 .gl-gallery__item-overlay-icon {
   color: #fff;
   font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .15);
+  backdrop-filter: blur(4px);
+  border: 1.5px solid rgba(255, 255, 255, .4);
   opacity: 0;
   transform: scale(.7);
   transition: all var(--transition);
@@ -1629,7 +1772,7 @@ h4 {
   font-size: 40px;
   opacity: .3;
   color: #fff;
-  background: linear-gradient(135deg, #1C3A0E, #7B5EA7);
+  background: linear-gradient(135deg, #1C3A0E, #C8A951);
 }
 
 .gl-gallery__footer {
@@ -1651,9 +1794,6 @@ h4 {
   align-items: center;
 }
 
-.gl-contacts__info {
-  /* left column */
-}
 
 .gl-contacts__title {
   font-family: var(--font-heading);
@@ -1856,10 +1996,6 @@ h4 {
   color: rgba(255, 255, 255, .4);
 }
 
-/* ==========================================================================
-   SINGLE ROOM TYPE — REDESIGN v2
-   ========================================================================== */
-
 /* Fix: always dark header on single room type pages (no transparent hero) */
 .single-mphb_room_type.gl-header-transparent #masthead,
 .single-mphb_room_type.gl-header-transparent .site-header,
@@ -1867,361 +2003,6 @@ h4 {
   background: rgba(10, 28, 5, 0.88) !important;
   backdrop-filter: blur(12px) !important;
   box-shadow: 0 1px 0 rgba(255, 255, 255, .08) !important;
-}
-
-/* ---- Hero ---- */
-.gl-room-single {
-  background: var(--color-sand);
-}
-
-.gl-room-hero {
-  position: relative;
-  height: 88vh;
-  min-height: 580px;
-  max-height: 860px;
-  background-image: var(--hero-bg, linear-gradient(135deg, #1C3A0E 0%, #2D5A1A 100%));
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  overflow: hidden;
-}
-
-.gl-room-hero__overlay {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to bottom,
-      rgba(0, 0, 0, .5) 0%,
-      rgba(0, 0, 0, .05) 40%,
-      rgba(0, 0, 0, .55) 75%,
-      rgba(0, 0, 0, .82) 100%);
-  pointer-events: none;
-}
-
-.gl-room-hero__top {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding-top: 96px;
-  z-index: 10;
-}
-
-.gl-room-hero__back {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: rgba(255, 255, 255, .8);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  text-decoration: none;
-  transition: color var(--transition), gap var(--transition);
-  padding: 6px 0;
-}
-
-.gl-room-hero__back:hover {
-  color: var(--color-gold);
-  gap: 10px;
-}
-
-.gl-room-hero__back svg {
-  flex-shrink: 0;
-}
-
-.gl-room-hero__content {
-  position: relative;
-  z-index: 10;
-  padding-bottom: 88px;
-}
-
-.gl-room-hero__label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  color: var(--color-gold);
-  margin-bottom: 10px;
-}
-
-.gl-room-hero__title {
-  font-family: var(--font-heading);
-  font-size: clamp(36px, 5.5vw, 68px);
-  font-weight: 600;
-  color: #fff;
-  margin: 0 0 22px;
-  line-height: 1.08;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, .35);
-}
-
-.gl-room-hero__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 28px;
-}
-
-.gl-room-hero__meta-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 16px;
-  background: rgba(255, 255, 255, .13);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, .22);
-  border-radius: 100px;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1;
-}
-
-.gl-room-hero__meta-pill svg {
-  opacity: .85;
-}
-
-.gl-room-hero__price {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.gl-room-hero__price-from {
-  color: rgba(255, 255, 255, .55);
-  font-size: 14px;
-}
-
-.gl-room-hero__price-value {
-  font-family: var(--font-heading);
-  font-size: 42px;
-  font-weight: 700;
-  color: var(--color-gold);
-  line-height: 1;
-}
-
-.gl-room-hero__price-per {
-  color: rgba(255, 255, 255, .65);
-  font-size: 15px;
-}
-
-/* Thumbnail strip */
-.gl-room-hero__strip {
-  position: absolute;
-  bottom: 24px;
-  right: clamp(16px, 4vw, 64px);
-  display: flex;
-  gap: 6px;
-  z-index: 10;
-}
-
-.gl-room-hero__strip-thumb {
-  width: 84px;
-  height: 60px;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, .3);
-  cursor: pointer;
-  position: relative;
-  background: none;
-  padding: 0;
-  flex-shrink: 0;
-  transition: border-color var(--transition), transform var(--transition);
-}
-
-.gl-room-hero__strip-thumb.is-active {
-  border-color: var(--color-gold);
-}
-
-.gl-room-hero__strip-thumb:hover {
-  transform: scale(1.06);
-  border-color: rgba(255, 255, 255, .8);
-}
-
-.gl-room-hero__strip-thumb.is-active:hover {
-  border-color: var(--color-gold);
-}
-
-.gl-room-hero__strip-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-}
-
-.gl-room-hero__strip-more {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, .62);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ---- Body ---- */
-.gl-room-body {
-  background: var(--color-sand);
-  padding: clamp(56px, 7vw, 96px) 0 clamp(64px, 8vw, 112px);
-}
-
-.gl-room-body__grid {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 56px;
-  align-items: start;
-}
-
-.gl-room-body__section {
-  margin-bottom: 52px;
-}
-
-.gl-room-body__section:last-child {
-  margin-bottom: 0;
-}
-
-.gl-room-body__section-title {
-  font-family: var(--font-heading);
-  font-size: 26px;
-  font-weight: 600;
-  color: var(--color-primary);
-  margin: 0 0 20px;
-  padding-bottom: 14px;
-  border-bottom: 2px solid var(--color-sand-dark);
-}
-
-.gl-room-body__desc {
-  font-size: 16px;
-  line-height: 1.9;
-  color: var(--color-text);
-}
-
-.gl-room-body__desc p {
-  margin: 0 0 16px;
-}
-
-.gl-room-body__desc p:last-child {
-  margin-bottom: 0;
-}
-
-/* ---- Room specs grid (площа, гості, ліжко, вид) ---- */
-.gl-room-specs {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 14px;
-}
-
-.gl-room-spec {
-  background: var(--color-sand);
-  border: 1px solid var(--color-sand-dark);
-  border-radius: var(--radius-md);
-  padding: 20px 16px 18px;
-  text-align: center;
-  transition: box-shadow var(--transition), border-color var(--transition);
-}
-
-.gl-room-spec:hover {
-  border-color: var(--color-accent);
-  box-shadow: 0 4px 18px rgba(123, 94, 167, .12);
-}
-
-.gl-room-spec__icon {
-  width: 42px;
-  height: 42px;
-  background: var(--color-primary);
-  color: #fff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 12px;
-  flex-shrink: 0;
-}
-
-.gl-room-spec__value {
-  display: block;
-  font-family: var(--font-heading);
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--color-primary);
-  line-height: 1.25;
-  word-break: break-word;
-}
-
-.gl-room-spec__label {
-  display: block;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: .07em;
-  color: var(--color-text-muted);
-  margin-top: 4px;
-}
-
-/* Amenities grid — original (2-col checkmarks) */
-.gl-room-amenities {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px 28px;
-}
-
-.gl-room-amenities__item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 15px;
-  color: var(--color-text);
-}
-
-.gl-room-amenities__check {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-/* Amenities pills variant (--pills modifier) */
-.gl-room-amenities--pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  grid-template-columns: none;
-}
-
-.gl-room-amenities--pills .gl-room-amenities__item {
-  background: var(--color-white);
-  border: 1px solid var(--color-sand-dark);
-  border-radius: 100px;
-  padding: 7px 16px 7px 10px;
-  font-size: 14px;
-  gap: 7px;
-  white-space: nowrap;
-  transition: border-color var(--transition), box-shadow var(--transition);
-}
-
-.gl-room-amenities--pills .gl-room-amenities__item:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 2px 10px rgba(28, 58, 14, .1);
-}
-
-.gl-room-amenities--pills .gl-room-amenities__check {
-  width: 20px;
-  height: 20px;
-  background: var(--color-primary);
-  flex-shrink: 0;
 }
 
 /* MPHB attrs — single room page, rich styling */
@@ -2253,14 +2034,13 @@ h4 {
 .gl-room-mphb-attrs__inner .mphb-room-type-attributes li:hover,
 .gl-room-mphb-attrs__inner .mphb-room-type-attribute:hover {
   border-color: var(--color-accent);
-  box-shadow: 0 2px 12px rgba(123, 94, 167, .1);
+  box-shadow: 0 2px 12px rgba(200, 169, 81, .1);
 }
 
 .gl-room-mphb-attrs__inner .mphb-attribute-title {
   font-weight: 600;
   color: var(--color-primary);
   font-size: 13px;
-  white-space: nowrap;
 }
 
 .gl-room-mphb-attrs__inner .mphb-attribute-title::after {
@@ -2303,206 +2083,6 @@ h4 {
 .gl-room-mphb-attrs__inner dd {
   color: var(--color-text-muted);
   font-size: 13px;
-  margin: 0;
-}
-
-/* Amenities check icon — now SVG */
-.gl-room-amenities__check {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.gl-room-amenities__check svg {
-  width: 10px;
-  height: 10px;
-}
-
-/* ---- Booking sidebar ---- */
-.gl-room-booking {
-  position: sticky;
-  top: 96px;
-}
-
-.gl-room-booking__inner {
-  background: var(--color-white);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  padding: 36px 32px;
-  border: 1px solid var(--color-sand-dark);
-}
-
-.gl-room-booking__price {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin-bottom: 28px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--color-sand-dark);
-}
-
-.gl-room-booking__price-from {
-  font-size: 13px;
-  color: var(--color-text-muted);
-}
-
-.gl-room-booking__price-value {
-  font-family: var(--font-heading);
-  font-size: 46px;
-  font-weight: 700;
-  color: var(--color-primary);
-  line-height: 1;
-}
-
-.gl-room-booking__price-per {
-  font-size: 14px;
-  color: var(--color-text-muted);
-}
-
-/* CTA button — override MPHB styles */
-.gl-room-booking__inner .mphb-book-button-wrapper,
-.gl-room-booking__inner .mphb-sc-book-button-wrap {
-  margin: 0 0 24px;
-}
-
-.gl-room-booking__inner .mphb-book-button-wrapper a,
-.gl-room-booking__inner .mphb-sc-book-button-wrap a,
-.gl-room-booking__inner a.button.mphb-book-button,
-.gl-room-booking__cta {
-  display: block !important;
-  width: 100% !important;
-  text-align: center !important;
-  background: var(--color-primary) !important;
-  color: #fff !important;
-  padding: 17px 32px !important;
-  border-radius: var(--radius-xl) !important;
-  font-family: var(--font-body) !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  letter-spacing: .1em !important;
-  text-decoration: none !important;
-  border: 2px solid transparent !important;
-  cursor: pointer !important;
-  transition: all var(--transition) !important;
-  box-sizing: border-box !important;
-  margin-bottom: 24px !important;
-}
-
-.gl-room-booking__inner .mphb-book-button-wrapper a:hover,
-.gl-room-booking__inner a.button.mphb-book-button:hover,
-.gl-room-booking__cta:hover {
-  background: var(--color-gold) !important;
-  color: var(--color-primary) !important;
-  border-color: var(--color-gold) !important;
-}
-
-.gl-room-booking__details {
-  display: flex;
-  flex-direction: column;
-  gap: 11px;
-  padding: 22px 0;
-  border-top: 1px solid var(--color-sand-dark);
-}
-
-.gl-room-booking__detail-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13.5px;
-  color: var(--color-text);
-  line-height: 1.4;
-}
-
-.gl-room-booking__detail-icon {
-  font-size: 16px;
-}
-
-.gl-room-booking__detail-item strong {
-  color: var(--color-dark);
-}
-
-.gl-room-booking__contact {
-  padding-top: 20px;
-  border-top: 1px solid var(--color-sand-dark);
-}
-
-.gl-room-booking__contact-label {
-  font-size: 12px;
-  color: var(--color-text-muted);
-  margin: 0 0 6px;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-}
-
-.gl-room-booking__contact-phone {
-  font-size: 19px;
-  font-weight: 700;
-  color: var(--color-primary);
-  text-decoration: none;
-  display: block;
-  transition: color var(--transition);
-}
-
-.gl-room-booking__contact-phone:hover {
-  color: var(--color-gold);
-}
-
-/* ==========================================================================
-   SAUNA / CHAN PAGE
-   ========================================================================== */
-.gl-sauna-hero {
-  position: relative;
-  height: 60vh;
-  min-height: 480px;
-  display: flex;
-  align-items: flex-end;
-  overflow: hidden;
-}
-
-.gl-sauna-hero__bg {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #5C1F00 0%, #9B3A0E 100%);
-  background-size: cover;
-  background-position: center;
-}
-
-.gl-sauna-hero--chan .gl-sauna-hero__bg {
-  background: linear-gradient(135deg, #0E2147 0%, #1A3D7C 100%);
-}
-
-.gl-sauna-hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, .7) 0%, transparent 60%);
-}
-
-.gl-sauna-hero__content {
-  position: relative;
-  z-index: 2;
-  padding: clamp(30px, 5vw, 60px);
-  color: #fff;
-}
-
-.gl-sauna-hero__title {
-  font-family: var(--font-heading);
-  font-size: clamp(44px, 8vw, 80px);
-  font-weight: 700;
-  color: #fff;
-  margin: 0 0 8px;
-}
-
-.gl-sauna-hero__subtitle {
-  font-size: 18px;
-  color: rgba(255, 255, 255, .75);
   margin: 0;
 }
 
@@ -2564,86 +2144,6 @@ h4 {
 }
 
 /* ==========================================================================
-   LIGHTBOX
-   ========================================================================== */
-.gl-lightbox {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, .92);
-  z-index: 99999;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  backdrop-filter: blur(4px);
-}
-
-.gl-lightbox.is-open {
-  display: flex;
-}
-
-.gl-lightbox__close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, .1);
-  border: 1px solid rgba(255, 255, 255, .2);
-  color: #fff;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background var(--transition);
-}
-
-.gl-lightbox__close:hover {
-  background: rgba(255, 255, 255, .2);
-}
-
-.gl-lightbox__img {
-  max-width: 90vw;
-  max-height: 90vh;
-  object-fit: contain;
-  border-radius: var(--radius-md);
-}
-
-.gl-lightbox__prev,
-.gl-lightbox__next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255, 255, 255, .1);
-  border: 1px solid rgba(255, 255, 255, .2);
-  color: #fff;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background var(--transition);
-}
-
-.gl-lightbox__prev {
-  left: 20px;
-}
-
-.gl-lightbox__next {
-  right: 20px;
-}
-
-.gl-lightbox__prev:hover,
-.gl-lightbox__next:hover {
-  background: rgba(255, 255, 255, .25);
-}
-
-/* ==========================================================================
    ASTRA OVERRIDES
    ========================================================================== */
 
@@ -2671,10 +2171,6 @@ body.page-template-page-home article.page {
   display: none !important;
 }
 
-/* Override Elementor container max-width */
-.elementor-section.elementor-section-boxed>.elementor-container {
-  max-width: var(--max-width) !important;
-}
 
 /* ==========================================================================
    RESPONSIVE
@@ -2762,10 +2258,6 @@ body.page-template-page-home article.page {
     min-width: calc(100% - 0px);
   }
 
-  .gl-hero__stats {
-    display: none;
-  }
-
   /* Room single page */
   .gl-room-hero {
     height: 72vh;
@@ -2829,9 +2321,6 @@ body.page-template-page-home article.page {
   background: var(--color-sand);
 }
 
-/* Ensure equal-height cards within Elementor columns */
-.gl-page-rooms .elementor-widget-mphbe-room,
-.gl-page-rooms .elementor-widget-mphbe-room>.elementor-widget-container,
 .gl-page-rooms .mphb_sc_room-wrapper {
   height: 100%;
   display: block;
@@ -3085,11 +2574,6 @@ body.page-template-page-home article.page {
   box-shadow: 0 6px 20px rgba(200, 169, 81, .35) !important;
 }
 
-/* ---- Rooms section Elementor padding ---- */
-.gl-page-rooms .elementor-widget-mphbe-room {
-  padding: 0 !important;
-}
-
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
   .gl-page-rooms .mphb_room_type .mphb-loop-room-thumbnail img {
@@ -3132,148 +2616,6 @@ body.page-template-page-home article.page {
   font-size: 16px;
   line-height: 1.85;
   color: var(--color-text);
-}
-
-/* ==========================================================================
-   AVAILABILITY CALENDAR SECTION
-   ========================================================================== */
-.gl-room-calendar {
-  background: var(--color-primary);
-  padding: clamp(64px, 8vw, 104px) 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.gl-room-calendar::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 15% 60%, rgba(123, 94, 167, .22) 0%, transparent 55%),
-    radial-gradient(circle at 85% 25%, rgba(200, 169, 81, .12) 0%, transparent 50%);
-  pointer-events: none;
-}
-
-/* Header */
-.gl-room-calendar__header {
-  text-align: center;
-  margin-bottom: 48px;
-  position: relative;
-}
-
-.gl-room-calendar__header .gl-section-label {
-  color: var(--color-gold-light);
-}
-
-.gl-room-calendar__header .gl-section-label::before,
-.gl-room-calendar__header .gl-section-label::after {
-  background: var(--color-gold-light);
-}
-
-.gl-room-calendar__title {
-  font-family: var(--font-heading);
-  font-size: clamp(28px, 4vw, 52px);
-  color: #fff;
-  margin: 0 0 12px;
-  font-weight: 600;
-}
-
-.gl-room-calendar__subtitle {
-  font-size: 16px;
-  color: rgba(255, 255, 255, .55);
-  max-width: 480px;
-  margin: 0 auto;
-  line-height: 1.75;
-}
-
-/* Calendar widget wrapper */
-.gl-room-calendar__widget {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 24px;
-  position: relative;
-}
-
-/* Legend */
-.gl-room-calendar__legend {
-  display: flex;
-  justify-content: center;
-  gap: 28px;
-  margin-top: 28px;
-  flex-wrap: wrap;
-}
-
-.gl-room-calendar__legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: rgba(255, 255, 255, .55);
-  font-family: var(--font-body);
-}
-
-.gl-room-calendar__legend-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-
-.gl-room-calendar__legend-dot--available {
-  background: rgba(60, 140, 60, .2);
-  border: 1px solid rgba(100, 190, 100, .5);
-}
-
-.gl-room-calendar__legend-dot--unavailable {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, .15);
-}
-
-.gl-room-calendar__legend-dot--today {
-  background: rgba(200, 169, 81, .2);
-  border: 1px solid var(--color-gold);
-}
-
-.gl-room-calendar__legend-dot--checkin {
-  background: rgba(123, 94, 167, .2);
-  border: 1px solid rgba(123, 94, 167, .5);
-}
-
-/* CTA button under calendar */
-.gl-room-calendar__cta {
-  text-align: center;
-  margin-top: 40px;
-}
-
-.gl-room-calendar__cta .mphb-book-button-wrapper a,
-.gl-room-calendar__cta .mphb-sc-book-button-wrap a,
-.gl-room-calendar__cta a.button.mphb-book-button {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  padding: 16px 48px !important;
-  background: var(--color-gold) !important;
-  color: var(--color-primary) !important;
-  border-radius: var(--radius-xl) !important;
-  font-family: var(--font-body) !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  letter-spacing: .1em !important;
-  text-decoration: none !important;
-  border: 2px solid var(--color-gold) !important;
-  box-shadow: 0 8px 32px rgba(200, 169, 81, .4) !important;
-  transition: all var(--transition) !important;
-  width: auto !important;
-}
-
-.gl-room-calendar__cta .mphb-book-button-wrapper a:hover,
-.gl-room-calendar__cta a.button.mphb-book-button:hover {
-  background: var(--color-gold-light) !important;
-  border-color: var(--color-gold-light) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 12px 40px rgba(200, 169, 81, .55) !important;
 }
 
 /* ==========================================================================
@@ -3738,7 +3080,6 @@ body.page-template-page-home article.page {
   background-position: center bottom !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
-  /* align-items, display, overflow — зі shared hero base */
   flex-direction: column;
   justify-content: center;
   min-height: 0;
@@ -3753,7 +3094,6 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 
 .gl-banya-hero::before {
   content: "";
-  /* position, inset, pointer-events — зі shared hero base */
   background:
     linear-gradient(to bottom,
       rgba(0, 0, 0, .30) 0%,
@@ -3764,7 +3104,6 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 }
 
 .gl-banya-hero__content {
-  /* position, z-index, width — зі shared hero base */
   padding: clamp(60px, 8vw, 100px) 0 90px;
   margin: auto 0;
 }
@@ -3865,6 +3204,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   background: var(--color-gold);
   color: var(--color-primary) !important;
   border: 2px solid var(--color-gold);
+  box-shadow: 0 4px 20px rgba(200, 169, 81, .35);
   padding: 16px 36px;
   border-radius: var(--radius-sm);
   font-family: var(--font-body);
@@ -3884,15 +3224,17 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 .gl-btn--gold:hover {
   background: var(--color-gold-light);
   border-color: var(--color-gold-light);
+  color: var(--color-primary) !important;
+  text-decoration: none;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(200, 169, 81, .4);
+  box-shadow: 0 8px 32px rgba(200, 169, 81, .5);
 }
 
 /* Outline white button */
 .gl-btn--outline-white {
   background: transparent;
-  color: #fff;
-  border: 2px solid rgba(255, 255, 255, .6);
+  color: #fff !important;
+  border: 2px solid rgba(255, 255, 255, .65);
   padding: 16px 32px;
   border-radius: var(--radius-sm);
   font-family: var(--font-body);
@@ -3910,7 +3252,9 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 
 .gl-btn--outline-white:hover {
   border-color: #fff;
-  background: rgba(255, 255, 255, .1);
+  background: rgba(255, 255, 255, .15);
+  color: #fff !important;
+  text-decoration: none;
   transform: translateY(-2px);
 }
 
@@ -4042,6 +3386,23 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   margin-bottom: 60px;
 }
 
+.gl-banya-features .gl-section-title {
+  color: #fff;
+}
+
+.gl-banya-features .gl-section-label {
+  color: var(--color-gold-light);
+}
+
+.gl-banya-features .gl-section-label::before,
+.gl-banya-features .gl-section-label::after {
+  background: var(--color-gold-light);
+}
+
+.gl-banya-features .gl-section-subtitle {
+  color: rgba(255, 255, 255, .7);
+}
+
 .gl-banya-features__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -4049,10 +3410,10 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 }
 
 .gl-banya-feature-card {
-  background: var(--color-sand);
+  background: var(--color-white);
   border-radius: var(--radius-md);
   padding: 36px 28px;
-  border: 1px solid var(--color-sand-dark);
+  border: 1px solid rgba(255, 255, 255, .12);
   transition: transform var(--transition), box-shadow var(--transition),
     border-color var(--transition);
 }
@@ -4208,7 +3569,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 10% 50%, rgba(123, 94, 167, .2) 0%, transparent 50%),
+    radial-gradient(circle at 10% 50%, rgba(200, 169, 81, .2) 0%, transparent 50%),
     radial-gradient(circle at 90% 50%, rgba(200, 169, 81, .12) 0%, transparent 50%);
   pointer-events: none;
 }
@@ -4289,7 +3650,6 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   text-transform: uppercase;
   padding: 6px 18px;
   border-radius: var(--radius-xl);
-  white-space: nowrap;
 }
 
 .gl-banya-price-card__icon {
@@ -4578,7 +3938,6 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
    ------------------------------------------------------------------ */
 .gl-gallery-hero {
   background-image: var(--gallery-hero-bg);
-  /* align-items: center, min-height: 100vh — зі shared hero base */
   flex-direction: column;
   justify-content: center;
   padding-bottom: 96px;
@@ -4586,7 +3945,6 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 }
 
 .gl-gallery-hero__overlay {
-  /* position, inset, pointer-events — зі shared hero base */
   background:
     linear-gradient(to bottom,
       rgba(0, 0, 0, .30) 0%,
@@ -4596,7 +3954,6 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 }
 
 .gl-gallery-hero__content {
-  /* position, z-index, width — зі shared hero base */
   padding: clamp(80px, 10vw, 120px) 0;
 }
 
@@ -4773,9 +4130,6 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   line-height: 1;
 }
 
-.gl-gallery-tab__label {
-  white-space: nowrap;
-}
 
 .gl-gallery-tab__count {
   font-size: 11px;
@@ -4797,7 +4151,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
    ------------------------------------------------------------------ */
 .gl-gallery-main {
   padding: clamp(40px, 6vw, 80px) 0 clamp(60px, 8vw, 100px);
-  background: var(--color-sand);
+  background: var(--color-white);
 }
 
 .gl-gallery-masonry {
@@ -4960,7 +4314,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   position: absolute;
   inset: 0;
   background-image: radial-gradient(ellipse at 20% 50%, rgba(200, 169, 81, .08) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 50%, rgba(123, 94, 167, .08) 0%, transparent 60%);
+    radial-gradient(ellipse at 80% 50%, rgba(200, 169, 81, .08) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -5461,7 +4815,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 
 .gl-room-amenities__item:hover {
   border-color: var(--color-accent);
-  background: rgba(123, 94, 167, 0.06);
+  background: rgba(200, 169, 81, 0.06);
 }
 
 .gl-room-amenities__check {
@@ -5705,9 +5059,10 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
    CALENDAR SECTION
    ========================================================================== */
 .gl-room-calendar {
-  background: var(--color-sand);
+  background: var(--color-primary);
   padding: clamp(60px, 8vw, 120px) 0;
-  border-top: 1px solid var(--color-sand-dark);
+  border-top: none;
+  color: #fff;
 }
 
 .gl-room-calendar__header {
@@ -5715,17 +5070,26 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   margin-bottom: 48px;
 }
 
+.gl-room-calendar__header .gl-section-label {
+  color: var(--color-gold-light);
+}
+
+.gl-room-calendar__header .gl-section-label::before,
+.gl-room-calendar__header .gl-section-label::after {
+  background: var(--color-gold-light);
+}
+
 .gl-room-calendar__title {
   font-family: var(--font-heading);
   font-size: clamp(28px, 4vw, 48px);
   font-weight: 600;
-  color: var(--color-dark);
+  color: #fff;
   margin: 12px 0 16px;
 }
 
 .gl-room-calendar__subtitle {
   font-size: 16px;
-  color: var(--color-text-muted);
+  color: rgba(255, 255, 255, .72);
   max-width: 480px;
   margin: 0 auto;
   line-height: 1.7;
@@ -5756,7 +5120,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: var(--color-text-muted);
+  color: rgba(255, 255, 255, .7);
   font-weight: 500;
 }
 
@@ -5956,8 +5320,6 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   pointer-events: none;
 }
 
-/* (scroll animations consolidated — see main block above) */
-
 /* ==========================================================================
    RESPONSIVE — Single Room Page
    ========================================================================== */
@@ -6066,8 +5428,6 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
    SCROLL-TO-TOP BUTTON
    ========================================================================= */
 
-/* --- Removed old gl-scroll-top block here, consolidated below --- */
-
 @media (max-width: 768px) {
   .gl-scroll-top {
     bottom: 20px;
@@ -6091,36 +5451,6 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   box-shadow: 0 1px 0 rgba(255, 255, 255, .08) !important;
 }
 
-/* Button variants used on rooms page */
-.gl-btn--gold {
-  background: var(--color-gold);
-  color: var(--color-primary) !important;
-  border-color: var(--color-gold);
-  box-shadow: 0 4px 20px rgba(200, 169, 81, .35);
-}
-
-.gl-btn--gold:hover {
-  background: var(--color-gold-light);
-  border-color: var(--color-gold-light);
-  box-shadow: 0 8px 32px rgba(200, 169, 81, .5);
-  transform: translateY(-2px);
-  color: var(--color-primary) !important;
-  text-decoration: none;
-}
-
-.gl-btn--outline-white {
-  background: transparent;
-  color: #fff !important;
-  border-color: rgba(255, 255, 255, .7);
-}
-
-.gl-btn--outline-white:hover {
-  background: rgba(255, 255, 255, .15);
-  border-color: #fff;
-  color: #fff !important;
-  text-decoration: none;
-}
-
 /* ---- Page wrapper ---- */
 .gl-rooms-page {
   width: 100%;
@@ -6137,18 +5467,15 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
    HERO
    ============================ */
 .gl-rooms-hero {
-  /* min-height: 100vh, display: flex, align-items: center, overflow, background-size — зі shared hero base */
   flex-direction: column;
   justify-content: center;
   background-image: var(--rooms-hero-bg, linear-gradient(150deg, #0d2409 0%, #1C3A0E 60%, #2D5A1A 100%));
   background-position: center 30%;
-  /* override shared base's center */
   padding-bottom: 96px;
   /* місце для stats-bar знизу */
 }
 
 .gl-rooms-hero__overlay {
-  /* position, inset, pointer-events — зі shared hero base */
   background: linear-gradient(150deg,
       rgba(10, 28, 5, .75) 0%,
       rgba(28, 58, 14, .55) 50%,
@@ -6156,11 +5483,8 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 }
 
 .gl-rooms-hero__content {
-  /* position, z-index, width — зі shared hero base */
   padding: clamp(80px, 10vw, 120px) 0 clamp(40px, 5vw, 60px);
 }
-
-/* Stats bar — uses shared .gl-hero-stats-bar class */
 
 .gl-rooms-hero__label {
   font-family: var(--font-body);
@@ -6214,7 +5538,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
    ROOMS LISTING
    ============================ */
 .gl-rooms-listing {
-  background: var(--color-sand);
+  background: var(--color-white);
 }
 
 .gl-rooms-listing__header {
@@ -6258,7 +5582,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   position: relative;
   min-height: 380px;
   overflow: hidden;
-  background: linear-gradient(135deg, #1C3A0E 0%, #7B5EA7 100%);
+  background: linear-gradient(135deg, #1C3A0E 0%, #C8A951 100%);
 }
 
 .gl-rooms-card__img-link {
@@ -6497,7 +5821,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 20% 50%, rgba(123, 94, 167, .2) 0%, transparent 50%),
+    radial-gradient(circle at 20% 50%, rgba(200, 169, 81, .2) 0%, transparent 50%),
     radial-gradient(circle at 80% 50%, rgba(200, 169, 81, .12) 0%, transparent 50%);
   pointer-events: none;
 }
@@ -6561,7 +5885,6 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 
 @media (max-width: 640px) {
   .gl-rooms-hero {
-    /* min-height: 100vh залишається зі shared base */
     padding-bottom: 160px;
     /* більше місця для 2x2 stats grid */
   }
@@ -6600,15 +5923,9 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   }
 }
 
+/* REMOVED: Redundant gl-banya-hero height styles to avoid conflict with main mobile optimizations */
 @media (max-width: 640px) {
-  .gl-banya-hero {
-    height: 100vh;
-    height: 100svh;
-  }
-
-  .gl-banya-hero__scroll {
-    bottom: 100px;
-  }
+  /* ... styles moved to bottom section ... */
 }
 
 /* ==========================================================================
@@ -6624,40 +5941,6 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
 }
-
-/* --------------------------------------------------------------------------
-   Buttons: gold & outline-white (used in hero actions)
-   -------------------------------------------------------------------------- */
-.gl-btn--gold {
-  background: var(--color-gold);
-  color: var(--color-primary) !important;
-  border-color: var(--color-gold);
-  box-shadow: 0 4px 20px rgba(200, 169, 81, .35);
-}
-
-.gl-btn--gold:hover {
-  background: var(--color-gold-light);
-  border-color: var(--color-gold-light);
-  box-shadow: 0 8px 32px rgba(200, 169, 81, .5);
-  transform: translateY(-2px);
-  color: var(--color-primary) !important;
-  text-decoration: none;
-}
-
-.gl-btn--outline-white {
-  background: transparent;
-  color: #fff !important;
-  border-color: rgba(255, 255, 255, .65);
-}
-
-.gl-btn--outline-white:hover {
-  background: rgba(255, 255, 255, .12);
-  border-color: #fff;
-  color: #fff !important;
-  text-decoration: none;
-}
-
-/* (scroll animations consolidated — see main block above) */
 
 /* --------------------------------------------------------------------------
    Scroll-to-top button (Consolidated & Premium)
@@ -6764,7 +6047,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   background-size: cover;
   background-position: center;
   position: relative;
-  min-height: 80vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -6844,10 +6127,10 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 /* Scroll indicator */
 .gl-contact-hero__scroll {
   position: absolute;
-  bottom: 40px;
+  bottom: 112px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 2;
+  z-index: 4;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -6879,26 +6162,9 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   }
 }
 
-/* --------------------------------------------------------------------------
-   CONTACT HERO — strip at bottom
-   -------------------------------------------------------------------------- */
-/* Make room for the stats-bar at bottom of contact hero */
-.gl-contact-hero {
-  height: 100vh;
-  padding-bottom: 96px;
-  flex-direction: column;
-  justify-content: center;
-}
-
 /* Compensate for WP admin bar */
 .admin-bar .gl-contact-hero {
   height: calc(100vh - 32px);
-}
-
-/* Scroll indicator — вище strip */
-.gl-contact-hero__scroll {
-  bottom: 112px;
-  z-index: 4;
 }
 
 /* Contact strip items inside dark hero */
@@ -7297,6 +6563,12 @@ a.gl-contact-card__value:hover {
 /* --------------------------------------------------------------------------
    DIRECTIONS SECTION
    -------------------------------------------------------------------------- */
+.gl-contact-directions .gl-section-title { color: #fff; }
+.gl-contact-directions .gl-section-label { color: var(--color-gold-light); }
+.gl-contact-directions .gl-section-label::before,
+.gl-contact-directions .gl-section-label::after { background: var(--color-gold-light); }
+.gl-contact-directions .gl-section-subtitle { color: rgba(255, 255, 255, .7); }
+
 .gl-contact-directions__header {
   text-align: center;
   margin-bottom: 56px;
@@ -7498,13 +6770,6 @@ a.gl-contact-card__value:hover {
   color: var(--color-gold);
 }
 
-@media (max-width: 768px) {
-  .gl-ready-section .gl-booking-contact__call-btn {
-    width: 100%;
-    max-width: 280px;
-    justify-content: center;
-  }
-}
 
 
 @media (max-width: 992px) {
@@ -7519,9 +6784,6 @@ a.gl-contact-card__value:hover {
   
   .gl-contact-strip__item--hero:nth-child(2) {
     border-right: none;
-  }
-  .gl-contact-strip__item--hero:nth-child(1),
-  .gl-contact-strip__item--hero:nth-child(2) {
     border-bottom: 1px solid rgba(255, 255, 255, .12);
   }
 }
@@ -8080,6 +7342,19 @@ a.gl-contact-card__value:hover {
   .gl-hero__title,
   .gl-banya-hero__title {
     font-size: clamp(32px, 8vw, 44px) !important;
+    margin-bottom: 12px !important;
+    white-space: normal !important;
+    line-height: 1.2 !important;
+  }
+
+  .gl-banya-hero__label,
+  .gl-banya-hero__desc {
+    display: none !important;
+  }
+
+  .gl-banya-hero__subtitle {
+    font-size: 13px !important;
+    margin-bottom: 16px !important;
   }
   
   .gl-section-title,
@@ -8133,6 +7408,12 @@ a.gl-contact-card__value:hover {
     width: 100%;
     display: flex !important;
     align-items: stretch !important;
+    margin-top: 15px !important;
+  }
+
+  .gl-banya-hero__price {
+    margin: 0 0 15px 0 !important;
+    justify-content: center;
   }
   
   .gl-room-card__footer .gl-btn,
@@ -8141,41 +7422,29 @@ a.gl-contact-card__value:hover {
   .gl-banya-hero__actions .gl-btn {
     width: 100%;
     justify-content: center;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
+    padding: 12px 24px !important; /* Slightly smaller padding on mobile */
   }
 
-  /* Prevent last button from having margin */
-  .gl-room-card__footer .gl-btn:last-child,
-  .gl-rooms-card__actions .gl-btn:last-child,
-  .gl-hero__actions .gl-btn:last-child,
-  .gl-banya-hero__actions .gl-btn:last-child {
-    margin-bottom: 0;
+  .gl-banya-hero__content {
+    padding: 40px 0 60px !important;
   }
 
-  /* Form inputs in the booking widget to prevent tiny inputs */
-  .mphb_sc_search-form input[type="text"],
-  .mphb_sc_search-form select {
-    font-size: 16px !important; /* Prevents iOS auto-zoom on forms */
+  /* Ensure hero doesn't cut off content and stats bar doesn't overlap */
+  .gl-banya-hero {
+    height: auto !important;
+    min-height: 100svh !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 
-  /* Banya & Chan massive icons */
-  .gl-banya-feature-card__icon {
-    width: 48px !important;
-    height: 48px !important;
-    margin: 0 auto 16px !important;
-  }
-  
-  .gl-banya-about__img-badge {
-    width: 60px !important;
-    height: 60px !important;
-  }
-  
-  /* 4. Navigation Contrast */
-  /* Ensure the mobile overlay menu is very dark */
-  .ast-header-break-point #ast-mobile-header .ast-mobile-header-content,
-  .ast-header-break-point .ast-mobile-header-content,
-  #ast-mobile-popup .ast-mobile-popup-inner {
-    background: rgba(10, 25, 6, 0.99) !important;
+  .gl-hero-stats-bar {
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    background: rgba(8, 22, 4, 0.95) !important;
   }
 }
 
@@ -8198,7 +7467,7 @@ a.gl-contact-card__value:hover {
   content: '';
   position: absolute;
   inset: -1px;
-  background: linear-gradient(135deg, rgba(200, 169, 81, .3), transparent 50%, rgba(123, 94, 167, .2));
+  background: linear-gradient(135deg, rgba(200, 169, 81, .3), transparent 50%, rgba(200, 169, 81, .2));
   border-radius: inherit;
   opacity: 0;
   transition: opacity .4s ease;
@@ -8288,7 +7557,7 @@ a.gl-contact-card__value:hover {
 
 .gl-advantage-item:hover .gl-advantage-item__icon {
   animation: floatIcon 1.5s ease-in-out infinite;
-  box-shadow: 0 16px 40px rgba(123, 94, 167, .4);
+  box-shadow: 0 16px 40px rgba(200, 169, 81, .4);
 }
 
 /* Smooth link underline animation */

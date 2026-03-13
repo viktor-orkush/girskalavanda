@@ -24,7 +24,7 @@ $contact = function_exists('glav_get_contact_data')
     : [];
 ?>
 
-<section class="gl-section gl-section--sand gl-ready-section" id="booking-section-ready">
+<section class="gl-section gl-section--white gl-ready-section" id="booking-section-ready">
 
 
     <div class="gl-container">

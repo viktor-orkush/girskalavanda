@@ -226,7 +226,7 @@ $phone_disp = get_theme_mod('gl_phone_display', $phone);
     <div class="gl-gallery-hero__content">
       <div class="gl-container">
         <p class="gl-gallery-hero__label">Фотогалерея · Гірська Лаванда</p>
-        <h1 class="gl-gallery-hero__title">Наша<br><em>Галерея</em></h1>
+        <h1 class="gl-gallery-hero__title">Наша <em>Галерея</em></h1>
         <p class="gl-gallery-hero__subtitle">Поглянь на комплекс, номери, баню і карпатську природу очима наших гостей
         </p>
       </div>
@@ -322,9 +322,9 @@ else: ?>
   $placeholders = [
     ['icon' => '🏨', 'title' => 'Комплекс', 'gradient' => 'linear-gradient(135deg,#1C3A0E,#4a8c3f)', 'cat' => 'hotel'],
     ['icon' => '🛏️', 'title' => 'Номери', 'gradient' => 'linear-gradient(135deg,#5C1F00,#9B3A0E)', 'cat' => 'rooms'],
-    ['icon' => '🌲', 'title' => 'Природа', 'gradient' => 'linear-gradient(135deg,#7B5EA7,#9B7FC7)', 'cat' => 'nature'],
+    ['icon' => '🌲', 'title' => 'Природа', 'gradient' => 'linear-gradient(135deg,#2D5A1A,#4a8c3f)', 'cat' => 'nature'],
     ['icon' => '🧖', 'title' => 'Баня', 'gradient' => 'linear-gradient(135deg,#0E2147,#1A3D7C)', 'cat' => 'wellness'],
-    ['icon' => '🏔️', 'title' => 'Карпати', 'gradient' => 'linear-gradient(135deg,#2D5A1A,#7B5EA7)', 'cat' => 'nature'],
+    ['icon' => '🏔️', 'title' => 'Карпати', 'gradient' => 'linear-gradient(135deg,#1C3A0E,#2D5A1A)', 'cat' => 'nature'],
     ['icon' => '🌸', 'title' => 'Лаванда', 'gradient' => 'linear-gradient(135deg,#C8A951,#9B3A0E)', 'cat' => 'hotel'],
     ['icon' => '🔥', 'title' => 'Чан', 'gradient' => 'linear-gradient(135deg,#7B2500,#C0440E)', 'cat' => 'wellness'],
     ['icon' => '🏡', 'title' => 'Тераса', 'gradient' => 'linear-gradient(135deg,#1C3A0E,#C8A951)', 'cat' => 'rooms'],

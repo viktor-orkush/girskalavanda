@@ -151,7 +151,7 @@ endif; ?>
   <!-- ======================================================================
        ABOUT — описово з фото
        ====================================================================== -->
-  <section class="gl-banya-about gl-section gl-section--sand" id="chan-about">
+  <section class="gl-banya-about gl-section gl-section--white" id="chan-about">
     <div class="gl-container">
       <div class="gl-banya-about__grid">
 
@@ -235,7 +235,7 @@ endif; ?>
   <!-- ======================================================================
        BENEFITS — переваги чану
        ====================================================================== -->
-  <section class="gl-banya-features gl-section gl-section--white" id="chan-benefits">
+  <section class="gl-banya-features gl-section gl-section--dark" id="chan-benefits">
     <div class="gl-container">
       <div class="gl-banya-features__header gl-center gl-animate">
         <span class="gl-section-label">Переваги</span>
@@ -310,7 +310,7 @@ endif; ?>
        GALLERY
        ====================================================================== -->
   <?php if (!empty($gallery_imgs)): ?>
-  <section class="gl-banya-gallery gl-section gl-section--sand" id="chan-gallery">
+  <section class="gl-banya-gallery gl-section gl-section--white" id="chan-gallery">
     <div class="gl-container">
       <div class="gl-banya-gallery__header gl-center gl-animate">
         <span class="gl-section-label">Фотогалерея</span>

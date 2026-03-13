@@ -65,7 +65,7 @@ $icon_check = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path
     <div class="gl-contact-hero__content">
       <div class="gl-container">
         <p class="gl-contact-hero__label">Гірська Лаванда · Східниця</p>
-        <h1 class="gl-contact-hero__title">Зв'яжіться<br><em>з нами</em></h1>
+        <h1 class="gl-contact-hero__title">Зв'яжіться <em>з нами</em></h1>
         <p class="gl-contact-hero__subtitle">Ми завжди раді допомогти з бронюванням та відповісти на ваші запитання</p>
 
         <div class="gl-contact-hero__actions">
@@ -162,7 +162,7 @@ endif; ?>
   <!-- ======================================================================
        CONTACT INFO + MAP
        ====================================================================== -->
-  <section class="gl-contact-main gl-section gl-section--sand" id="contact-info">
+  <section class="gl-contact-main gl-section gl-section--white" id="contact-info">
     <div class="gl-container">
 
       <div class="gl-contact-main__header gl-animate gl-center">
@@ -240,7 +240,7 @@ endif; ?>
   <!-- ======================================================================
        HOW TO GET HERE
        ====================================================================== -->
-  <section class="gl-contact-directions gl-section gl-section--sand" id="directions">
+  <section class="gl-contact-directions gl-section gl-section--dark" id="directions">
     <div class="gl-container">
 
       <div class="gl-contact-directions__header gl-animate gl-center">

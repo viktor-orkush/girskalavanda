@@ -91,7 +91,7 @@ if ($ig_raw) {
     <div class="gl-rooms-hero__content">
       <div class="gl-container">
         <p class="gl-rooms-hero__label">Розміщення · Гірська Лаванда</p>
-        <h1 class="gl-rooms-hero__title">Наші<br><em>Номери</em></h1>
+        <h1 class="gl-rooms-hero__title">Наші <em>Номери</em></h1>
         <p class="gl-rooms-hero__subtitle">Затишні номери серед карпатських сосен — від компактних до розкішних
           двоповерхових апартаментів з терасою</p>
         <div class="gl-rooms-hero__actions">
@@ -153,7 +153,7 @@ endif; ?>
   <!-- ======================================================================
        ROOM TYPES LISTING
        ====================================================================== -->
-  <section class="gl-section gl-rooms-listing gl-section--sand" id="rooms-list">
+  <section class="gl-section gl-rooms-listing gl-section--white" id="rooms-list">
     <div class="gl-container">
       <div class="gl-rooms-listing__header gl-animate">
         <span class="gl-section-label">Номери</span>

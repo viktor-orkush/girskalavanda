@@ -1,8 +1,0 @@
-{
-  "apiVersion": 2,
-  "title": "Accommodation Type Template",
-  "name": "motopress-hotel-booking/template",
-  "category": "hotel-booking",
-  "icon": "admin-home",
-  "editorScript": "file:./index.js"
-}

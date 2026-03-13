@@ -13,12 +13,15 @@ get_header();
        ===================================================================== -->
   <?php
   $hero_image = get_theme_mod( 'gl_hero_image', '' );
+  if ( ! $hero_image ) {
+      $hero_image = get_the_post_thumbnail_url( get_the_ID(), 'full' );
+  }
   $has_photo  = ! empty( $hero_image );
   ?>
-  <section class="gl-hero gl-hero--with-booking" id="hero">
+  <section class="gl-hero gl-hero--with-booking" id="hero" <?php if ( $has_photo ) : ?> style="--gl-hero-bg: url('<?php echo esc_url( $hero_image ); ?>')"<?php endif; ?>>
 
     <!-- Фонове фото або градієнт -->
-    <div class="gl-hero__bg"<?php if ( $has_photo ) : ?> style="background-image: url('<?php echo esc_url( $hero_image ); ?>')"<?php endif; ?>></div>
+    <div class="gl-hero__bg"></div>
 
     <!-- Контент -->
     <div class="gl-hero__content">
@@ -28,12 +31,11 @@ get_header();
       </div>
 
       <?php
-      $hero_title    = get_theme_mod( 'gl_hero_title', "Гірська\nЛаванда" );
+      $hero_title    = get_theme_mod( 'gl_hero_title', "Гірська Лаванда" );
       $hero_subtitle = get_theme_mod( 'gl_hero_subtitle', 'Заміський комплекс · Східниця · Карпати' );
-      $title_parts   = explode( "\n", $hero_title );
       ?>
       <h1 class="gl-hero__title">
-        <?php echo implode( '<br>', array_map( 'esc_html', $title_parts ) ); ?>
+        <?php echo esc_html( str_replace( "\n", " ", $hero_title ) ); ?>
       </h1>
       <p class="gl-hero__subtitle"><?php echo esc_html( $hero_subtitle ); ?></p>
       <p class="gl-hero__desc">Затишний відпочинок серед карпатських сосен. Традиційна баня, гарячий чан просто неба — все для справжнього відновлення</p>
@@ -51,7 +53,6 @@ get_header();
     <!-- Scroll indicator -->
     <a href="#rooms" class="gl-hero__scroll" aria-label="Прокрутити донизу">
       <span class="gl-hero__scroll-line"></span>
-      <span>Scroll</span>
     </a>
 
   </section>
@@ -74,7 +75,7 @@ get_header();
         // Отримати кімнати з MotoPress Hotel Booking
         $rooms = get_posts( [
             'post_type'      => 'mphb_room_type',
-            'posts_per_page' => 4,
+            'posts_per_page' => 6,
             'post_status'    => 'publish',
             'orderby'        => 'menu_order',
             'order'          => 'ASC',
@@ -135,43 +136,6 @@ get_header();
               <a href="<?php echo esc_url( $permalink ); ?>" class="gl-btn gl-btn--sm">
                 Детальніше
               </a>
-            </div>
-          </div>
-        </article>
-        <?php
-            endforeach;
-        else :
-            // Fallback якщо MotoPress не налаштований
-            $fallback_rooms = [
-                [ 'name' => 'Стандартний двомісний номер',        'desc' => 'Затишний номер з двома окремими ліжками і видом на карпатський ліс. Ідеальний для двох.',                               'price' => '800',   'capacity' => 2, 'children' => 0, 'size' => 15, 'icon' => '🛏️' ],
-                [ 'name' => 'Двомісні апартаменти з терасою',     'desc' => 'Просторі апартаменти з власною терасою і панорамним видом на гори. Двоспальне ліжко + диван.', 'price' => '1 400', 'capacity' => 2, 'children' => 0, 'size' => 25, 'icon' => '🏡' ],
-                [ 'name' => 'Сімейні апартаменти',                'desc' => 'Ідеальний варіант для сімей з дітьми. Двоспальне ліжко + розкладний диван у просторому номері.',                         'price' => '1 500', 'capacity' => 4, 'children' => 2, 'size' => 35, 'icon' => '👨‍👩‍👧' ],
-                [ 'name' => 'Двоповерхові апартаменти з терасою', 'desc' => 'Розкішні двоповерхові апартаменти з власною терасою — максимум простору і приватності в Карпатах.',                     'price' => '2 500', 'capacity' => 4, 'children' => 0, 'size' => 70, 'icon' => '🏠' ],
-            ];
-                foreach ( $fallback_rooms as $room ) :
-        ?>
-            <article class="gl-room-card">
-          <div class="gl-room-card__img">
-            <div class="gl-room-card__img-placeholder"><?php echo $room['icon']; ?></div>
-            <span class="gl-room-card__badge">Карпати</span>
-          </div>
-          <div class="gl-room-card__body">
-            <h3 class="gl-room-card__name"><?php echo esc_html( $room['name'] ); ?></h3>
-            <p class="gl-room-card__desc"><?php echo esc_html( $room['desc'] ); ?></p>
-            <div class="gl-room-card__features">
-              <span class="gl-room-card__feature"><span class="gl-room-card__feature-icon">👥</span>
-                <?php echo $room['capacity']; ?> гост.<?php if ( ! empty( $room['children'] ) ) : ?> + <?php echo $room['children']; ?> діт.<?php endif; ?>
-              </span>
-              <span class="gl-room-card__feature"><span class="gl-room-card__feature-icon">📐</span> <?php echo $room['size']; ?> м²</span>
-              <span class="gl-room-card__feature"><span class="gl-room-card__feature-icon">🌲</span> Вид на ліс</span>
-            </div>
-            <div class="gl-room-card__footer">
-              <div class="gl-room-card__price">
-                <span class="gl-room-card__price-label">від</span>
-                <span class="gl-room-card__price-value"><?php echo $room['price']; ?> ₴</span>
-                <span class="gl-room-card__price-night">/ ніч</span>
-              </div>
-              <a href="/rooms/" class="gl-btn gl-btn--sm">Детальніше</a>
             </div>
           </div>
         </article>
@@ -305,6 +269,11 @@ get_header();
        ADVANTAGES — shortcode
        ===================================================================== -->
   <?php echo do_shortcode( '[gl_advantages]' ); ?>
+
+  <!-- =====================================================================
+       TESTIMONIALS — shortcode
+       ===================================================================== -->
+  <?php echo do_shortcode( '[gl_testimonials]' ); ?>
 
   <!-- =====================================================================
        GALLERY PREVIEW — shortcode
