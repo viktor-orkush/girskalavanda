@@ -48,30 +48,33 @@ if (empty($gallery_imgs)) {
   }
 }
 
+// === ImageObject JSON-LD Schema ===
+if (function_exists('glav_render_image_schema')) {
+  $schema_images = [];
+  if ($hero_url) {
+    $schema_images[] = [
+      'url' => $hero_url,
+      'name' => 'Гарячий Чан просто неба у Східниці',
+      'description' => 'Карпатський чан на дровах з цілющими травами під відкритим небом.',
+    ];
+  }
+  $count = 0;
+  foreach ($gallery_imgs as $gimg) {
+    if ($count >= 3) break;
+    $schema_images[] = [
+      'url' => $gimg['full'],
+      'alt' => $gimg['alt'],
+      'name' => wp_strip_all_tags($gimg['alt']) . ' — Гірська Лаванда',
+      'description' => 'Фото гарячого чану в комплексі відпочинку Гірська Лаванда у Східниці.'
+    ];
+    $count++;
+  }
+  glav_render_image_schema($schema_images);
+}
+
 // === Contact info ===
-$phone = get_theme_mod('gl_phone', '');
-$phone_disp = get_theme_mod('gl_phone_display', $phone);
-$telegram_raw = get_theme_mod('gl_telegram', '');
-$telegram_url = '';
-if ($telegram_raw) {
-  $telegram_url = str_starts_with($telegram_raw, 'http')
-    ? $telegram_raw
-    : 'https://t.me/' . ltrim($telegram_raw, '@/');
-}
-$whatsapp_url = $viber_url = '';
-if ($phone) {
-  $wa_phone = preg_replace('/[^0-9]/', '', $phone);
-  $wa_msg = rawurlencode('Добрий день! Хочу забронювати чан.');
-  $whatsapp_url = 'https://wa.me/' . $wa_phone . '?text=' . $wa_msg;
-  $viber_url = 'viber://contact?number=' . $wa_phone;
-}
-$instagram_dm = 'https://www.instagram.com/girska_lavandaa';
-$ig_raw = get_theme_mod('gl_instagram', '');
-if ($ig_raw) {
-  preg_match('/instagram\.com\/([^\/\?#]+)/i', $ig_raw, $m);
-  $ig_user = isset($m[1]) ? trim($m[1], '/') : '';
-  $instagram_dm = $ig_user ? 'https://ig.me/m/' . $ig_user : $ig_raw;
-}
+$contact = glav_get_contact_info('Добрий день! Хочу забронювати чан.');
+extract($contact);
 
 // === SVG icons ===
 $icon_fire = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-.5 15.5c-2.5 0-4.5-2-4.5-4.5 0-2.45 1.45-4.22 2.75-5.35C10.38 8.88 11 9.75 11 10.5c0 1.38-1 2.5-1 4 0 1.1.9 2 2 2s2-.9 2-2c0-1.5-1-2.62-1-4 0-.75.62-1.62 1.25-2.85C15.55 8.78 17 10.55 17 13c0 2.5-2 4.5-4.5 4.5z"/></svg>';

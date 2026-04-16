@@ -18,6 +18,9 @@ if (!$hero_url) {
 
 // === Collect gallery images ===
 // Priority: images attached to gallery page → all recent images
+$gallery_imgs = get_transient( 'glav_gallery_page_imgs' );
+
+if ( $gallery_imgs === false ) :
 $gallery_imgs = [];
 
 // 1. Images attached to this page
@@ -187,6 +190,9 @@ foreach ($gallery_imgs as &$img) {
   }
 }
 unset($img);
+
+set_transient( 'glav_gallery_page_imgs', $gallery_imgs, DAY_IN_SECONDS );
+endif; // end transient cache block
 
 // === Category definitions ===
 $categories = [

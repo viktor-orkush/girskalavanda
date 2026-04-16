@@ -110,7 +110,7 @@
     const total = cards.length;
 
     function getMax() {
-      return Math.max(0, total - (window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3));
+      return Math.max(0, total - 1); // always 1 card per step — all dots reachable
     }
 
     function goTo(idx) {
@@ -126,8 +126,13 @@
     dots.forEach(function (d, i) { d.addEventListener('click', function () { goTo(i); }); });
 
     // Auto-play
-    var autoplay = setInterval(function () { goTo(current + 1 > getMax() ? 0 : current + 1); }, 5000);
+    function startAutoplay() {
+      autoplay = setInterval(function () { goTo(current + 1 > getMax() ? 0 : current + 1); }, 5000);
+    }
+    var autoplay;
+    startAutoplay();
     track.addEventListener('mouseenter', function () { clearInterval(autoplay); });
+    track.addEventListener('mouseleave', startAutoplay);
 
     // Touch swipe
     var touchStartX = 0;

@@ -197,7 +197,6 @@ get_header();
               <span class="gl-wellness-card__price-unit">/ сеанс</span>
             </div>
             <div class="gl-wellness-card__actions">
-              <a href="/banya/#booking-section-ready" class="gl-btn gl-btn--primary">Забронювати баню</a>
               <a href="/banya/" class="gl-btn gl-btn--outline">Детальніше</a>
             </div>
           </div>
@@ -230,7 +229,9 @@ get_header();
               <span class="gl-wellness-card__price-value">від 3 000 ₴</span>
               <span class="gl-wellness-card__price-unit">/ сеанс</span>
             </div>
-            <a href="/banya/#booking-section-ready" class="gl-btn gl-btn--primary">Забронювати хамам</a>
+            <div class="gl-wellness-card__actions">
+              <a href="/banya/" class="gl-btn gl-btn--outline">Детальніше</a>
+            </div>
           </div>
         </div>
 
@@ -260,7 +261,9 @@ get_header();
               <span class="gl-wellness-card__price-value">від 2 500 ₴</span>
               <span class="gl-wellness-card__price-unit">/ сеанс</span>
             </div>
-            <a href="/chan/#booking-section-ready" class="gl-btn gl-btn--primary">Забронювати чан</a>
+            <div class="gl-wellness-card__actions">
+              <a href="/chan/" class="gl-btn gl-btn--outline">Детальніше</a>
+            </div>
           </div>
         </div>
 

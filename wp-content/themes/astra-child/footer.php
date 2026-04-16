@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 $phone = get_theme_mod('gl_phone', '');
 $phone_disp = get_theme_mod('gl_phone_display', $phone);
-$instagram = get_theme_mod('gl_instagram', 'https://instagram.com/girskalavanda');
+$instagram = get_theme_mod('gl_instagram', 'https://www.instagram.com/girska_lavandaa/');
 $facebook = get_theme_mod('gl_facebook', '');
 $telegram = get_theme_mod('gl_telegram', '');
 $maps_url = get_theme_mod('gl_maps_url', 'https://maps.app.goo.gl/s5NUR41X67xDFT5f8');

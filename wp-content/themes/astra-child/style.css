@@ -112,6 +112,9 @@ License URI:  http://www.gnu.org/licenses/gpl-2.0.html
   --shadow-md: 0 8px 30px rgba(0, 0, 0, .10);
   --shadow-lg: 0 20px 60px rgba(0, 0, 0, .15);
   --shadow-hover: 0 16px 48px rgba(0, 0, 0, .18);
+  --shadow-gold-sm: 0 4px 20px rgba(200, 169, 81, .3);
+  --shadow-gold-md: 0 8px 32px rgba(200, 169, 81, .45);
+  --shadow-gold-lg: 0 8px 32px rgba(200, 169, 81, .5);
 
   --transition: .3s ease;
   --transition-slow: .6s ease;
@@ -277,7 +280,7 @@ h4 {
   background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-light) 100%);
   color: var(--color-primary) !important;
   border-color: var(--color-gold);
-  box-shadow: 0 4px 20px rgba(200, 169, 81, .3);
+  box-shadow: var(--shadow-gold-sm);
   position: relative;
   overflow: hidden;
 }
@@ -293,7 +296,7 @@ h4 {
 }
 
 .gl-btn--primary:hover {
-  box-shadow: 0 8px 32px rgba(200, 169, 81, .45);
+  box-shadow: var(--shadow-gold-md);
   transform: translateY(-3px) scale(1.02);
   color: var(--color-primary) !important;
   text-decoration: none;
@@ -314,13 +317,13 @@ h4 {
   background: var(--color-accent);
   color: #fff !important;
   border-color: var(--color-accent);
-  box-shadow: 0 4px 20px rgba(200, 169, 81, .3);
+  box-shadow: var(--shadow-gold-sm);
 }
 
 .gl-btn--accent:hover {
   background: var(--color-accent-light);
   border-color: var(--color-accent-light);
-  box-shadow: 0 8px 32px rgba(200, 169, 81, .45);
+  box-shadow: var(--shadow-gold-md);
   transform: translateY(-2px);
   color: #fff !important;
   text-decoration: none;
@@ -1048,169 +1051,6 @@ h4 {
   }
 }
 
-/* Hero booking strip - Improved contrast and constants */
-.gl-hero__booking {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 3;
-  background: rgba(28, 58, 14, .85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(200, 169, 81, .3);
-  padding: 20px clamp(20px, 5vw, 60px);
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, .3);
-}
-
-.gl-hero-search .mphb-checkout-form {
-  gap: 20px !important;
-}
-
-.gl-hero-search .mphb-datepicker-wrap input {
-  font-weight: 600 !important;
-  color: var(--color-primary) !important;
-}
-
-.gl-hero-search .mphb-datepicker-wrap label {
-  color: var(--color-gold-light) !important;
-  opacity: .9;
-}
-
-.gl-hero__booking-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.gl-hero__booking-label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--color-gold-light);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-/* MPHB форма всередині hero strip */
-.gl-hero__booking .mphb-checkout-form,
-.gl-hero__booking .mphb_sc_check-form-wrap,
-.gl-hero__booking form.mphb-checkout-form {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  flex: 1;
-}
-
-.gl-hero__booking .mphb-checkout-form .mphb-datepicker-wrap,
-.gl-hero__booking .mphb-checkout-form p {
-  margin: 0;
-  flex: 1;
-  min-width: 160px;
-}
-
-.gl-hero__booking .mphb-checkout-form input[type="text"],
-.gl-hero__booking .mphb-checkout-form input[type="number"],
-.gl-hero__booking .mphb-checkout-form select {
-  background: var(--color-white);
-  border: 1px solid rgba(255, 255, 255, .3);
-  border-radius: var(--radius-md);
-  padding: 11px 16px;
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--color-dark);
-  width: 100%;
-  transition: all var(--transition);
-}
-
-.gl-hero__booking .mphb-checkout-form input:focus,
-.gl-hero__booking .mphb-checkout-form select:focus {
-  outline: none;
-  border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgba(200, 169, 81, .25);
-}
-
-.gl-hero__booking .mphb-checkout-form label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, .8);
-  margin-bottom: 6px;
-  display: block;
-}
-
-.gl-hero__booking .mphb-checkout-form input[type="submit"],
-.gl-hero__booking .mphb-checkout-form button[type="submit"] {
-  background: var(--color-gold);
-  color: var(--color-primary);
-  border: none;
-  border-radius: var(--radius-xl);
-  padding: 13px 32px;
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all var(--transition);
-  box-shadow: 0 4px 16px rgba(200, 169, 81, .4);
-}
-
-.gl-hero__booking .mphb-checkout-form input[type="submit"]:hover,
-.gl-hero__booking .mphb-checkout-form button[type="submit"]:hover {
-  background: var(--color-gold-light);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(200, 169, 81, .55);
-}
-
-/* Зсув hero scroll indicator коли є booking strip */
-.gl-hero--with-booking .gl-hero__scroll {
-  bottom: 130px;
-}
-
-@media (max-width: 991px) {
-  .gl-hero__booking {
-    padding: 15px 20px;
-  }
-
-  .gl-hero__booking-inner {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-
-  .gl-hero__booking-label {
-    text-align: center;
-    margin-bottom: 5px;
-  }
-
-  .gl-hero--with-booking .gl-hero__scroll {
-    display: none; /* Ховаємо скрол на планшетах/мобілках якщо є бронювання, бо забагато всього */
-  }
-}
-
-@media (max-width: 768px) {
-  .gl-hero {
-    min-height: auto;
-    padding: 120px 0 60px;
-    display: block;
-  }
-
-  .gl-hero__booking {
-    position: relative;
-    margin-top: 40px;
-    background: var(--color-primary);
-    border-top: 1px solid rgba(200, 169, 81, .2);
-  }
-}
-
 /* ==========================================================================
    ROOMS SECTION
    ========================================================================== */
@@ -1634,9 +1474,6 @@ h4 {
   color: rgba(255, 255, 255, .5);
 }
 
-.gl-wellness-card__body .gl-btn {
-  margin-top: auto;
-}
 
 /* ==========================================================================
    ADVANTAGES / FEATURES SECTION
@@ -3427,17 +3264,11 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   background: var(--color-gold);
   color: var(--color-primary) !important;
   border: 2px solid var(--color-gold);
-  box-shadow: 0 4px 20px rgba(200, 169, 81, .35);
+  box-shadow: var(--shadow-gold-sm);
   padding: 16px 36px;
   border-radius: var(--radius-sm);
-  font-family: var(--font-body);
   font-size: 12px;
-  font-weight: 700;
   letter-spacing: 2px;
-  text-transform: uppercase;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
   gap: 8px;
   transition: background var(--transition), border-color var(--transition),
     color var(--transition), transform var(--transition),
@@ -3450,7 +3281,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   color: var(--color-primary) !important;
   text-decoration: none;
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(200, 169, 81, .5);
+  box-shadow: var(--shadow-gold-lg);
 }
 
 /* Outline white button */
@@ -3460,15 +3291,8 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   border: 2px solid rgba(255, 255, 255, .65);
   padding: 16px 32px;
   border-radius: var(--radius-sm);
-  font-family: var(--font-body);
   font-size: 12px;
-  font-weight: 700;
   letter-spacing: 2px;
-  text-transform: uppercase;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
   transition: border-color var(--transition), background var(--transition),
     transform var(--transition);
 }
@@ -4060,22 +3884,24 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   margin-top: 40px;
 }
 
-/* HOME — wellness card actions (two buttons) */
+/* HOME — wellness card actions */
 .gl-wellness-card__actions {
   display: flex;
   gap: 12px;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  margin-top: auto;
+}
+.gl-wellness-card__actions .gl-btn {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
 }
 
 @media (max-width: 768px) {
   .gl-banya-rooms__grid {
     grid-template-columns: 1fr;
-  }
-
-  .gl-wellness-card__actions {
-    flex-direction: column;
-    align-items: stretch;
   }
 }
 
@@ -7368,6 +7194,26 @@ a.gl-contact-card__value:hover {
   padding: 10px 0 !important;
 }
 
+/* Center logo+name block in mobile header bar */
+.ast-header-break-point .ast-primary-header-bar .ast-builder-grid-row {
+  display: flex !important;
+  align-items: center !important;
+  position: relative !important;
+}
+
+.ast-header-break-point .ast-primary-header-bar .site-header-primary-section-left {
+  position: absolute !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.ast-header-break-point .ast-primary-header-bar .site-header-primary-section-right {
+  margin-left: auto !important;
+}
+
 /* --- Mobile menu dropdown panel --- */
 .ast-header-break-point #ast-mobile-header .ast-mobile-header-content,
 .ast-header-break-point .ast-mobile-header-content,
@@ -8027,6 +7873,7 @@ a.gl-contact-card__value:hover {
     min-height: 100svh !important;
     display: flex !important;
     flex-direction: column !important;
+    padding-top: 100px !important;
     padding-bottom: 0 !important;
     justify-content: flex-start !important;
   }

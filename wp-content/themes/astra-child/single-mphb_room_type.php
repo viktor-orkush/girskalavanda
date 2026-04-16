@@ -100,7 +100,7 @@ while ( have_posts() ) :
         $instagram_dm = $ig_user ? 'https://ig.me/m/' . $ig_user : $instagram_raw;
     }
     if ( ! $instagram_dm ) {
-        $instagram_dm = 'https://www.instagram.com/girska_lavandaa';
+        $instagram_dm = 'https://www.instagram.com/girska_lavandaa/';
     }
 
     // === Filter post content ===
