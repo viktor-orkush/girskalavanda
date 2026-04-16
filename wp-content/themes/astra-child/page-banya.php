@@ -15,6 +15,10 @@ if (!$hero_url) {
   $uploads = wp_upload_dir();
   $hero_url = $uploads['baseurl'] . '/2025/07/chan.jpg';
 }
+$hero_alt    = $hero_id
+  ? (get_post_meta($hero_id, '_wp_attachment_image_alt', true) ?: 'Традиційна баня на дровах у Карпатах — Гірська Лаванда')
+  : 'Традиційна дерев\'яна баня на дровах у Карпатах — Гірська Лаванда, Східниця';
+$hero_srcset = $hero_id ? wp_get_attachment_image_srcset($hero_id, 'full') : '';
 
 // === Gallery — images attached to this page ===
 $gallery_imgs = [];
@@ -92,7 +96,16 @@ $icon_lock = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke
   <!-- ======================================================================
        HERO
        ====================================================================== -->
-  <section class="gl-banya-hero" style="--banya-hero-bg: url('<?php echo esc_url($hero_url); ?>')">
+  <section class="gl-banya-hero">
+
+    <img
+      class="gl-banya-hero__bg"
+      src="<?php echo esc_url($hero_url); ?>"
+      <?php if ($hero_srcset): ?>srcset="<?php echo esc_attr($hero_srcset); ?>" sizes="100vw"<?php endif; ?>
+      alt="<?php echo esc_attr($hero_alt); ?>"
+      fetchpriority="high"
+      decoding="async"
+    >
 
     <div class="gl-banya-hero__content">
       <div class="gl-container">
@@ -165,8 +178,14 @@ endif; ?>
       <div class="gl-banya-about__grid">
 
         <div class="gl-banya-about__img-wrap gl-animate">
-          <div class="gl-banya-about__img" style="background-image: url('<?php echo esc_url($hero_url); ?>')">
-          </div>
+          <img
+            class="gl-banya-about__img"
+            src="<?php echo esc_url($hero_url); ?>"
+            <?php if ($hero_srcset): ?>srcset="<?php echo esc_attr($hero_srcset); ?>" sizes="(max-width: 768px) 100vw, 50vw"<?php endif; ?>
+            alt="<?php echo esc_attr($hero_alt); ?>"
+            loading="lazy"
+            decoding="async"
+          >
           <div class="gl-banya-about__img-badge">
             <span class="gl-banya-about__img-badge-icon">🔥</span>
             <span>Традиційна баня<br>на дровах</span>
@@ -410,6 +429,136 @@ endif; ?>
 
     </div>
   </section>
+
+
+  <!-- ======================================================================
+       FAQ
+       ====================================================================== -->
+  <section class="gl-banya-faq gl-section gl-section--white" id="banya-faq">
+    <div class="gl-container">
+      <div class="gl-contact-faq__header gl-animate">
+        <span class="gl-section-label">Часті питання</span>
+        <h2 class="gl-section-title">Відповіді на ваші запитання</h2>
+      </div>
+
+      <div class="gl-contact-faq__list gl-animate gl-animate--delay-1" style="flex-direction: column;">
+        <details class="gl-faq-item">
+          <summary class="gl-faq-item__question">
+            <span>Скільки коштує баня в Карпатах (Східниці)?</span>
+            <span class="gl-faq-item__toggle"></span>
+          </summary>
+          <div class="gl-faq-item__answer">
+            <p>Вартість оренди нашої приватної бані починається від 2 500 ₴ за сеанс (мінімум 2 години). У вартість входить традиційна парна на дровах, кімната відпочинку та закрита територія.</p>
+          </div>
+        </details>
+
+        <details class="gl-faq-item">
+          <summary class="gl-faq-item__question">
+            <span>Чи можна приїжджати в баню з дітьми?</span>
+            <span class="gl-faq-item__toggle"></span>
+          </summary>
+          <div class="gl-faq-item__answer">
+            <p>Так, звичайно! Наша закрита територія цілком безпечна для дітей, а в кімнаті відпочинку є все необхідне для комфортного перебування всією сім'єю.</p>
+          </div>
+        </details>
+
+        <details class="gl-faq-item">
+          <summary class="gl-faq-item__question">
+            <span>Скільки людей вміщує баня?</span>
+            <span class="gl-faq-item__toggle"></span>
+          </summary>
+          <div class="gl-faq-item__answer">
+            <p>Парна та кімната відпочинку комфортно вміщують компанію до 8 осіб одночасно.</p>
+          </div>
+        </details>
+
+        <details class="gl-faq-item">
+          <summary class="gl-faq-item__question">
+            <span>Що входить у вартість оренди бані?</span>
+            <span class="gl-faq-item__toggle"></span>
+          </summary>
+          <div class="gl-faq-item__answer">
+            <p>У вартість входить: парна на дровах, міні-басейн (купіль) з холодною водою, кімната відпочинку з телевізором та міні-кухнею, а також безкоштовний паркінг на закритій території.</p>
+          </div>
+        </details>
+
+        <details class="gl-faq-item">
+          <summary class="gl-faq-item__question">
+            <span>Чи працює баня взимку?</span>
+            <span class="gl-faq-item__toggle"></span>
+          </summary>
+          <div class="gl-faq-item__answer">
+            <p>Так, наш комплекс відпочинку працює цілий рік — 365 днів на рік у будь-яку погоду.</p>
+          </div>
+        </details>
+
+        <details class="gl-faq-item">
+          <summary class="gl-faq-item__question">
+            <span>Чи можна у вас замовити хамам?</span>
+            <span class="gl-faq-item__toggle"></span>
+          </summary>
+          <div class="gl-faq-item__answer">
+            <p>Так, поруч із традиційною парною є хамам. Це окрема додаткова послуга, вартість якої становить від 3 000 ₴ за сеанс.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       ROOMS CROSS-LINK — Залишіться на ніч
+       ====================================================================== -->
+  <?php
+  $banya_rooms = get_posts([
+    'post_type'      => 'mphb_room_type',
+    'posts_per_page' => 3,
+    'post_status'    => 'publish',
+    'orderby'        => 'menu_order',
+    'order'          => 'ASC',
+  ]);
+  if (!empty($banya_rooms)): ?>
+  <section class="gl-banya-rooms gl-section gl-section--sand" id="banya-rooms">
+    <div class="gl-container">
+      <div class="gl-banya-rooms__header gl-center gl-animate">
+        <span class="gl-section-label">Готель Гірська Лаванда</span>
+        <h2 class="gl-section-title">Залишіться на ніч</h2>
+        <p class="gl-section-subtitle">Продовжте відпочинок після бані — оберіть затишний номер серед карпатських сосен</p>
+      </div>
+      <div class="gl-banya-rooms__grid">
+        <?php foreach ($banya_rooms as $room):
+          $thumb_url = get_the_post_thumbnail_url($room->ID, 'medium_large') ?: '';
+          $capacity  = get_post_meta($room->ID, 'mphb_adults_capacity', true);
+          $size      = get_post_meta($room->ID, 'mphb_size', true);
+          $price     = function_exists('glav_get_room_price') ? glav_get_room_price($room->ID) : 0;
+        ?>
+        <a href="<?php echo esc_url(get_permalink($room->ID)); ?>" class="gl-banya-room-card gl-animate">
+          <?php if ($thumb_url): ?>
+          <div class="gl-banya-room-card__img">
+            <img src="<?php echo esc_url($thumb_url); ?>"
+                 alt="<?php echo esc_attr(get_the_title($room->ID)); ?>"
+                 loading="lazy" decoding="async">
+          </div>
+          <?php endif; ?>
+          <div class="gl-banya-room-card__body">
+            <h3 class="gl-banya-room-card__title"><?php echo esc_html(get_the_title($room->ID)); ?></h3>
+            <div class="gl-banya-room-card__meta">
+              <?php if ($capacity): ?><span><?php echo esc_html($capacity); ?> гостей</span><?php endif; ?>
+              <?php if ($size): ?><span><?php echo esc_html($size); ?> м²</span><?php endif; ?>
+            </div>
+            <?php if ($price): ?>
+            <div class="gl-banya-room-card__price">від <?php echo number_format($price, 0, '.', ' '); ?> ₴ / ніч</div>
+            <?php endif; ?>
+            <span class="gl-banya-room-card__link">Переглянути номер →</span>
+          </div>
+        </a>
+        <?php endforeach; ?>
+      </div>
+      <div class="gl-center gl-banya-rooms__cta gl-animate">
+        <a href="<?php echo esc_url(home_url('/rooms/')); ?>" class="gl-btn gl-btn--outline-gold">Всі номери готелю</a>
+      </div>
+    </div>
+  </section>
+  <?php endif; ?>
 
 
   <!-- ======================================================================

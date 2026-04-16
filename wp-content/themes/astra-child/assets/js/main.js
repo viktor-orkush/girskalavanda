@@ -461,37 +461,27 @@
   }
 
   /* =========================================================================
-     SCROLL-TO-TOP BUTTON
+     FLOATING CONTACT WIDGET (FAB)
      ========================================================================= */
-  var scrollTopBtn = document.getElementById('gl-scroll-top');
-  if (scrollTopBtn) {
-    var progressCircle = scrollTopBtn.querySelector('.gl-scroll-top__progress-circle');
-    var circumference = progressCircle ? 2 * Math.PI * 22 : 0; // r=22
+  var contactFab = document.getElementById('gl-contact-fab');
+  if (contactFab) {
+    var fabToggle = document.getElementById('gl-contact-fab-toggle');
 
-    function updateScrollTop() {
-      var scrollY = window.scrollY || window.pageYOffset;
-      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      var scrollPercent = docHeight > 0 ? scrollY / docHeight : 0;
+    fabToggle.addEventListener('click', function (e) {
+      e.stopPropagation();
+      contactFab.classList.toggle('is-open');
+    });
 
-      // Show/hide button (appear after 400px scroll)
-      if (scrollY > 400) {
-        scrollTopBtn.classList.add('is-visible');
-      } else {
-        scrollTopBtn.classList.remove('is-visible');
+    document.addEventListener('click', function (e) {
+      if (!contactFab.contains(e.target)) {
+        contactFab.classList.remove('is-open');
       }
+    });
 
-      // Update progress ring
-      if (progressCircle && circumference) {
-        var offset = circumference - (scrollPercent * circumference);
-        progressCircle.style.strokeDashoffset = offset;
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        contactFab.classList.remove('is-open');
       }
-    }
-
-    window.addEventListener('scroll', updateScrollTop, { passive: true });
-    updateScrollTop();
-
-    scrollTopBtn.addEventListener('click', function () {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 

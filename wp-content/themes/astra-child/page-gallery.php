@@ -369,7 +369,8 @@ endif; ?>
     'url' => '/rooms/',
     'label' => 'Переглянути номери',
     'class' => 'gl-btn--gold'
-  ]
+  ],
+  'hide_contact' => true,
 ]); ?>
 
 

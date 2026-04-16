@@ -20,6 +20,455 @@ function  glav_preload_hero_image() {
 }
 
 // =============================================================================
+// SEO — META TAGS, CANONICAL, OPEN GRAPH, SCHEMA
+// =============================================================================
+
+/**
+ * Canonical URL tag — prevents duplicate content from MPHB booking URL params.
+ * Skipped if Yoast or RankMath is active.
+ */
+add_action( 'wp_head', 'glav_seo_canonical', 1 );
+function glav_seo_canonical() {
+    if ( defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) ) {
+        return;
+    }
+    if ( is_singular() ) {
+        $canonical = get_permalink();
+    } elseif ( is_front_page() || is_home() ) {
+        $canonical = home_url( '/' );
+    } else {
+        return;
+    }
+    echo '<link rel="canonical" href="' . esc_url( $canonical ) . '" />' . "\n";
+}
+
+/**
+ * Meta description tag per page type.
+ * Skipped if Yoast or RankMath is active.
+ */
+add_action( 'wp_head', 'glav_seo_meta_description', 3 );
+function glav_seo_meta_description() {
+    if ( defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) ) {
+        return;
+    }
+
+    $desc = '';
+
+    if ( is_front_page() || is_page_template( 'page-home.php' ) ) {
+        $desc = 'Готель Гірська Лаванда в Східниці — проживання в Карпатах, традиційна баня та гарячий чан. Бронювання онлайн.';
+    } elseif ( is_page( 'banya' ) || is_page( 'chan' ) ) {
+        $desc = 'Приватна традиційна баня на дровах в Східниці — парна, хамам, міні-басейн. Від 2 500 ₴/сеанс. Бронювання онлайн.';
+    } elseif ( is_page( 'rooms' ) ) {
+        $desc = 'Номери готелю Гірська Лаванда в Східниці, Карпати — апартаменти та стандартні номери з видом на ліс. Онлайн бронювання.';
+    } elseif ( is_page( 'gallery' ) ) {
+        $desc = 'Фотогалерея готелю Гірська Лаванда в Східниці — номери, баня, чан та карпатські краєвиди.';
+    } elseif ( is_page( 'contact' ) ) {
+        $desc = 'Контакти готелю Гірська Лаванда — Східниця, Львівська область. Телефон, адреса, карта проїзду.';
+    } elseif ( is_singular( 'mphb_room_type' ) ) {
+        $id       = get_the_ID();
+        $capacity = get_post_meta( $id, 'mphb_adults_capacity', true );
+        $size     = get_post_meta( $id, 'mphb_size', true );
+        $price    = glav_get_room_price( $id );
+        $parts    = array_filter( [
+            $capacity ? $capacity . ' гост.' : '',
+            $size     ? $size . ' м²'        : '',
+            $price    ? 'від ' . $price . ' ₴/ніч' : '',
+        ] );
+        $desc = get_the_title() . ' — готель Гірська Лаванда, Східниця.' . ( $parts ? ' ' . implode( ', ', $parts ) . '.' : '' );
+    } else {
+        $desc = get_bloginfo( 'description' );
+    }
+
+    if ( $desc ) {
+        echo '<meta name="description" content="' . esc_attr( $desc ) . '" />' . "\n";
+    }
+}
+
+/**
+ * Open Graph + Twitter Card meta tags.
+ * Skipped if Yoast or RankMath is active.
+ */
+add_action( 'wp_head', 'glav_seo_og_tags', 5 );
+function glav_seo_og_tags() {
+    if ( defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) ) {
+        return;
+    }
+
+    $site_name   = get_bloginfo( 'name' );
+    $default_img = get_theme_mod( 'gl_hero_image', '' );
+
+    $title = wp_get_document_title();
+    $url   = is_singular() ? get_permalink() : ( is_front_page() ? home_url( '/' ) : get_pagenum_link() );
+    $type  = is_singular( 'mphb_room_type' ) ? 'article' : 'website';
+    $image = $default_img;
+    $desc  = get_bloginfo( 'description' );
+
+    if ( is_front_page() || is_page_template( 'page-home.php' ) ) {
+        $desc = 'Готель Гірська Лаванда в Східниці — проживання в Карпатах, традиційна баня та гарячий чан. Бронювання онлайн.';
+    } elseif ( is_page( 'banya' ) || is_page( 'chan' ) ) {
+        $desc  = 'Приватна традиційна баня на дровах в Східниці — парна, хамам, міні-басейн. Від 2 500 ₴/сеанс.';
+        $image = get_the_post_thumbnail_url( get_the_ID(), 'full' ) ?: $default_img;
+    } elseif ( is_page( 'rooms' ) ) {
+        $desc = 'Номери готелю Гірська Лаванда в Східниці, Карпати — апартаменти та стандартні номери з видом на ліс.';
+    } elseif ( is_singular( 'mphb_room_type' ) ) {
+        $id       = get_the_ID();
+        $capacity = get_post_meta( $id, 'mphb_adults_capacity', true );
+        $size     = get_post_meta( $id, 'mphb_size', true );
+        $price    = glav_get_room_price( $id );
+        $parts    = array_filter( [
+            $capacity ? $capacity . ' гост.' : '',
+            $size     ? $size . ' м²'        : '',
+            $price    ? 'від ' . $price . ' ₴/ніч' : '',
+        ] );
+        $desc  = get_the_title() . ' — готель Гірська Лаванда, Східниця.' . ( $parts ? ' ' . implode( ', ', $parts ) . '.' : '' );
+        $image = get_the_post_thumbnail_url( $id, 'full' ) ?: $default_img;
+    }
+
+    ?>
+<meta property="og:type" content="<?php echo esc_attr( $type ); ?>" />
+<meta property="og:title" content="<?php echo esc_attr( $title ); ?>" />
+<meta property="og:description" content="<?php echo esc_attr( $desc ); ?>" />
+<meta property="og:url" content="<?php echo esc_url( $url ); ?>" />
+<meta property="og:site_name" content="<?php echo esc_attr( $site_name ); ?>" />
+<meta property="og:locale" content="uk_UA" />
+<?php if ( $image ) : ?>
+<meta property="og:image" content="<?php echo esc_url( $image ); ?>" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<?php endif; ?>
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="<?php echo esc_attr( $title ); ?>" />
+<meta name="twitter:description" content="<?php echo esc_attr( $desc ); ?>" />
+<?php if ( $image ) : ?>
+<meta name="twitter:image" content="<?php echo esc_url( $image ); ?>" />
+<?php endif; ?>
+    <?php
+}
+
+/**
+ * LodgingBusiness + Hotel JSON-LD schema — outputs on all pages.
+ */
+add_action( 'wp_head', 'glav_schema_lodging_business', 10 );
+function glav_schema_lodging_business() {
+    $phone      = get_theme_mod( 'gl_phone', '' );
+    $instagram  = get_theme_mod( 'gl_instagram', '' );
+    $facebook   = get_theme_mod( 'gl_facebook', '' );
+    $maps_url   = get_theme_mod( 'gl_maps_url', '' );
+    $hero_image = get_theme_mod( 'gl_hero_image', '' );
+
+    $same_as = array_values( array_filter( [ $instagram, $facebook ] ) );
+
+    $schema = [
+        '@context'      => 'https://schema.org',
+        '@type'         => [ 'LodgingBusiness', 'Hotel' ],
+        '@id'           => home_url( '/#hotel' ),
+        'name'          => 'Гірська Лаванда',
+        'alternateName' => 'Girska Lavanda',
+        'description'   => 'Затишний готельний комплекс у серці Карпат в Східниці. Проживання в комфортних номерах, традиційна баня на дровах, гарячий чан серед природи.',
+        'url'           => home_url( '/' ),
+        'telephone'     => $phone ?: '',
+        'address'       => [
+            '@type'           => 'PostalAddress',
+            'streetAddress'   => 'с. Східниця',
+            'addressLocality' => 'Східниця',
+            'addressRegion'   => 'Львівська область',
+            'addressCountry'  => 'UA',
+            'postalCode'      => '82460',
+        ],
+        'geo' => [
+            '@type'     => 'GeoCoordinates',
+            'latitude'  => 49.219197,
+            'longitude' => 23.35088,
+        ],
+        'checkinTime'  => '14:00',
+        'checkoutTime' => '12:00',
+        'priceRange'   => '₴₴',
+        'amenityFeature' => [
+            [ '@type' => 'LocationFeatureSpecification', 'name' => 'Free WiFi',    'value' => true ],
+            [ '@type' => 'LocationFeatureSpecification', 'name' => 'Free parking', 'value' => true ],
+            [ '@type' => 'LocationFeatureSpecification', 'name' => 'Sauna',        'value' => true ],
+            [ '@type' => 'LocationFeatureSpecification', 'name' => 'Hot tub',      'value' => true ],
+        ],
+    ];
+
+    if ( $hero_image ) {
+        $schema['image'] = $hero_image;
+    }
+    if ( $same_as ) {
+        $schema['sameAs'] = $same_as;
+    }
+    if ( $maps_url ) {
+        $schema['hasMap'] = $maps_url;
+    }
+
+    echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n";
+}
+
+/**
+ * HotelRoom JSON-LD schema — only on single room type pages.
+ */
+add_action( 'wp_head', 'glav_schema_hotel_room', 10 );
+function glav_schema_hotel_room() {
+    if ( ! is_singular( 'mphb_room_type' ) ) {
+        return;
+    }
+
+    $id       = get_the_ID();
+    $title    = get_the_title();
+    $url      = get_permalink();
+    $image    = get_the_post_thumbnail_url( $id, 'full' );
+    $capacity = (int) get_post_meta( $id, 'mphb_adults_capacity', true );
+    $size     = (float) get_post_meta( $id, 'mphb_size', true );
+    $price    = glav_get_room_price( $id );
+    $amenities_raw = glav_get_room_amenities( $id );
+    $excerpt  = get_the_excerpt() ?: wp_trim_words( get_the_content(), 30 );
+
+    $schema = [
+        '@context'         => 'https://schema.org',
+        '@type'            => 'HotelRoom',
+        'name'             => $title,
+        'url'              => $url,
+        'description'      => $excerpt,
+        'containedInPlace' => [ '@id' => home_url( '/#hotel' ) ],
+    ];
+
+    if ( $image ) {
+        $schema['image'] = $image;
+    }
+    if ( $capacity ) {
+        $schema['occupancy'] = [
+            '@type'    => 'QuantitativeValue',
+            'minValue' => 1,
+            'maxValue' => $capacity,
+        ];
+    }
+    if ( $size ) {
+        $schema['floorSize'] = [
+            '@type'    => 'QuantitativeValue',
+            'value'    => $size,
+            'unitCode' => 'MTK',
+        ];
+    }
+    if ( $amenities_raw ) {
+        $schema['amenityFeature'] = array_map( function( $name ) {
+            return [ '@type' => 'LocationFeatureSpecification', 'name' => $name, 'value' => true ];
+        }, $amenities_raw );
+    }
+    if ( $price ) {
+        $schema['offers'] = [
+            '@type'         => 'Offer',
+            'price'         => $price,
+            'priceCurrency' => 'UAH',
+            'priceSpecification' => [
+                '@type'         => 'UnitPriceSpecification',
+                'price'         => $price,
+                'priceCurrency' => 'UAH',
+                'unitText'      => 'night',
+            ],
+        ];
+    }
+
+    echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n";
+}
+
+/**
+ * Service + Offer JSON-LD schema — only on /banya/ page.
+ */
+add_action( 'wp_head', 'glav_schema_banya', 10 );
+function glav_schema_banya() {
+    if ( ! is_page( 'banya' ) && ! is_page( 'chan' ) ) {
+        return;
+    }
+
+    $schema = [
+        '@context'    => 'https://schema.org',
+        '@type'       => 'Service',
+        'name'        => 'Традиційна баня Гірська Лаванда',
+        'description' => 'Приватна традиційна дерев\'яна баня на дровах в Східниці. Парна, хамам, міні-басейн, гарячий дерев\'яний чан під відкритим небом.',
+        'provider'    => [ '@id' => home_url( '/#hotel' ) ],
+        'areaServed'  => [ '@type' => 'City', 'name' => 'Східниця' ],
+        'url'         => get_permalink(),
+        'hasOfferCatalog' => [
+            '@type' => 'OfferCatalog',
+            'name'  => 'Послуги бані',
+            'itemListElement' => [
+                [
+                    '@type'       => 'Offer',
+                    'itemOffered' => [
+                        '@type'       => 'Service',
+                        'name'        => 'Баня (традиційна парна)',
+                        'description' => 'Традиційна дерев\'яна парна на дровах, до 8 осіб',
+                    ],
+                    'price'         => '2500',
+                    'priceCurrency' => 'UAH',
+                    'priceSpecification' => [
+                        '@type'         => 'UnitPriceSpecification',
+                        'price'         => '2500',
+                        'priceCurrency' => 'UAH',
+                        'unitText'      => 'session',
+                        'minPrice'      => '2500',
+                    ],
+                ],
+                [
+                    '@type'       => 'Offer',
+                    'itemOffered' => [
+                        '@type'       => 'Service',
+                        'name'        => 'Хамам',
+                        'description' => 'Турецька парна з вологою парою',
+                    ],
+                    'price'         => '3000',
+                    'priceCurrency' => 'UAH',
+                ],
+            ],
+        ],
+    ];
+
+    echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n";
+}
+
+/**
+ * FAQPage JSON-LD schema — for /banya/ and /chan/ pages.
+ */
+add_action( 'wp_head', 'glav_schema_faq', 10 );
+function glav_schema_faq() {
+    $faqs = [];
+
+    if ( is_page( 'banya' ) ) {
+        $faqs = [
+            [
+                'q' => 'Скільки коштує баня в Карпатах (Східниці)?',
+                'a' => 'Вартість оренди нашої приватної бані починається від 2 500 ₴ за сеанс (мінімум 2 години). У вартість входить традиційна парна на дровах, кімната відпочинку та закрита територія.'
+            ],
+            [
+                'q' => 'Чи можна приїжджати в баню з дітьми?',
+                'a' => 'Так, звичайно! Наша закрита територія цілком безпечна для дітей, а в кімнаті відпочинку є все необхідне для комфортного перебування всією сім\'єю.'
+            ],
+            [
+                'q' => 'Скільки людей вміщує баня?',
+                'a' => 'Парна та кімната відпочинку комфортно вміщують компанію до 8 осіб одночасно.'
+            ],
+            [
+                'q' => 'Що входить у вартість оренди бані?',
+                'a' => 'У вартість входить: парна на дровах, міні-басейн (купіль) з холодною водою, кімната відпочинку з телевізором та міні-кухнею, а також безкоштовний паркінг на закритій території.'
+            ],
+            [
+                'q' => 'Чи працює баня взимку?',
+                'a' => 'Так, наш комплекс відпочинку працює цілий рік — 365 днів на рік у будь-яку погоду.'
+            ],
+            [
+                'q' => 'Чи можна у вас замовити хамам?',
+                'a' => 'Так, поруч із традиційною парною є хамам. Це окрема додаткова послуга, вартість якої становить від 3 000 ₴ за сеанс.'
+            ]
+        ];
+    } elseif ( is_page( 'chan' ) ) {
+        $faqs = [
+            [
+                'q' => 'Скільки коштує чан у Карпатах (Східниці)?',
+                'a' => 'Оренда гарячого чану просто неба коштує від 2 500 ₴ за сеанс (мінімум 2 години). У ціну також входить користування кімнатою відпочинку та закритою територією.'
+            ],
+            [
+                'q' => 'Чи можна купатися в чані з дітьми?',
+                'a' => 'Так, відпочинок у чані чудово підходить для сімей з дітьми. Вода нагрівається до комфортної і безпечної температури 38–42°C.'
+            ],
+            [
+                'q' => 'Скільки людей вміщує чан?',
+                'a' => 'Наш просторий чан розрахований на комфортний відпочинок компанії до 8 осіб.'
+            ],
+            [
+                'q' => 'Що входить до оренди чану?',
+                'a' => 'До вартості входить: закритий від сторонніх гарячий чан з підігрівом на дровах, кімната відпочинку з ТБ, міні-кухня, душ, роздягальня та безкоштовний паркінг.'
+            ],
+            [
+                'q' => 'Чи працює чан узимку?',
+                'a' => 'Так! Купання в гарячому чані під відкритим небом взимку в оточенні снігу — це один із найкращих видів релаксу в Карпатах.'
+            ],
+            [
+                'q' => 'Чи можна додати в чан цілющі трави?',
+                'a' => 'Звичайно. За вашим бажанням ми можемо додати цілющі карпатські трави для ароматерапії та кращого оздоровчого ефекту.'
+            ]
+        ];
+    }
+
+    if ( empty( $faqs ) ) {
+        return;
+    }
+
+    $schema = [
+        '@context'   => 'https://schema.org',
+        '@type'      => 'FAQPage',
+        'mainEntity' => []
+    ];
+
+    foreach ( $faqs as $faq ) {
+        $schema['mainEntity'][] = [
+            '@type'          => 'Question',
+            'name'           => $faq['q'],
+            'acceptedAnswer' => [
+                '@type' => 'Answer',
+                'text'  => $faq['a']
+            ]
+        ];
+    }
+
+    echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n";
+}
+
+/**
+ * BreadcrumbList JSON-LD schema.
+ */
+add_action( 'wp_head', 'glav_schema_breadcrumb', 10 );
+function glav_schema_breadcrumb() {
+    $home = [ '@type' => 'ListItem', 'position' => 1, 'name' => 'Головна', 'item' => home_url( '/' ) ];
+
+    if ( is_front_page() || is_home() ) {
+        $items = [ $home ];
+    } elseif ( is_page( 'rooms' ) ) {
+        $items = [ $home, [ '@type' => 'ListItem', 'position' => 2, 'name' => 'Номери', 'item' => get_permalink() ] ];
+    } elseif ( is_page( 'banya' ) || is_page( 'chan' ) ) {
+        $items = [ $home, [ '@type' => 'ListItem', 'position' => 2, 'name' => 'Баня та Чан', 'item' => get_permalink() ] ];
+    } elseif ( is_singular( 'mphb_room_type' ) ) {
+        $rooms_page = get_page_by_path( 'rooms' );
+        $rooms_url  = $rooms_page ? get_permalink( $rooms_page->ID ) : home_url( '/rooms/' );
+        $items = [
+            $home,
+            [ '@type' => 'ListItem', 'position' => 2, 'name' => 'Номери', 'item' => $rooms_url ],
+            [ '@type' => 'ListItem', 'position' => 3, 'name' => get_the_title(), 'item' => get_permalink() ],
+        ];
+    } else {
+        return;
+    }
+
+    $schema = [
+        '@context'        => 'https://schema.org',
+        '@type'           => 'BreadcrumbList',
+        'itemListElement' => $items,
+    ];
+
+    echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n";
+}
+
+/**
+ * Sitemap: remove internal MPHB post types and taxonomies from WP built-in sitemap.
+ */
+add_filter( 'wp_sitemaps_post_types', 'glav_sitemap_filter_post_types' );
+function glav_sitemap_filter_post_types( $post_types ) {
+    $remove = [ 'mphb_rate', 'mphb_season', 'mphb_room', 'mphb_booking', 'mphb_reserved_room', 'mphb_coupon', 'mphb_payment' ];
+    foreach ( $remove as $type ) {
+        unset( $post_types[ $type ] );
+    }
+    return $post_types;
+}
+
+add_filter( 'wp_sitemaps_taxonomies', 'glav_sitemap_filter_taxonomies' );
+function glav_sitemap_filter_taxonomies( $taxonomies ) {
+    $remove = [ 'mphb_room_type_category', 'mphb_room_type_facility', 'mphb_bed_type', 'mphb_season_rule' ];
+    foreach ( $remove as $tax ) {
+        unset( $taxonomies[ $tax ] );
+    }
+    return $taxonomies;
+}
+
+// =============================================================================
 // ENQUEUE STYLES & SCRIPTS
 // =============================================================================
 add_action( 'wp_enqueue_scripts', 'glav_enqueue_assets' );
@@ -115,27 +564,189 @@ function glav_custom_hero_styles() {
 }
 
 // =============================================================================
-// PHONE NUMBER IN HEADER NAV
+// HEADER NAV CUSTOMIZATIONS (Logo in middle, Phone at end)
 // =============================================================================
-add_filter( 'wp_nav_menu_items', 'glav_add_phone_to_menu', 10, 2 );
-function glav_add_phone_to_menu( $items, $args ) {
-    // Add to primary and mobile menu
-    if ( ! in_array( $args->theme_location, [ 'primary', 'mobile_menu' ], true ) ) {
-        return $items;
+add_filter( 'wp_nav_menu_items', 'glav_customize_header_menu', 10, 2 );
+function  glav_customize_header_menu( $items, $args ) {
+    // 1. Add Phone Number (Primary and Mobile)
+    if ( in_array( $args->theme_location, [ 'primary', 'mobile_menu' ], true ) ) {
+        $phone      = get_theme_mod( 'gl_phone', '' );
+        $phone_disp = get_theme_mod( 'gl_phone_display', $phone );
+
+        if ( $phone ) {
+            $items .= '<li class="menu-item menu-item-phone">'
+                     . '<a href="tel:' . esc_attr( $phone ) . '">'
+                     . '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.5 11.61a19.79 19.79 0 01-3.07-8.67A2 2 0 012.42 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.9a16 16 0 006.15 6.15l1.27-.77a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>'
+                     . esc_html( $phone_disp ?: $phone )
+                     . '</a></li>';
+        }
     }
 
-    $phone      = get_theme_mod( 'gl_phone', '' );
-    $phone_disp = get_theme_mod( 'gl_phone_display', $phone );
+    // 2. Sort Mobile Menu items (same logical order as desktop, no branding logo)
+    if ( in_array( $args->theme_location, [ 'mobile_menu', 'ast-mobile-menu', 'primary_mobile', 'off-canvas' ], true ) ) {
+        // Split by TOP-LEVEL </li> only
+        $depth      = 0;
+        $current    = '';
+        $menu_items = [];
+        $tokens     = preg_split( '/(<li\b[^>]*>|<\/li>)/i', $items, -1, PREG_SPLIT_DELIM_CAPTURE );
+        foreach ( $tokens as $token ) {
+            if ( preg_match( '/^<li\b/i', $token ) ) {
+                $depth++;
+                $current .= $token;
+            } elseif ( strcasecmp( $token, '</li>' ) === 0 ) {
+                $depth--;
+                $current .= '</li>';
+                if ( $depth === 0 ) {
+                    $menu_items[] = $current;
+                    $current      = '';
+                }
+            } else {
+                $current .= $token;
+            }
+        }
 
-    if ( $phone ) {
-        $items .= '<li class="menu-item menu-item-phone">'
-                 . '<a href="tel:' . esc_attr( $phone ) . '">'
-                 . '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.5 11.61a19.79 19.79 0 01-3.07-8.67A2 2 0 012.42 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.9a16 16 0 006.15 6.15l1.27-.77a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>'
-                 . esc_html( $phone_disp ?: $phone )
-                 . '</a></li>';
+        // Remove "Home" / "Головна"
+        $menu_items = array_values( array_filter( $menu_items, function ( $item ) {
+            return stripos( $item, '>Головна<' ) === false && stripos( $item, '>Home<' ) === false;
+        } ) );
+
+        // Sort: Номери, Баня, Чан, Галерея, Контакти, Phone
+        $mobile_order = [
+            'rooms'    => 10, 'номери'   => 10,
+            'banya'    => 20, 'баня'     => 20,
+            'chan'     => 30, 'чан'      => 30,
+            'gallery'  => 40, 'галерея'  => 40,
+            'contact'  => 50, 'контакти' => 50,
+            'phone'    => 60,
+            'book'     => 70,
+        ];
+
+        usort( $menu_items, function ( $a, $b ) use ( $mobile_order ) {
+            $a_score = 999;
+            $b_score = 999;
+            foreach ( $mobile_order as $key => $score ) {
+                if ( stripos( $a, $key ) !== false ) { $a_score = min( $a_score, $score ); }
+                if ( stripos( $b, $key ) !== false ) { $b_score = min( $b_score, $score ); }
+            }
+            return $a_score - $b_score;
+        } );
+
+        $items = implode( '', $menu_items );
+    }
+
+    // 3. Add Centered Logo (Primary Desktop Menu ONLY)
+    if ( $args->theme_location === 'primary' ) {
+        // Split by TOP-LEVEL </li> only — correctly handles nested sub-menus.
+        // explode('</li>') breaks when items have children (sub-menu </li> tags inflate the count).
+        $depth      = 0;
+        $current    = '';
+        $menu_items = [];
+        $tokens     = preg_split( '/(<li\b[^>]*>|<\/li>)/i', $items, -1, PREG_SPLIT_DELIM_CAPTURE );
+        foreach ( $tokens as $token ) {
+            if ( preg_match( '/^<li\b/i', $token ) ) {
+                $depth++;
+                $current .= $token;
+            } elseif ( strcasecmp( $token, '</li>' ) === 0 ) {
+                $depth--;
+                $current .= '</li>';
+                if ( $depth === 0 ) {
+                    $menu_items[] = $current;
+                    $current      = '';
+                }
+            } else {
+                $current .= $token;
+            }
+        }
+
+        // Remove "Home" / "Головна"
+        $menu_items = array_values( array_filter( $menu_items, function ( $item ) {
+            return stripos( $item, '>Головна<' ) === false && stripos( $item, '>Home<' ) === false;
+        } ) );
+
+        // 3. Reorder items: [Rooms], [Banya], [Chan] | LOGO | [Gallery], [Contact], [Phone]
+        $order_map = [
+            'rooms'    => 10, 'номери'   => 10,
+            'banya'    => 20, 'баня'     => 20,
+            'chan'     => 30, 'чан'      => 30,
+            'gallery'  => 40, 'галерея'  => 40,
+            'contact'  => 50, 'контакти' => 50,
+            'phone'    => 60,
+            'book'     => 70,
+        ];
+
+        usort( $menu_items, function ( $a, $b ) use ( $order_map ) {
+            $a_score = 999;
+            $b_score = 999;
+            foreach ( $order_map as $key => $score ) {
+                if ( stripos( $a, $key ) !== false ) { $a_score = min( $a_score, $score ); }
+                if ( stripos( $b, $key ) !== false ) { $b_score = min( $b_score, $score ); }
+            }
+            return $a_score - $b_score;
+        } );
+
+        // Find insertion point (middle of top-level items)
+        // Use floor() to ensure that with an odd number of items (e.g. 5), 
+        // the middle item (Gallery) moves to the right side of the logo.
+        $count     = count( $menu_items );
+        $insert_at = (int) floor( $count / 2 );
+
+        // Branding Data
+        $custom_logo_id = get_theme_mod( 'custom_logo' );
+        $logo_url = $custom_logo_id ? wp_get_attachment_image_url( $custom_logo_id, 'full' ) : '';
+        $site_name = get_bloginfo( 'name' ); // e.g. "Гірська Лаванда"
+
+        // Split name for "Logo in middle of name" effect
+        $clean_name = str_replace( 'Комплекс ', '', $site_name );
+        $name_parts = explode( ' ', $clean_name );
+        $part1 = $name_parts[0] ?? '';
+        $part2 = isset($name_parts[1]) ? implode(' ', array_slice($name_parts, 1)) : '';
+
+        $logo_html = '<li class="menu-item menu-item-logo">'
+                   . '<a href="' . home_url('/') . '" rel="home">'
+                   . '<span class="gl-logo-word gl-logo-word--1">' . esc_html($part1) . '</span>'
+                   . ($logo_url ? '<div class="gl-menu-logo-wrap"><img src="' . esc_url($logo_url) . '" alt="' . esc_attr($site_name) . '" class="gl-menu-logo"></div>' : '')
+                   . '<span class="gl-logo-word gl-logo-word--2">' . esc_html($part2) . '</span>'
+                   . '</a></li>';
+
+        array_splice( $menu_items, $insert_at, 0, $logo_html );
+        $items = implode( '', $menu_items );
     }
 
     return $items;
+}
+
+/**
+ * 4. Filter Astra Logo to include "Word [Logo] Word" on Mobile (Header Bar)
+ */
+add_filter( 'astra_logo', 'glav_customize_mobile_header_logo', 10, 1 );
+function glav_customize_mobile_header_logo( $html ) {
+    // Only apply for mobile devices or tablet views
+    if ( ! wp_is_mobile() ) {
+        return $html;
+    }
+    
+    $custom_logo_id = get_theme_mod( 'custom_logo' );
+    $logo_url       = $custom_logo_id ? wp_get_attachment_image_url( $custom_logo_id, 'full' ) : '';
+    $site_name      = get_bloginfo( 'name' );
+    $clean_name     = str_replace( 'Комплекс ', '', $site_name );
+    $name_parts     = explode( ' ', $clean_name );
+    $part1          = $name_parts[0] ?? '';
+    $part2          = isset( $name_parts[1] ) ? implode( ' ', array_slice( $name_parts, 1 ) ) : '';
+
+    if ( ! $part1 && ! $part2 ) {
+        return $html;
+    }
+
+    $branding_html = '<span class="gl-logo-word gl-logo-word--1">' . esc_html( $part1 ) . '</span>'
+                  . ( $logo_url ? '<div class="gl-menu-logo-wrap"><img src="' . esc_url( $logo_url ) . '" alt="' . esc_attr( $site_name ) . '" class="gl-menu-logo"></div>' : '' )
+                  . '<span class="gl-logo-word gl-logo-word--2">' . esc_html( $part2 ) . '</span>';
+
+    // Replace the content of the link in $html with our branding_html
+    if ( preg_match( '/(<a\b[^>]*>)(.*)(<\/a>)/is', $html, $matches ) ) {
+        return $matches[1] . $branding_html . $matches[3];
+    }
+
+    return $html;
 }
 
 // =============================================================================
@@ -731,25 +1342,90 @@ function glav_get_contact_data( $wa_message = '' ) {
 }
 
 // =============================================================================
-// SCROLL-TO-TOP BUTTON
+// FLOATING CONTACT WIDGET (Chaty-style FAB)
 // =============================================================================
 
-// Disable Astra's built-in scroll-to-top button (blue arrow) to avoid duplicate
+// Disable Astra's built-in scroll-to-top button
 add_filter( 'astra_get_option_scroll-to-top-enable', '__return_false' );
 
-add_action( 'wp_footer', 'glav_scroll_to_top_button' );
-function glav_scroll_to_top_button() {
+add_action( 'wp_footer', 'glav_floating_contact' );
+function glav_floating_contact() {
+    $data = glav_get_contact_data();
+
+    $channels = [];
+
+    if ( ! empty( $data['phone'] ) ) {
+        $channels[] = [
+            'url'   => 'tel:' . $data['phone'],
+            'label' => 'Зателефонувати',
+            'color' => '#03E78B',
+            'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+        ];
+    }
+
+    if ( ! empty( $data['telegram_url'] ) ) {
+        $channels[] = [
+            'url'   => $data['telegram_url'],
+            'label' => 'Telegram',
+            'color' => '#2AABEE',
+            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>',
+        ];
+    }
+
+    if ( ! empty( $data['whatsapp_url'] ) ) {
+        $channels[] = [
+            'url'   => $data['whatsapp_url'],
+            'label' => 'WhatsApp',
+            'color' => '#25D366',
+            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>',
+        ];
+    }
+
+    if ( ! empty( $data['viber_url'] ) ) {
+        $channels[] = [
+            'url'   => $data['viber_url'],
+            'label' => 'Viber',
+            'color' => '#665CAC',
+            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.398.002C9.473.028 5.331.344 3.014 2.467 1.294 4.177.518 6.77.399 9.932c-.12 3.163-.27 9.09 5.563 10.665l.004.002v2.458s-.038.99.613 1.195c.79.249 1.254-.508 2.01-1.318.413-.443.983-1.093 1.413-1.59 3.9.327 6.894-.422 7.234-.534.784-.258 5.22-.824 5.943-6.726.745-6.079-.354-9.917-2.347-11.65l-.002-.004c-.6-.574-2.986-2.239-8.523-2.393 0 0-.387-.02-.908-.013zM11.5 1.59c.455-.007.78.012.78.012 4.671.13 6.774 1.468 7.283 1.952 1.683 1.46 2.593 4.87 1.94 10.143-.608 4.958-4.194 5.29-4.876 5.514-.287.095-2.836.732-6.16.531 0 0-2.44 2.942-3.2 3.708-.12.12-.258.166-.352.144-.13-.03-.166-.18-.164-.396l.028-4.015c-4.917-1.327-4.623-6.327-4.523-8.976.1-2.648.727-4.88 2.178-6.316 1.958-1.795 5.612-2.076 7.345-2.3h-.001l.72.001zm.7 2.834c-.162 0-.294.132-.294.296a.295.295 0 0 0 .294.296c1.14.013 2.197.46 3.005 1.289.808.828 1.27 1.933 1.298 3.11a.295.295 0 0 0 .296.291h.004a.295.295 0 0 0 .291-.3c-.033-1.378-.575-2.673-1.525-3.647-.95-.974-2.19-1.518-3.5-1.535h-.068zM8.073 6.26c-.232-.009-.476.092-.655.303l-.002.002c-.342.37-.706.77-.727 1.225-.037.66.35 1.277.658 1.732l.024.034c.836 1.29 1.862 2.47 3.07 3.404l.016.013.013.015c.76.615 1.636 1.13 2.583 1.418l.004.002.03.012c.405.154.814.095 1.162-.092.348-.188.603-.495.735-.828.073-.182.058-.378-.06-.52-.426-.52-.946-.96-1.512-1.332-.28-.174-.598-.063-.754.063l-.496.457a.36.36 0 0 1-.39.063c-.558-.243-1.874-1.326-2.375-1.858a.357.357 0 0 1-.034-.413l.376-.55c.15-.218.196-.542.005-.81a9.68 9.68 0 0 0-1.171-1.299.535.535 0 0 0-.372-.152c-.043-.002-.085-.002-.128-.004zm4.534.466c-.163 0-.295.134-.293.297.01.895.377 1.748 1.024 2.395.648.648 1.497 1.01 2.392 1.025h.01a.295.295 0 0 0 .003-.59c-.715-.013-1.39-.3-1.907-.818-.518-.518-.81-1.199-.82-1.916a.296.296 0 0 0-.296-.293h-.113zm.095 1.563a.295.295 0 0 0-.28.31c.03.42.213.81.518 1.107.305.298.698.472 1.107.493a.295.295 0 0 0 .03-.59.988.988 0 0 1-.71-.315.988.988 0 0 1-.332-.71.295.295 0 0 0-.297-.291l-.035-.004z"/></svg>',
+        ];
+    }
+
+    if ( ! empty( $data['instagram_dm'] ) ) {
+        $channels[] = [
+            'url'   => $data['instagram_dm'],
+            'label' => 'Instagram',
+            'color' => '#E1306C',
+            'icon'  => '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>',
+        ];
+    }
+
+    if ( empty( $channels ) ) {
+        return;
+    }
     ?>
-    <button class="gl-scroll-top" id="gl-scroll-top"
-            aria-label="Прокрутити вгору"
-            title="Вгору">
-      <svg class="gl-scroll-top__progress" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
-        <circle class="gl-scroll-top__progress-circle"
-                cx="25" cy="25" r="22"
-                stroke-dasharray="138.23"
-                stroke-dashoffset="138.23"></circle>
-      </svg>
-      <span class="gl-scroll-top__icon" aria-hidden="true">&#8593;</span>
-    </button>
+    <div class="gl-contact-fab" id="gl-contact-fab">
+      <div class="gl-contact-fab__channels">
+        <?php foreach ( $channels as $i => $ch ) : ?>
+          <a class="gl-contact-fab__channel"
+             href="<?php echo esc_url( $ch['url'] ); ?>"
+             target="_blank" rel="noopener noreferrer"
+             aria-label="<?php echo esc_attr( $ch['label'] ); ?>"
+             style="--ch-color: <?php echo esc_attr( $ch['color'] ); ?>; --ch-i: <?php echo $i; ?>">
+            <span class="gl-contact-fab__channel-icon"><?php echo $ch['icon']; ?></span>
+            <span class="gl-contact-fab__channel-label"><?php echo esc_html( $ch['label'] ); ?></span>
+          </a>
+        <?php endforeach; ?>
+      </div>
+      <button class="gl-contact-fab__toggle" id="gl-contact-fab-toggle"
+              aria-label="Контакти" title="Зв'язатися з нами">
+        <svg class="gl-contact-fab__icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <svg class="gl-contact-fab__icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
     <?php
 }
