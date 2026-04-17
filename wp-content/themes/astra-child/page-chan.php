@@ -16,6 +16,14 @@ if (!$hero_url) {
   $hero_url = $uploads['baseurl'] . '/2025/07/chan.jpg';
 }
 
+// === About section image (відмінне від hero) ===
+$about_img_id = get_post_meta($page_id, '_chan_about_image_id', true);
+$about_url = $about_img_id ? wp_get_attachment_image_url($about_img_id, 'full') : '';
+if (!$about_url) {
+  $uploads = wp_upload_dir();
+  $about_url = $uploads['baseurl'] . '/2026/04/фото-чана.webp';
+}
+
 // === Gallery — images attached to this page ===
 $gallery_imgs = [];
 $attachments = get_attached_media('image', $page_id);
@@ -159,8 +167,12 @@ endif; ?>
       <div class="gl-banya-about__grid">
 
         <div class="gl-banya-about__img-wrap gl-animate">
-          <div class="gl-banya-about__img" style="background-image: url('<?php echo esc_url($hero_url); ?>')">
-          </div>
+          <img
+            src="<?php echo esc_url($about_url); ?>"
+            alt="Гарячий чан — Гірська Лаванда"
+            class="gl-banya-about__img gl-banya-about__img--full"
+            loading="lazy"
+            decoding="async">
           <div class="gl-banya-about__img-badge">
             <span class="gl-banya-about__img-badge-icon">🌊</span>
             <span>Гарячий чан<br>під відкритим небом</span>

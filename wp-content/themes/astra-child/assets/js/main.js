@@ -483,54 +483,76 @@
   }
 
   /* =========================================================================
-     HERO FOG CANVAS (lightweight particles)
+     HERO BOKEH (warm light orbs — amber / gold / green palette)
      ========================================================================= */
   var fogCanvas = document.querySelector('.gl-hero-fog');
   if (fogCanvas && fogCanvas.getContext) {
     var fogCtx = fogCanvas.getContext('2d');
-    var fogParticles = [], fogRafId;
+    var bokehOrbs = [], fogRafId;
+
+    // Warm Carpathian palette: gold, amber, soft green, warm white
+    var BOKEH_COLORS = [
+      [200, 169,  81],  // gold
+      [220, 140,  40],  // amber
+      [255, 220, 120],  // warm yellow
+      [100, 170,  70],  // forest green
+      [255, 255, 200],  // warm white
+      [180, 120,  50],  // bronze
+    ];
 
     function resizeFog() {
       fogCanvas.width  = fogCanvas.offsetWidth  || window.innerWidth;
       fogCanvas.height = fogCanvas.offsetHeight || window.innerHeight;
     }
 
-    function makeFogParticle(spreadY) {
+    function makeOrb() {
+      var col = BOKEH_COLORS[Math.floor(Math.random() * BOKEH_COLORS.length)];
       return {
-        x: Math.random() * fogCanvas.width,
-        y: spreadY ? Math.random() * fogCanvas.height : fogCanvas.height + 80,
-        r: Math.random() * 140 + 60,
-        a: Math.random() * 0.09 + 0.02,
-        vx: (Math.random() - 0.5) * 0.22,
-        vy: -(Math.random() * 0.10 + 0.03),
+        x:      Math.random() * fogCanvas.width,
+        y:      Math.random() * fogCanvas.height,
+        r:      Math.random() * 130 + 40,       // base radius 40–170px
+        rAmp:   Math.random() * 20 + 5,         // pulse amplitude
+        rFreq:  Math.random() * 0.0006 + 0.0003,// pulse speed
+        a:      Math.random() * 0.13 + 0.05,    // opacity 5–18%
+        vx:     (Math.random() - 0.5) * 0.18,
+        vy:     (Math.random() - 0.5) * 0.12,
+        col:    col,
+        phase:  Math.random() * Math.PI * 2,    // pulse offset
       };
     }
 
     function initFog() {
       resizeFog();
-      fogParticles = [];
-      for (var i = 0; i < 32; i++) { fogParticles.push(makeFogParticle(true)); }
+      bokehOrbs = [];
+      for (var i = 0; i < 22; i++) { bokehOrbs.push(makeOrb()); }
     }
 
     function drawFog() {
       fogCtx.clearRect(0, 0, fogCanvas.width, fogCanvas.height);
-      for (var i = 0; i < fogParticles.length; i++) {
-        var p = fogParticles[i];
-        var g = fogCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-        g.addColorStop(0, 'rgba(255,255,255,' + p.a + ')');
-        g.addColorStop(1, 'rgba(255,255,255,0)');
+      fogCtx.globalCompositeOperation = 'screen';
+      var now = performance.now();
+      for (var i = 0; i < bokehOrbs.length; i++) {
+        var p   = bokehOrbs[i];
+        var rad = p.r + Math.sin(now * p.rFreq + p.phase) * p.rAmp;
+        var g   = fogCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rad);
+        var c   = p.col;
+        g.addColorStop(0,   'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + (p.a * 0.9) + ')');
+        g.addColorStop(0.4, 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + (p.a * 0.4) + ')');
+        g.addColorStop(1,   'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',0)');
         fogCtx.beginPath();
-        fogCtx.arc(p.x, p.y, p.r, 0, 6.283);
+        fogCtx.arc(p.x, p.y, rad, 0, 6.283);
         fogCtx.fillStyle = g;
         fogCtx.fill();
+        // drift
         p.x += p.vx;
         p.y += p.vy;
-        if (p.y + p.r < 0) {
-          var np = makeFogParticle(false);
-          p.x = np.x; p.y = fogCanvas.height + p.r;
-          p.r = np.r; p.a = np.a; p.vx = np.vx; p.vy = np.vy;
-        }
+        // wrap around edges
+        if (p.x < -rad * 2)  p.x = fogCanvas.width  + rad;
+        if (p.x > fogCanvas.width  + rad * 2) p.x = -rad;
+        if (p.y < -rad * 2)  p.y = fogCanvas.height + rad;
+        if (p.y > fogCanvas.height + rad * 2) p.y = -rad;
       }
+      fogCtx.globalCompositeOperation = 'source-over';
       fogRafId = requestAnimationFrame(drawFog);
     }
 

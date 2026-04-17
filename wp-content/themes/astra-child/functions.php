@@ -1092,7 +1092,7 @@ function glav_sc_contacts( $atts ) {
           <div class="gl-contacts__map gl-animate gl-animate--delay-2">
             <!-- Карта: Гірська Лаванда, Східниця -->
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2606!2d23.35088!3d49.219197!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z0JPRltGA0YHRjNC60LAg0JvQsNCy0LDQvdC00LA!5e0!3m2!1suk!2sua!4v1"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2606!2d23.3509508!3d49.2191115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x473a358d09cdeecf%3A0x65ba7a1199625777!2z0JrQvtC80L%2FQu9C10LrRgSDQk9GW0YDRgdGM0LrQsCDQm9Cw0LLQsNC90LTQsA!5e0!3m2!1suk!2sua!4v1744905600000"
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
               title="Розташування комплексу Гірська Лаванда — Східниця"
@@ -1404,7 +1404,7 @@ function glav_customize_register( $wp_customize ) {
     ] );
 
     $wp_customize->add_setting( 'gl_maps_url', [
-        'default'           => 'https://maps.app.goo.gl/s5NUR41X67xDFT5f8',
+        'default'           => 'https://www.google.com/maps/place/Комплекс+Гірська+Лаванда/@49.2191115,23.3509508,17z/data=!3m1!4b1!4m6!3m5!1s0x473a358d09cdeecf:0x65ba7a1199625777!8m2!3d49.2191115!4d23.3509508',
         'sanitize_callback' => 'esc_url_raw',
     ] );
     $wp_customize->add_control( 'gl_maps_url', [

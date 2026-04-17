@@ -121,6 +121,13 @@ License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 
   --max-width: 1280px;
   --section-pad: clamp(60px, 8vw, 120px);
+
+  /* Shared hero overlay — нейтральний темний градієнт для всіх hero секцій */
+  --gl-hero-overlay: linear-gradient(to bottom,
+    rgba(0, 0, 0, .20) 0%,
+    rgba(0, 0, 0, .32) 40%,
+    rgba(0, 0, 0, .38) 70%,
+    rgba(0, 0, 0, .26) 100%);
 }
 
 /* ==========================================================================
@@ -790,6 +797,7 @@ h4 {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  background: var(--gl-hero-overlay);
 }
 
 .gl-rooms-hero__content,
@@ -921,7 +929,7 @@ h4 {
     linear-gradient(150deg, #0a1c06 0%, #081604 40%, #1c3a0e 70%, #162C09 100%);
   background-size: cover;
   background-position: center 30%;
-  filter: brightness(.75);
+  filter: brightness(.88);
   transform: scale(1.05);
   transition: transform 8s ease;
   z-index: 0;
@@ -954,10 +962,10 @@ h4 {
   position: absolute;
   inset: 0;
   background: linear-gradient(to bottom,
-      rgba(8, 22, 4, .5) 0%,
-      rgba(8, 22, 4, .2) 30%,
-      rgba(8, 22, 4, .4) 70%,
-      #081604 100%);
+      rgba(0, 0, 0, .25) 0%,
+      rgba(0, 0, 0, .10) 30%,
+      rgba(0, 0, 0, .20) 70%,
+      #0a0a0a 100%);
   pointer-events: none;
   z-index: 1; /* Below fog canvas (z-index 2) and content (z-index 3) */
 }
@@ -3203,12 +3211,6 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 
 .gl-banya-hero::before {
   content: "";
-  background:
-    linear-gradient(to bottom,
-      rgba(0, 0, 0, .30) 0%,
-      rgba(15, 30, 8, .55) 35%,
-      rgba(15, 30, 8, .60) 65%,
-      rgba(0, 0, 0, .35) 100%);
   z-index: 1;
 }
 
@@ -3402,6 +3404,12 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   display: block;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
+}
+
+.gl-banya-about__img--full {
+  aspect-ratio: unset;
+  height: auto;
+  object-fit: unset;
 }
 
 .gl-banya-about__img-badge {
@@ -4153,14 +4161,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   /* місце для filters-bar знизу */
 }
 
-.gl-gallery-hero__overlay {
-  background:
-    linear-gradient(to bottom,
-      rgba(0, 0, 0, .30) 0%,
-      rgba(15, 30, 8, .55) 35%,
-      rgba(15, 30, 8, .60) 65%,
-      rgba(0, 0, 0, .35) 100%);
-}
+/* .gl-gallery-hero__overlay — background comes from shared --gl-hero-overlay */
 
 .gl-gallery-hero__content {
   padding: clamp(80px, 10vw, 120px) 0;
@@ -5673,12 +5674,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   /* місце для stats-bar знизу */
 }
 
-.gl-rooms-hero__overlay {
-  background: linear-gradient(150deg,
-      rgba(10, 28, 5, .75) 0%,
-      rgba(28, 58, 14, .55) 50%,
-      rgba(28, 58, 14, .70) 100%);
-}
+/* .gl-rooms-hero__overlay — background comes from shared --gl-hero-overlay */
 
 .gl-rooms-hero__content {
   padding: clamp(80px, 10vw, 120px) 0 clamp(40px, 5vw, 60px);
@@ -6360,13 +6356,8 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 }
 
 .gl-contact-hero__overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(160deg,
-      rgba(28, 58, 14, 0.8) 0%,
-      rgba(28, 58, 14, 0.4) 50%,
-      rgba(8, 15, 5, 0.85) 100%);
   z-index: 1;
+  /* background comes from shared --gl-hero-overlay */
 }
 
 .gl-contact-hero__content {
@@ -8213,7 +8204,7 @@ a.gl-contact-card__value:hover {
 }
 
 /* =========================================================================
-   WOW EFFECTS — Hero Fog Canvas
+   WOW EFFECTS — Hero Bokeh Canvas
    ========================================================================= */
 .gl-hero-fog {
   position: absolute;
@@ -8222,6 +8213,7 @@ a.gl-contact-card__value:hover {
   pointer-events: none;
   z-index: 2; /* Above dark overlay (z-index 1), but below content (z-index 3) */
   opacity: 1;
+  mix-blend-mode: screen;
 }
 
 /* =========================================================================
