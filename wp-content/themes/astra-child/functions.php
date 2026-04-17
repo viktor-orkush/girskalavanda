@@ -53,7 +53,7 @@ function glav_seo_document_title_parts( $title ) {
     }
 
     if ( is_front_page() || is_page_template( 'page-home.php' ) ) {
-        $title['title']   = 'Готель Гірська Лаванда в Східниці';
+        $title['title']   = 'Комлекс Гірська Лаванда в Східниці';
         $title['tagline'] = 'Проживання, баня та чан у Карпатах';
     } elseif ( is_page( 'banya' ) ) {
         $title['title'] = 'Баня в Карпатах · Традиційна баня на дровах';
@@ -102,15 +102,15 @@ function glav_seo_meta_description() {
     $desc = '';
 
     if ( is_front_page() || is_page_template( 'page-home.php' ) ) {
-        $desc = 'Готель Гірська Лаванда в Східниці — проживання в Карпатах, традиційна баня та гарячий чан. Бронювання онлайн.';
+        $desc = 'Комплекс Гірська Лаванда в Східниці — проживання в Карпатах, традиційна баня та гарячий чан. Бронювання онлайн.';
     } elseif ( is_page( 'banya' ) || is_page( 'chan' ) ) {
         $desc = 'Приватна традиційна баня на дровах в Східниці — парна, хамам, міні-басейн. Від 2 500 ₴/сеанс. Бронювання онлайн.';
     } elseif ( is_page( 'rooms' ) ) {
-        $desc = 'Номери готелю Гірська Лаванда в Східниці, Карпати — апартаменти та стандартні номери з видом на ліс. Онлайн бронювання.';
+        $desc = 'Номери Гірська Лаванда в Східниці, Карпати — апартаменти та стандартні номери з видом на ліс. Онлайн бронювання.';
     } elseif ( is_page( 'gallery' ) ) {
-        $desc = 'Фотогалерея готелю Гірська Лаванда в Східниці — номери, баня, чан та карпатські краєвиди.';
+        $desc = 'Фотогалерея комплексу Гірська Лаванда в Східниці — номери, апартаменти, баня, чан та карпатські краєвиди.';
     } elseif ( is_page( 'contact' ) ) {
-        $desc = 'Контакти готелю Гірська Лаванда — Східниця, Львівська область. Телефон, адреса, карта проїзду.';
+        $desc = 'Контакти комплексу Гірська Лаванда — Східниця, Львівська область. Телефон, адреса, карта проїзду.';
     } elseif ( is_singular( 'mphb_room_type' ) ) {
         $id       = get_the_ID();
         $capacity = get_post_meta( $id, 'mphb_adults_capacity', true );
@@ -121,7 +121,7 @@ function glav_seo_meta_description() {
             $size     ? $size . ' м²'        : '',
             $price    ? 'від ' . $price . ' ₴/ніч' : '',
         ] );
-        $desc = get_the_title() . ' — готель Гірська Лаванда, Східниця.' . ( $parts ? ' ' . implode( ', ', $parts ) . '.' : '' );
+        $desc = get_the_title() . ' — комплекс Гірська Лаванда, Східниця.' . ( $parts ? ' ' . implode( ', ', $parts ) . '.' : '' );
     } else {
         $desc = get_bloginfo( 'description' );
     }
@@ -151,12 +151,12 @@ function glav_seo_og_tags() {
     $desc  = get_bloginfo( 'description' );
 
     if ( is_front_page() || is_page_template( 'page-home.php' ) ) {
-        $desc = 'Готель Гірська Лаванда в Східниці — проживання в Карпатах, традиційна баня та гарячий чан. Бронювання онлайн.';
+        $desc = 'Комплекс Гірська Лаванда в Східниці — відпочинок та апартаменти в оренду в Карпатах, традиційна баня та гарячий чан. Бронювання онлайн.';
     } elseif ( is_page( 'banya' ) || is_page( 'chan' ) ) {
         $desc  = 'Приватна традиційна баня на дровах в Східниці — парна, хамам, міні-басейн. Від 2 500 ₴/сеанс.';
         $image = get_the_post_thumbnail_url( get_the_ID(), 'full' ) ?: $default_img;
     } elseif ( is_page( 'rooms' ) ) {
-        $desc = 'Номери готелю Гірська Лаванда в Східниці, Карпати — апартаменти та стандартні номери з видом на ліс.';
+        $desc = 'Номери Гірська Лаванда в Східниці, Карпати — оренда апартаментів для відпочинку з видом на ліс.';
     } elseif ( is_singular( 'mphb_room_type' ) ) {
         $id       = get_the_ID();
         $capacity = get_post_meta( $id, 'mphb_adults_capacity', true );
@@ -167,7 +167,7 @@ function glav_seo_og_tags() {
             $size     ? $size . ' м²'        : '',
             $price    ? 'від ' . $price . ' ₴/ніч' : '',
         ] );
-        $desc  = get_the_title() . ' — готель Гірська Лаванда, Східниця.' . ( $parts ? ' ' . implode( ', ', $parts ) . '.' : '' );
+        $desc  = get_the_title() . ' — комплекс Гірська Лаванда, Східниця.' . ( $parts ? ' ' . implode( ', ', $parts ) . '.' : '' );
         $image = get_the_post_thumbnail_url( $id, 'full' ) ?: $default_img;
     }
 
@@ -193,7 +193,7 @@ function glav_seo_og_tags() {
 }
 
 /**
- * LodgingBusiness + Hotel JSON-LD schema — outputs on all pages.
+ * Apartment JSON-LD schema — outputs on all pages.
  */
 add_action( 'wp_head', 'glav_schema_lodging_business', 10 );
 function glav_schema_lodging_business() {
@@ -207,11 +207,11 @@ function glav_schema_lodging_business() {
 
     $schema = [
         '@context'      => 'https://schema.org',
-        '@type'         => [ 'LodgingBusiness', 'Hotel' ],
-        '@id'           => home_url( '/#hotel' ),
-        'name'          => 'Гірська Лаванда',
-        'alternateName' => 'Girska Lavanda',
-        'description'   => 'Затишний готельний комплекс у серці Карпат в Східниці. Проживання в комфортних номерах, традиційна баня на дровах, гарячий чан серед природи.',
+        '@type'         => 'Apartment',
+        '@id'           => home_url( '/#apartments' ),
+        'name'          => 'Апартаменти Гірська Лаванда',
+        'alternateName' => 'Girska Lavanda Apartments',
+        'description'   => 'Апартаменти з обслуговуванням у серці Карпат в Східниці. Оренда апартаментів для відпочинку, традиційна баня на дровах, гарячий чан серед природи.',
         'url'           => home_url( '/' ),
         'telephone'     => $phone ?: '',
         'address'       => [
@@ -332,7 +332,7 @@ function glav_schema_banya() {
         '@type'       => 'Service',
         'name'        => 'Традиційна баня Гірська Лаванда',
         'description' => 'Приватна традиційна дерев\'яна баня на дровах в Східниці. Парна, хамам, міні-басейн, гарячий дерев\'яний чан під відкритим небом.',
-        'provider'    => [ '@id' => home_url( '/#hotel' ) ],
+        'provider'    => [ '@id' => home_url( '/#apartments' ) ],
         'areaServed'  => [ '@type' => 'City', 'name' => 'Східниця' ],
         'url'         => get_permalink(),
         'hasOfferCatalog' => [
@@ -1409,7 +1409,7 @@ function glav_customize_register( $wp_customize ) {
     ] );
     $wp_customize->add_control( 'gl_maps_url', [
         'label'       => 'Google Maps посилання',
-        'description' => 'Пряме посилання на Google Maps для готелю (використовується у футері та на сторінці контактів)',
+        'description' => 'Пряме посилання на Google Maps для апартаментів (використовується у футері та на сторінці контактів)',
         'section'     => 'gl_contacts',
         'type'        => 'url',
     ] );
@@ -1487,7 +1487,7 @@ function glav_get_room_amenities( $room_type_id ) {
         if ( str_contains( $title, 'сімей' ) ) {
             $list[] = 'Місце для дітей';
         }
-        // Baня і чан — shared hotel facilities
+        // Baня і чан — shared facilities
         $list[] = 'Баня та чан (спільне)';
 
         return array_unique( $list );

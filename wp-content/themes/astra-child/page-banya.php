@@ -70,7 +70,7 @@ if (function_exists('glav_render_image_schema')) {
       'url' => $gimg['full'],
       'alt' => $gimg['alt'],
       'name' => wp_strip_all_tags($gimg['alt']) . ' — Гірська Лаванда',
-      'description' => 'Фото з банного комплексу готелю Гірська Лаванда у Східниці.'
+      'description' => 'Фото з банного комплексу Гірська Лаванда у Східниці.'
     ];
     $count++;
   }
@@ -525,7 +525,7 @@ endif; ?>
   <section class="gl-banya-rooms gl-section gl-section--sand" id="banya-rooms">
     <div class="gl-container">
       <div class="gl-banya-rooms__header gl-center gl-animate">
-        <span class="gl-section-label">Готель Гірська Лаванда</span>
+        <span class="gl-section-label">Комплекс Гірська Лаванда</span>
         <h2 class="gl-section-title">Залишіться на ніч</h2>
         <p class="gl-section-subtitle">Продовжте відпочинок після бані — оберіть затишний номер серед карпатських сосен</p>
       </div>
@@ -559,7 +559,7 @@ endif; ?>
         <?php endforeach; ?>
       </div>
       <div class="gl-center gl-banya-rooms__cta gl-animate">
-        <a href="<?php echo esc_url(home_url('/rooms/')); ?>" class="gl-btn gl-btn--outline-gold">Всі номери готелю</a>
+        <a href="<?php echo esc_url(home_url('/rooms/')); ?>" class="gl-btn gl-btn--outline-gold">Всі номери</a>
       </div>
     </div>
   </section>

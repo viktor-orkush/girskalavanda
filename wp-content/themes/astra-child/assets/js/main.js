@@ -10,14 +10,6 @@
      ========================================================================= */
   const header = document.getElementById('masthead') || document.querySelector('.site-header');
 
-  function updateHeaderHeight() {
-    var h = header ? header.offsetHeight : 0;
-    document.documentElement.style.setProperty('--gl-header-height', h + 'px');
-  }
-
-  updateHeaderHeight();
-  window.addEventListener('resize', updateHeaderHeight, { passive: true });
-
   function onScroll() {
     if (!header) return;
     const scrolled = window.scrollY > 80;
@@ -34,66 +26,54 @@
   const animatedEls = document.querySelectorAll('.gl-animate');
 
   if (animatedEls.length && 'IntersectionObserver' in window) {
-    var observer = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
-            // Stagger siblings that appear together
-            var el = entry.target;
-            var siblings = el.parentElement.querySelectorAll('.gl-animate:not(.is-visible)');
-            var staggerBase = 0;
-            siblings.forEach(function (sib) {
-              if (sib.getBoundingClientRect().top < window.innerHeight) {
-                if (!sib.style.transitionDelay && !sib.className.match(/gl-animate--delay-/)) {
-                  sib.style.transitionDelay = staggerBase + 'ms';
-                  staggerBase += 80;
-                }
-                sib.classList.add('is-visible');
-                observer.unobserve(sib);
-              }
-            });
-            el.classList.add('is-visible');
-            observer.unobserve(el);
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.05, rootMargin: '0px 0px -20px 0px' }
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
     );
     animatedEls.forEach(function (el) { observer.observe(el); });
-
-    // Safety net: reveal any still-hidden elements after 3s
-    setTimeout(function () {
-      document.querySelectorAll('.gl-animate:not(.is-visible)').forEach(function (el) {
-        el.classList.add('is-visible');
-      });
-    }, 3000);
   } else {
     // Fallback — show all
     animatedEls.forEach(function (el) { el.classList.add('is-visible'); });
   }
 
   /* =========================================================================
-     HERO PARALLAX (Optimized with requestAnimationFrame)
+     HERO PARALLAX — scroll + mouse movement
      ========================================================================= */
-  const heroBg = document.querySelector('.gl-hero__bg');
-  if (heroBg && window.innerWidth > 768) {
+  var heroBg = document.querySelector('.gl-hero__bg');
+  if (heroBg) {
     heroBg.classList.add('gl-hero__bg--loaded');
-    
-    let scrollY = 0;
-    let ticking = false;
 
-    function updateParallax() {
-      heroBg.style.transform = 'scale(1.05) translateY(' + (scrollY * 0.3) + 'px)';
-      ticking = false;
+    var heroScrollOff = 0, heroMX = 0, heroMY = 0;
+
+    function applyHeroBg() {
+      heroBg.style.transform = 'scale(1.08) translate(' + heroMX + 'px,' + (heroMY + heroScrollOff * 0.25) + 'px)';
     }
 
     window.addEventListener('scroll', function () {
-      scrollY = window.scrollY;
-      if (!ticking) {
-        window.requestAnimationFrame(updateParallax);
-        ticking = true;
-      }
+      heroScrollOff = window.scrollY;
+      applyHeroBg();
     }, { passive: true });
+
+    var heroSection = document.querySelector('.gl-hero');
+    if (heroSection) {
+      heroSection.addEventListener('mousemove', function (e) {
+        var r = heroSection.getBoundingClientRect();
+        heroMX = -((e.clientX / r.width) - 0.5) * 18;
+        heroMY = -((e.clientY / r.height) - 0.5) * 12;
+        applyHeroBg();
+      });
+      heroSection.addEventListener('mouseleave', function () {
+        heroMX = 0; heroMY = 0;
+        applyHeroBg();
+      });
+    }
   }
 
   /* =========================================================================
@@ -108,9 +88,10 @@
     let current = 0;
     const cards = track.querySelectorAll('.gl-testimonial-card');
     const total = cards.length;
+    const perView = window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3;
 
     function getMax() {
-      return Math.max(0, total - 1); // always 1 card per step — all dots reachable
+      return Math.max(0, total - (window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3));
     }
 
     function goTo(idx) {
@@ -126,13 +107,8 @@
     dots.forEach(function (d, i) { d.addEventListener('click', function () { goTo(i); }); });
 
     // Auto-play
-    function startAutoplay() {
-      autoplay = setInterval(function () { goTo(current + 1 > getMax() ? 0 : current + 1); }, 5000);
-    }
-    var autoplay;
-    startAutoplay();
+    var autoplay = setInterval(function () { goTo(current + 1 > getMax() ? 0 : current + 1); }, 5000);
     track.addEventListener('mouseenter', function () { clearInterval(autoplay); });
-    track.addEventListener('mouseleave', startAutoplay);
 
     // Touch swipe
     var touchStartX = 0;
@@ -347,147 +323,398 @@
   });
 
   /* =========================================================================
-     MOBILE MENU — CSS-driven animation with Astra override
-     We force display:block and let CSS handle visibility via max-height/opacity.
-     Astra uses body class `ast-main-header-nav-open` to toggle menu state.
+     MOBILE MENU — smooth animation helper
+     Astra toggles display:none/block which breaks CSS transitions.
+     We override with max-height animation via CSS class, and hook into
+     Astra's toggle to add/remove body class.
      ========================================================================= */
-  var mobileMenuContent = document.querySelector('#ast-mobile-header .ast-mobile-header-content, .ast-mobile-header-content');
-  var mobileToggle = document.querySelector('#ast-mobile-header .menu-toggle, .ast-mobile-menu-trigger-minimal, .main-header-menu-toggle');
+  var mobileMenuContent = document.querySelector('#ast-mobile-header .ast-mobile-header-content');
+  var mobileToggle = document.querySelector('#ast-mobile-header .ast-mobile-menu-trigger-minimal');
 
   if (mobileMenuContent && mobileToggle) {
-    // Force display:block so CSS can control visibility via max-height + opacity
+    // Override Astra's display:none with our CSS animation approach
+    // Force display:block always, control visibility via max-height + opacity
     mobileMenuContent.style.display = 'block';
 
-    // Astra may reset display:none — keep overriding it
+    // Watch for Astra's class changes on body to detect menu open/close
+    var menuObserver = new MutationObserver(function (mutations) {
+      mutations.forEach(function (mutation) {
+        if (mutation.attributeName === 'class') {
+          var isOpen = document.body.classList.contains('ast-main-header-nav-open');
+          if (isOpen) {
+            mobileMenuContent.style.display = 'block';
+          }
+        }
+      });
+    });
+    menuObserver.observe(document.body, { attributes: true });
+
+    // Also ensure display is always block (Astra may re-set it)
     var contentObserver = new MutationObserver(function () {
-      if (mobileMenuContent.style.display !== 'block') {
+      if (mobileMenuContent.style.display === 'none' && 
+          document.body.classList.contains('ast-main-header-nav-open')) {
         mobileMenuContent.style.display = 'block';
       }
     });
     contentObserver.observe(mobileMenuContent, { attributes: true, attributeFilter: ['style'] });
 
-    // Close menu on link click (smooth UX — navigate then close)
-    mobileMenuContent.querySelectorAll('a.menu-link, a[href]').forEach(function (link) {
+    // Close menu on link click (for smooth UX)
+    mobileMenuContent.querySelectorAll('.menu-link').forEach(function (link) {
+      // Skip links with sub-menus (they toggle sub-menu instead)
       var parent = link.closest('.menu-item');
-      // Skip sub-menu toggle parents (they expand sub-menu)
-      if (parent && parent.classList.contains('menu-item-has-children') && !link.closest('.sub-menu')) return;
+      if (parent && parent.classList.contains('menu-item-has-children')) return;
 
       link.addEventListener('click', function () {
+        // Trigger Astra's close by clicking the toggle
         if (document.body.classList.contains('ast-main-header-nav-open')) {
           mobileToggle.click();
         }
       });
     });
+  }
 
-    // Close on overlay click / scroll lock
-    document.addEventListener('click', function (e) {
-      if (!document.body.classList.contains('ast-main-header-nav-open')) return;
-      // If click is outside menu and outside toggle button
-      var header = document.querySelector('#ast-mobile-header, .ast-mobile-header-wrap');
-      if (header && !header.contains(e.target)) {
-        mobileToggle.click();
+  /* =========================================================================
+     SCROLL-TO-TOP BUTTON
+     ========================================================================= */
+  var scrollTopBtn = document.getElementById('gl-scroll-top');
+  if (scrollTopBtn) {
+    var progressCircle = scrollTopBtn.querySelector('.gl-scroll-top__progress-circle');
+    var circumference = progressCircle ? 2 * Math.PI * 22 : 0; // r=22
+
+    function updateScrollTop() {
+      var scrollY = window.scrollY || window.pageYOffset;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var scrollPercent = docHeight > 0 ? scrollY / docHeight : 0;
+
+      // Show/hide button (appear after 400px scroll)
+      if (scrollY > 400) {
+        scrollTopBtn.classList.add('is-visible');
+      } else {
+        scrollTopBtn.classList.remove('is-visible');
       }
+
+      // Update progress ring
+      if (progressCircle && circumference) {
+        var offset = circumference - (scrollPercent * circumference);
+        progressCircle.style.strokeDashoffset = offset;
+      }
+    }
+
+    window.addEventListener('scroll', updateScrollTop, { passive: true });
+    updateScrollTop();
+
+    scrollTopBtn.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
   /* =========================================================================
      ROOMS CAROUSEL
      ========================================================================= */
-  var roomsTrack   = document.querySelector('.gl-rooms__track');
-  var roomsBtnPrev = document.querySelector('.gl-rooms__btn--prev');
-  var roomsBtnNext = document.querySelector('.gl-rooms__btn--next');
-  var roomsDotsEl  = document.getElementById('rooms-dots');
+  var roomsCarousel = document.getElementById('rooms-carousel');
+  var roomsTrack    = roomsCarousel ? roomsCarousel.querySelector('.gl-rooms__track') : null;
+  var roomsDotsWrap = document.getElementById('rooms-dots');
+  var roomsBtnPrev  = roomsCarousel ? roomsCarousel.querySelector('.gl-rooms__btn--prev') : null;
+  var roomsBtnNext  = roomsCarousel ? roomsCarousel.querySelector('.gl-rooms__btn--next') : null;
 
   if (roomsTrack) {
-    var roomsCards   = roomsTrack.querySelectorAll('.gl-room-card');
-    var roomsTotal   = roomsCards.length;
-    var roomsCurrent = 0;
-    var roomsDots    = [];
+    var roomCards   = roomsTrack.querySelectorAll('.gl-room-card');
+    var roomTotal   = roomCards.length;
+    var roomCurrent = 0;
 
     function getRoomsPerView() {
-      if (window.innerWidth >= 1024) return 3;
-      if (window.innerWidth >= 640)  return 2;
-      return 1;
+      return window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3;
     }
 
     function getRoomsMax() {
-      return Math.max(0, roomsTotal - getRoomsPerView());
+      return Math.max(0, roomTotal - getRoomsPerView());
     }
 
-    function roomsGoTo(idx) {
-      roomsCurrent = Math.max(0, Math.min(idx, getRoomsMax()));
-      var gap       = 28;
-      var viewport  = roomsTrack.parentElement;
-      var perView   = getRoomsPerView();
-      var cardWidth = (viewport.offsetWidth - gap * (perView - 1)) / perView;
-      roomsTrack.style.transform = 'translateX(-' + (roomsCurrent * (cardWidth + gap)) + 'px)';
-
-      roomsDots.forEach(function (d, i) {
-        d.classList.toggle('is-active', i === roomsCurrent);
-      });
-
-      if (roomsBtnPrev) roomsBtnPrev.disabled = roomsCurrent === 0;
-      if (roomsBtnNext) roomsBtnNext.disabled = roomsCurrent >= getRoomsMax();
-    }
-
-    // Generate dots
-    if (roomsDotsEl) {
-      for (var ri = 0; ri < roomsTotal; ri++) {
+    function buildRoomDots() {
+      if (!roomsDotsWrap) return;
+      roomsDotsWrap.innerHTML = '';
+      var max = getRoomsMax();
+      for (var i = 0; i <= max; i++) {
         var dot = document.createElement('button');
-        dot.className = 'gl-rooms__dot';
-        dot.setAttribute('aria-label', 'Номер ' + (ri + 1));
+        dot.className = 'gl-rooms__dot' + (i === roomCurrent ? ' is-active' : '');
+        dot.setAttribute('aria-label', 'Слайд ' + (i + 1));
+        roomsDotsWrap.appendChild(dot);
         (function (idx) {
-          dot.addEventListener('click', function () { roomsGoTo(idx); });
-        }(ri));
-        roomsDotsEl.appendChild(dot);
-        roomsDots.push(dot);
+          dot.addEventListener('click', function () { goToRoom(idx); });
+        })(i);
       }
     }
 
-    if (roomsBtnPrev) roomsBtnPrev.addEventListener('click', function () { roomsGoTo(roomsCurrent - 1); });
-    if (roomsBtnNext) roomsBtnNext.addEventListener('click', function () { roomsGoTo(roomsCurrent + 1); });
+    function goToRoom(idx) {
+      roomCurrent = Math.max(0, Math.min(idx, getRoomsMax()));
+      var cardWidth = roomCards[0] ? roomCards[0].offsetWidth : 0;
+      roomsTrack.style.transform = 'translateX(-' + (roomCurrent * (cardWidth + 28)) + 'px)';
 
-    // Touch swipe
-    var roomsTouchX = 0;
-    roomsTrack.addEventListener('touchstart', function (e) {
-      roomsTouchX = e.touches[0].clientX;
-    }, { passive: true });
+      if (roomsDotsWrap) {
+        roomsDotsWrap.querySelectorAll('.gl-rooms__dot').forEach(function (d, i) {
+          d.classList.toggle('is-active', i === roomCurrent);
+        });
+      }
+      if (roomsBtnPrev) roomsBtnPrev.disabled = roomCurrent === 0;
+      if (roomsBtnNext) roomsBtnNext.disabled = roomCurrent >= getRoomsMax();
+    }
+
+    if (roomsBtnPrev) roomsBtnPrev.addEventListener('click', function () { goToRoom(roomCurrent - 1); });
+    if (roomsBtnNext) roomsBtnNext.addEventListener('click', function () { goToRoom(roomCurrent + 1); });
+
+    var roomTouchX = 0;
+    roomsTrack.addEventListener('touchstart', function (e) { roomTouchX = e.touches[0].clientX; }, { passive: true });
     roomsTrack.addEventListener('touchend', function (e) {
-      var diff = roomsTouchX - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 50) roomsGoTo(diff > 0 ? roomsCurrent + 1 : roomsCurrent - 1);
+      var diff = roomTouchX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) goToRoom(diff > 0 ? roomCurrent + 1 : roomCurrent - 1);
     });
 
-    // Recalc offset on resize
+    var roomResizeTimer;
     window.addEventListener('resize', function () {
-      roomsGoTo(Math.min(roomsCurrent, getRoomsMax()));
+      clearTimeout(roomResizeTimer);
+      roomResizeTimer = setTimeout(function () {
+        buildRoomDots();
+        goToRoom(Math.min(roomCurrent, getRoomsMax()));
+      }, 200);
     }, { passive: true });
 
-    roomsGoTo(0);
+    buildRoomDots();
+    goToRoom(0);
   }
 
   /* =========================================================================
-     FLOATING CONTACT WIDGET (FAB)
+     HERO FOG CANVAS (lightweight particles)
      ========================================================================= */
-  var contactFab = document.getElementById('gl-contact-fab');
-  if (contactFab) {
-    var fabToggle = document.getElementById('gl-contact-fab-toggle');
+  var fogCanvas = document.querySelector('.gl-hero-fog');
+  if (fogCanvas && fogCanvas.getContext) {
+    var fogCtx = fogCanvas.getContext('2d');
+    var fogParticles = [], fogRafId;
 
+    function resizeFog() {
+      fogCanvas.width  = fogCanvas.offsetWidth  || window.innerWidth;
+      fogCanvas.height = fogCanvas.offsetHeight || window.innerHeight;
+    }
+
+    function makeFogParticle(spreadY) {
+      return {
+        x: Math.random() * fogCanvas.width,
+        y: spreadY ? Math.random() * fogCanvas.height : fogCanvas.height + 80,
+        r: Math.random() * 140 + 60,
+        a: Math.random() * 0.09 + 0.02,
+        vx: (Math.random() - 0.5) * 0.22,
+        vy: -(Math.random() * 0.10 + 0.03),
+      };
+    }
+
+    function initFog() {
+      resizeFog();
+      fogParticles = [];
+      for (var i = 0; i < 32; i++) { fogParticles.push(makeFogParticle(true)); }
+    }
+
+    function drawFog() {
+      fogCtx.clearRect(0, 0, fogCanvas.width, fogCanvas.height);
+      for (var i = 0; i < fogParticles.length; i++) {
+        var p = fogParticles[i];
+        var g = fogCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+        g.addColorStop(0, 'rgba(255,255,255,' + p.a + ')');
+        g.addColorStop(1, 'rgba(255,255,255,0)');
+        fogCtx.beginPath();
+        fogCtx.arc(p.x, p.y, p.r, 0, 6.283);
+        fogCtx.fillStyle = g;
+        fogCtx.fill();
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.y + p.r < 0) {
+          var np = makeFogParticle(false);
+          p.x = np.x; p.y = fogCanvas.height + p.r;
+          p.r = np.r; p.a = np.a; p.vx = np.vx; p.vy = np.vy;
+        }
+      }
+      fogRafId = requestAnimationFrame(drawFog);
+    }
+
+    window.addEventListener('resize', resizeFog, { passive: true });
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          if (!fogRafId) drawFog();
+        } else {
+          if (fogRafId) { cancelAnimationFrame(fogRafId); fogRafId = null; }
+        }
+      }).observe(fogCanvas);
+    } else {
+      drawFog();
+    }
+
+    initFog();
+  }
+
+  /* =========================================================================
+     TEXT REVEAL (word-by-word mask animation)
+     ========================================================================= */
+  document.querySelectorAll('.gl-text-reveal').forEach(function (el) {
+    var text = el.textContent.trim();
+    el.setAttribute('aria-label', text);
+    el.innerHTML = text.split(/\s+/).map(function (w) {
+      return '<span class="gl-tr-w"><span class="gl-tr-i">' + w + '</span></span>';
+    }).join(' ');
+
+    if ('IntersectionObserver' in window) {
+      var trObs = new IntersectionObserver(function (entries) {
+        if (!entries[0].isIntersecting) return;
+        el.querySelectorAll('.gl-tr-i').forEach(function (span, i) {
+          span.style.transitionDelay = (i * 0.07) + 's';
+          span.classList.add('is-visible');
+        });
+        trObs.unobserve(el);
+      }, { threshold: 0.2 });
+      trObs.observe(el);
+    } else {
+      el.querySelectorAll('.gl-tr-i').forEach(function (s) { s.classList.add('is-visible'); });
+    }
+  });
+
+  /* =========================================================================
+     CUSTOM CURSOR + MAGNETIC BUTTONS
+     (desktop only — touch devices are excluded by CSS and matchMedia)
+     ========================================================================= */
+  if (window.matchMedia && window.matchMedia('(pointer: fine)').matches) {
+    var glCursor    = document.createElement('div');
+    var glCursorRing = document.createElement('div');
+    glCursor.className     = 'gl-cursor';
+    glCursorRing.className = 'gl-cursor-follower';
+    document.body.appendChild(glCursor);
+    document.body.appendChild(glCursorRing);
+    document.body.classList.add('has-custom-cursor');
+
+    var curX = -100, curY = -100, ringX = -100, ringY = -100;
+
+    document.addEventListener('mousemove', function (e) {
+      curX = e.clientX; curY = e.clientY;
+      // Bug fix 3: CSS margin handles centering — just translate to exact cursor pos
+      glCursor.style.transform = 'translate(' + curX + 'px,' + curY + 'px)';
+    });
+
+    (function animateRing() {
+      ringX += (curX - ringX) * 0.13;
+      ringY += (curY - ringY) * 0.13;
+      // Bug fix 3: CSS margin handles centering
+      glCursorRing.style.transform = 'translate(' + ringX + 'px,' + ringY + 'px)';
+      requestAnimationFrame(animateRing);
+    })();
+
+    document.addEventListener('mouseleave', function () {
+      glCursor.style.opacity = '0'; glCursorRing.style.opacity = '0';
+    });
+    document.addEventListener('mouseenter', function () {
+      glCursor.style.opacity = '1'; glCursorRing.style.opacity = '1';
+    });
+
+    document.addEventListener('mouseover', function (e) {
+      if (e.target.closest('a, button, [role="button"], label, input')) {
+        glCursor.classList.add('is-active');
+        glCursorRing.classList.add('is-active');
+      }
+    });
+    // Bug fix 2: use relatedTarget to avoid flickering when moving between
+    // child elements of a link (mouseout fires for every child traversal)
+    document.addEventListener('mouseout', function (e) {
+      var from = e.target.closest('a, button, [role="button"], label, input');
+      var to   = e.relatedTarget ? e.relatedTarget.closest('a, button, [role="button"], label, input') : null;
+      if (from && from !== to) {
+        glCursor.classList.remove('is-active');
+        glCursorRing.classList.remove('is-active');
+      }
+    });
+
+    // Magnetic pull — all buttons (instant follow, elastic spring-back)
+    document.querySelectorAll('.gl-btn').forEach(function (btn) {
+      btn.addEventListener('mouseenter', function () {
+        // Kill CSS transition for transform — button follows cursor instantly
+        btn.style.transition = 'transform 0s linear';
+      });
+
+      btn.addEventListener('mousemove', function (e) {
+        var r  = btn.getBoundingClientRect();
+        var dx = (e.clientX - (r.left + r.width  / 2)) * 0.32;
+        var dy = (e.clientY - (r.top  + r.height / 2)) * 0.32;
+        btn.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(1.04)';
+        glCursor.classList.add('is-magnetic');
+        glCursorRing.classList.add('is-magnetic');
+      });
+
+      btn.addEventListener('mouseleave', function () {
+        // Elastic spring-back
+        btn.style.transition = 'transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        btn.style.transform = '';
+        setTimeout(function () { btn.style.transition = ''; }, 600);
+        glCursor.classList.remove('is-magnetic');
+        glCursorRing.classList.remove('is-magnetic');
+      });
+    });
+  }
+
+  /* =========================================================================
+     LIQUID RIPPLE — click wave from cursor origin (all .gl-btn)
+     ========================================================================= */
+  document.querySelectorAll('.gl-btn').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      var r    = btn.getBoundingClientRect();
+      var size = Math.max(r.width, r.height) * 2.2;
+      var x    = e.clientX - r.left - size / 2;
+      var y    = e.clientY - r.top  - size / 2;
+
+      var ripple = document.createElement('span');
+      ripple.className = 'gl-ripple';
+      ripple.style.cssText = 'width:' + size + 'px;height:' + size + 'px;top:' + y + 'px;left:' + x + 'px;';
+
+      // Insert first so text DOM nodes paint on top
+      btn.insertBefore(ripple, btn.firstChild);
+      setTimeout(function () { ripple.remove(); }, 750);
+    });
+  });
+
+  /* =========================================================================
+     CONTACT FAB — toggle open/close
+     ========================================================================= */
+  var fabEl     = document.getElementById('gl-contact-fab');
+  var fabToggle = document.getElementById('gl-contact-fab-toggle');
+  if (fabEl && fabToggle) {
     fabToggle.addEventListener('click', function (e) {
       e.stopPropagation();
-      contactFab.classList.toggle('is-open');
+      fabEl.classList.toggle('is-open');
     });
-
     document.addEventListener('click', function (e) {
-      if (!contactFab.contains(e.target)) {
-        contactFab.classList.remove('is-open');
+      if (fabEl.classList.contains('is-open') && !fabEl.contains(e.target)) {
+        fabEl.classList.remove('is-open');
       }
     });
-
+    // Close on Escape
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') {
-        contactFab.classList.remove('is-open');
-      }
+      if (e.key === 'Escape') fabEl.classList.remove('is-open');
     });
+  }
+
+  /* =========================================================================
+     IMAGE PARALLAX on scroll (room & wellness cards)
+     ========================================================================= */
+  var parallaxCardImgs = document.querySelectorAll('.gl-room-card__img img, .gl-wellness-card__img img');
+  if (parallaxCardImgs.length) {
+    function updateCardParallax() {
+      var vh = window.innerHeight;
+      parallaxCardImgs.forEach(function (img) {
+        var card = img.closest('.gl-room-card, .gl-wellness-card');
+        if (!card) return;
+        var rect = card.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > vh) return;
+        var offset = ((rect.top + rect.height / 2) - vh / 2) * 0.09;
+        img.style.transform = 'scale(1.12) translateY(' + offset + 'px)';
+      });
+    }
+    window.addEventListener('scroll', updateCardParallax, { passive: true });
+    updateCardParallax();
   }
 
 })();

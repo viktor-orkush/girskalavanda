@@ -19,13 +19,13 @@ if ($telegram_raw) {
 $whatsapp_url = $viber_url = '';
 if ($phone) {
   $wa_phone = preg_replace('/[^0-9]/', '', $phone);
-  $wa_msg = rawurlencode('Добрий день! Хочу забронювати номер у готелі Гірська Лаванда.');
+  $wa_msg = rawurlencode('Добрий день! Хочу забронювати апартаменти в Гірській Лаванді.');
   $whatsapp_url = 'https://wa.me/' . $wa_phone . '?text=' . $wa_msg;
   $viber_url = 'viber://contact?number=' . $wa_phone;
 }
 $instagram = get_theme_mod('gl_instagram', 'https://www.instagram.com/girska_lavandaa/');
 $facebook = get_theme_mod('gl_facebook', 'https://facebook.com/girskalavanda');
-$maps_url = get_theme_mod('gl_maps_url', 'https://maps.app.goo.gl/s5NUR41X67xDFT5f8');
+$maps_url = get_theme_mod('gl_maps_url', 'https://www.google.com/maps/place/Комплекс+Гірська+Лаванда/@49.2191115,23.3509508,17z/data=!3m1!4b1!4m6!3m5!1s0x473a358d09cdeecf:0x65ba7a1199625777!8m2!3d49.2191115!4d23.3509508');
 
 // Instagram DM link
 $instagram_dm = $instagram;
@@ -220,9 +220,9 @@ endif; ?>
         <div class="gl-contact-map gl-animate gl-animate--delay-2">
           <div class="gl-contact-map__wrapper">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2606!2d23.35088!3d49.219197!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z0JPRltGA0YHRjNC60LAg0JvQsNCy0LDQvdC00LA!5e0!3m2!1suk!2sua!4v1"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2606!2d23.3509508!3d49.2191115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x473a358d09cdeecf%3A0x65ba7a1199625777!2z0JrQvtC80L%2FQu9C10LrRgSDQk9GW0YDRgdGM0LrQsCDQm9Cw0LLQsNC90LTQsA!5e0!3m2!1suk!2sua!4v1744905600000"
               loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-              title="Розташування готелю Гірська Лаванда — Східниця"></iframe>
+              title="Розташування комплексу Гірська Лаванда — Східниця"></iframe>
           </div>
           <a href="<?php echo esc_url($maps_url); ?>" class="gl-contact-map__link" target="_blank"
             rel="noopener noreferrer">
@@ -262,7 +262,7 @@ endif; ?>
             <li><strong>З Івано-Франківська</strong> — ~100 км, 1.5–2 години через Калуш — Долину</li>
           </ul>
           <p class="gl-direction-card__note">
-            <?php echo $icon_check; ?> Безкоштовна парковка на території готелю
+            <?php echo $icon_check; ?> Безкоштовна парковка на території комплексу
           </p>
         </div>
 
@@ -331,7 +331,7 @@ endif; ?>
             <span class="gl-faq-item__toggle" aria-hidden="true"></span>
           </summary>
           <div class="gl-faq-item__answer">
-            <p>Так, на території готелю є безкоштовна охоронювана парковка для гостей. Місця не потрібно бронювати
+            <p>Так, на території комплексу є безкоштовна охоронювана парковка для гостей. Місця не потрібно бронювати
               заздалегідь.</p>
           </div>
         </details>
@@ -353,7 +353,7 @@ endif; ?>
             <span class="gl-faq-item__toggle" aria-hidden="true"></span>
           </summary>
           <div class="gl-faq-item__answer">
-            <p>Так, безкоштовний Wi-Fi доступний у всіх номерах та на території готелю.</p>
+            <p>Так, безкоштовний Wi-Fi доступний у всіх номерах та на території комплексу.</p>
           </div>
         </details>
 

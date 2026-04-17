@@ -272,7 +272,26 @@ h4 {
   border-radius: var(--radius-xl);
   border: 2px solid transparent;
   cursor: pointer;
-  transition: all var(--transition);
+  position: relative;   /* required for ripple + magnetic */
+  overflow: hidden;     /* clips ripple to button shape */
+  /* transform is controlled by JS for magnetic — excluded from transition */
+  transition: background var(--transition), color var(--transition),
+              border-color var(--transition), box-shadow var(--transition),
+              opacity var(--transition);
+}
+
+/* ── Liquid Ripple ─────────────────────────────────────── */
+.gl-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.38);
+  pointer-events: none;
+  transform: scale(0);
+  animation: glRipple 0.65s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes glRipple {
+  from { transform: scale(0); opacity: 0.85; }
+  to   { transform: scale(4); opacity: 0;    }
 }
 
 /* Primary — Gold */
@@ -283,6 +302,10 @@ h4 {
   box-shadow: var(--shadow-gold-sm);
   position: relative;
   overflow: hidden;
+  /* re-enable transform animation for CSS hover (JS overrides inline for magnetic) */
+  transition: background var(--transition), color var(--transition),
+              border-color var(--transition), box-shadow var(--transition),
+              opacity var(--transition), transform var(--transition);
 }
 
 .gl-btn--primary::after {
@@ -318,6 +341,9 @@ h4 {
   color: #fff !important;
   border-color: var(--color-accent);
   box-shadow: var(--shadow-gold-sm);
+  transition: background var(--transition), color var(--transition),
+              border-color var(--transition), box-shadow var(--transition),
+              opacity var(--transition), transform var(--transition);
 }
 
 .gl-btn--accent:hover {
@@ -335,6 +361,9 @@ h4 {
   color: #fff !important;
   border-color: rgba(255, 255, 255, .5);
   backdrop-filter: blur(4px);
+  transition: background var(--transition), color var(--transition),
+              border-color var(--transition), box-shadow var(--transition),
+              opacity var(--transition), transform var(--transition);
 }
 
 .gl-btn--outline:hover {
@@ -930,12 +959,12 @@ h4 {
       rgba(8, 22, 4, .4) 70%,
       #081604 100%);
   pointer-events: none;
-  z-index: 1;
+  z-index: 1; /* Below fog canvas (z-index 2) and content (z-index 3) */
 }
 
 .gl-hero__content {
   position: relative;
-  z-index: 2;
+  z-index: 3; /* Above fog canvas (z-index 2) */
   padding: 0 clamp(20px, 5vw, 60px);
   max-width: 1100px;
   overflow: visible;
@@ -966,6 +995,12 @@ h4 {
   border-radius: 50%;
   background: var(--color-gold);
   box-shadow: 0 0 10px var(--color-gold);
+  animation: badgePulse 2.2s ease-in-out infinite;
+  position: relative; /* needed for ::after ripple */
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 6px var(--color-gold); transform: scale(1); }
+  50%       { box-shadow: 0 0 18px var(--color-gold), 0 0 30px rgba(200,169,81,0.4); transform: scale(1.25); }
 }
 
 .gl-hero__desc {
@@ -993,6 +1028,20 @@ h4 {
   filter: drop-shadow(0 4px 30px rgba(0, 0, 0, .5));
   max-width: 1200px;
 }
+/* After text-reveal JS runs, it wraps words in spans — background-clip: text on the parent
+   no longer works (h1 has no direct text glyphs). Move gradient to the inner .gl-tr-i spans. */
+.gl-hero__title[aria-label] {
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  -webkit-text-fill-color: unset;
+}
+.gl-hero__title[aria-label] .gl-tr-i {
+  background: linear-gradient(135deg, var(--color-white) 0%, var(--color-gold-light) 50%, var(--color-gold) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
 .gl-hero__subtitle {
   font-family: var(--font-heading);
@@ -1017,7 +1066,7 @@ h4 {
   bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 2;
+  z-index: 4; /* Above fog canvas */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2365,7 +2414,7 @@ body.page-template-page-home article.page {
 }
 
 /* ==========================================================================
-   ROOMS LISTING PAGE — MotoPress Hotel Booking cards redesign
+   ROOMS LISTING PAGE — MotoPress Booking cards redesign
    Body class: .gl-page-rooms  (page slug = rooms)
    ========================================================================== */
 
@@ -8026,16 +8075,6 @@ a.gl-contact-card__value:hover {
   width: 100%;
 }
 
-/* Badge pulse animation */
-.gl-hero__badge-dot {
-  animation: badgePulse 2s ease-in-out infinite;
-}
-
-@keyframes badgePulse {
-  0%, 100% { opacity: .5; transform: scale(.8); }
-  50% { opacity: 1; transform: scale(1.2); }
-}
-
 /* Rooms section — dots styling improvement */
 .gl-rooms__dot {
   transition: all .3s cubic-bezier(.22, 1, .36, 1);
@@ -8085,4 +8124,217 @@ a.gl-contact-card__value:hover {
     transition: none !important;
     filter: none !important;
   }
+}
+
+/* =========================================================================
+   WOW EFFECT & ANIMATIONS ADDITIONS
+   ========================================================================= */
+
+/* 1. Pulsing Hero Badge — ripple ::after ring (base styles + animation in hero block above) */
+.gl-hero__badge-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: inherit;
+  transform: translate(-50%, -50%);
+  animation: badgeRipple 2s infinite cubic-bezier(0.19, 1, 0.22, 1);
+  z-index: -1;
+}
+@keyframes badgeRipple {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+}
+
+/* 2. Hero Atmospheric Fog / Lights — canvas .gl-hero-fog already handles this via JS */
+
+/* 3. Card Shine Effect (room cards only — wellness card has its own gold glow ::before) */
+.gl-room-card {
+  position: relative;
+  overflow: hidden; /* For shine to not spill out */
+}
+.gl-room-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-20deg);
+  z-index: 10;
+  transition: none;
+  pointer-events: none;
+}
+.gl-room-card:hover::before {
+  animation: shineHover 0.8s ease-in-out forwards;
+}
+@keyframes shineHover {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+/* 4. Custom Cursor — see authoritative block further below */
+
+/* =========================================================================
+   WOW EFFECTS — Marquee Strip
+   ========================================================================= */
+.gl-marquee-wrap {
+  overflow: hidden;
+  background: var(--color-dark, #1a1f1c);
+  padding: 14px 0;
+  border-top: 1px solid rgba(200,169,81,0.15);
+  border-bottom: 1px solid rgba(200,169,81,0.15);
+}
+.gl-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 28s linear infinite;
+}
+.gl-marquee-wrap:hover .gl-marquee-track {
+  animation-play-state: paused;
+}
+.gl-marquee-text {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(200,169,81,0.55);
+  white-space: nowrap;
+  padding-right: 0;
+}
+@keyframes marqueeScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* =========================================================================
+   WOW EFFECTS — Hero Fog Canvas
+   ========================================================================= */
+.gl-hero-fog {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 2; /* Above dark overlay (z-index 1), but below content (z-index 3) */
+  opacity: 1;
+}
+
+/* =========================================================================
+   WOW EFFECTS — Text Reveal (no layout styles — JS handles it)
+   ========================================================================= */
+/* Safety: if JS hasn't run yet, show text normally */
+.gl-text-reveal:not([aria-label]) {
+  opacity: 1 !important;
+}
+/* Word wrapper — clip overflow so inner slides up from below */
+.gl-tr-w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: inherit;
+}
+.gl-tr-i {
+  display: inline-block;
+  transform: translateY(105%);
+  opacity: 0;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.5s ease;
+}
+.gl-tr-i.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* =========================================================================
+   WOW EFFECTS — Custom Cursor (complete overhaul)
+   ========================================================================= */
+.gl-cursor,
+.gl-cursor-follower {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  top: 0; left: 0;
+  will-change: transform;
+}
+/* Bug fix 1: Hide native cursor on desktop when custom cursor is active */
+body.has-custom-cursor,
+body.has-custom-cursor * { cursor: none !important; }
+
+.gl-cursor {
+  width: 10px;
+  height: 10px;
+  /* Bug fix 3: negative margin auto-centers dot at translate(curX, curY) */
+  margin: -5px 0 0 -5px;
+  background: var(--color-accent, #C8A951);
+  transition: width 0.25s, height 0.25s, margin 0.25s,
+              background-color 0.25s, mix-blend-mode 0.25s, opacity 0.25s;
+}
+.gl-cursor-follower {
+  width: 36px;
+  height: 36px;
+  /* Bug fix 3: negative margin auto-centers ring */
+  margin: -18px 0 0 -18px;
+  border: 1.5px solid rgba(200,169,81, 0.45);
+  background: transparent;
+  transition: width 0.35s cubic-bezier(0.16,1,0.3,1),
+              height 0.35s cubic-bezier(0.16,1,0.3,1),
+              margin 0.35s cubic-bezier(0.16,1,0.3,1),
+              opacity 0.35s,
+              border-color 0.35s;
+}
+/* Hover on links/buttons */
+.gl-cursor.is-active {
+  width: 48px;
+  height: 48px;
+  margin: -24px 0 0 -24px; /* re-center for 48px */
+  background: rgba(255,255,255,0.9);
+  mix-blend-mode: difference;
+}
+.gl-cursor-follower.is-active {
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px; /* re-center for 64px */
+  opacity: 0.3;
+}
+/* Magnetic state */
+.gl-cursor.is-magnetic {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px; /* re-center for 6px */
+  background: var(--color-accent, #C8A951);
+  mix-blend-mode: normal;
+}
+.gl-cursor-follower.is-magnetic {
+  width: 52px;
+  height: 52px;
+  margin: -26px 0 0 -26px; /* re-center for 52px */
+  border-color: var(--color-accent, #C8A951);
+  border-width: 2px;
+  opacity: 0.8;
+}
+/* Hide cursor elements on touch/mobile, restore native cursor */
+@media (hover: none), (max-width: 768px) {
+  .gl-cursor, .gl-cursor-follower { display: none !important; }
+  body.has-custom-cursor,
+  body.has-custom-cursor * { cursor: auto !important; }
+}
+
+/* =========================================================================
+   WOW EFFECTS — Smooth image transform (for JS parallax)
+   ========================================================================= */
+.gl-room-card__img img,
+.gl-wellness-card__img img {
+  transition: transform 0.1s linear;
+  will-change: transform;
+}
+/* override — hover scale is now handled jointly with parallax */
+.gl-room-card:hover .gl-room-card__img img {
+  /* Keep transform from JS; ensure no conflict */
+  transition: transform 0.1s linear;
 }

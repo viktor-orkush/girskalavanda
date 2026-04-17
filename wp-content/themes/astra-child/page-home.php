@@ -1,7 +1,7 @@
 <?php
 /**
  * Template Name: Головна сторінка
- * Description: Повна головна сторінка готелю Гірська Лаванда
+ * Description: Повна головна сторінка комплексу Гірська Лаванда
  */
 
 get_header();
@@ -34,7 +34,7 @@ get_header();
       $hero_title    = get_theme_mod( 'gl_hero_title', "Гірська Лаванда" );
       $hero_subtitle = get_theme_mod( 'gl_hero_subtitle', 'Заміський комплекс · Східниця · Карпати' );
       ?>
-      <h1 class="gl-hero__title gl-animate gl-animate--blur">
+      <h1 class="gl-hero__title gl-text-reveal">
         <?php echo nl2br( esc_html( $hero_title ) ); ?>
       </h1>
       <p class="gl-hero__subtitle gl-animate gl-animate--blur gl-animate--delay-1"><?php echo esc_html( $hero_subtitle ); ?></p>
@@ -50,12 +50,23 @@ get_header();
       </div>
     </div>
 
+    <!-- Atmospheric fog particles -->
+    <canvas class="gl-hero-fog" aria-hidden="true"></canvas>
+
     <!-- Scroll indicator -->
     <a href="#rooms" class="gl-hero__scroll" aria-label="Прокрутити донизу">
       <span class="gl-hero__scroll-line"></span>
     </a>
 
   </section>
+
+  <!-- Marquee strip between hero and rooms -->
+  <div class="gl-marquee-wrap" aria-hidden="true">
+    <div class="gl-marquee-track">
+      <span class="gl-marquee-text">СХІДНИЦЯ&nbsp;&nbsp;&bull;&nbsp;&nbsp;КАРПАТИ&nbsp;&nbsp;&bull;&nbsp;&nbsp;ВІДПОЧИНОК&nbsp;&nbsp;&bull;&nbsp;&nbsp;БАНЯ&nbsp;&nbsp;&bull;&nbsp;&nbsp;ЧИСТЕ ПОВІТРЯ&nbsp;&nbsp;&bull;&nbsp;&nbsp;ГАРЯЧИЙ ЧАН&nbsp;&nbsp;&bull;&nbsp;&nbsp;ПРИРОДА&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
+      <span class="gl-marquee-text" aria-hidden="true">СХІДНИЦЯ&nbsp;&nbsp;&bull;&nbsp;&nbsp;КАРПАТИ&nbsp;&nbsp;&bull;&nbsp;&nbsp;ВІДПОЧИНОК&nbsp;&nbsp;&bull;&nbsp;&nbsp;БАНЯ&nbsp;&nbsp;&bull;&nbsp;&nbsp;ЧИСТЕ ПОВІТРЯ&nbsp;&nbsp;&bull;&nbsp;&nbsp;ГАРЯЧИЙ ЧАН&nbsp;&nbsp;&bull;&nbsp;&nbsp;ПРИРОДА&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
+    </div>
+  </div>
 
   <!-- =====================================================================
        ROOMS CAROUSEL
@@ -64,7 +75,7 @@ get_header();
     <div class="gl-container">
       <div class="gl-rooms__header gl-animate gl-animate--blur">
         <span class="gl-section-label">Номери</span>
-        <h2 class="gl-section-title">Оберіть свій номер</h2>
+        <h2 class="gl-section-title gl-text-reveal">Оберіть свій номер</h2>
         <p class="gl-section-subtitle">Кожен номер — окрема атмосфера затишку і комфорту в серці Карпат</p>
       </div>
 
@@ -72,7 +83,7 @@ get_header();
         <div class="gl-rooms__viewport">
           <div class="gl-rooms__track">
         <?php
-        // Отримати кімнати з MotoPress Hotel Booking
+        // Отримати апартаменти з MotoPress Booking
         $rooms = get_posts( [
             'post_type'      => 'mphb_room_type',
             'posts_per_page' => 6,

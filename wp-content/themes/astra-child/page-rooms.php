@@ -90,7 +90,7 @@ if ($ig_raw) {
 
     <div class="gl-rooms-hero__content">
       <div class="gl-container">
-        <p class="gl-rooms-hero__label">Розміщення · Гірська Лаванда</p>
+        <p class="gl-rooms-hero__label">Розміщення · Комплексу Гірська Лаванда</p>
         <h1 class="gl-rooms-hero__title">Наші <em>Номери</em></h1>
         <p class="gl-rooms-hero__subtitle">Затишні номери серед карпатських сосен — від компактних до розкішних
           двоповерхових апартаментів з терасою</p>
