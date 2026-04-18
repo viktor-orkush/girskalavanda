@@ -52,49 +52,81 @@
   /* =========================================================================
      TESTIMONIALS SLIDER
      ========================================================================= */
-  const track = document.querySelector('.gl-testimonials__track');
-  const dots  = document.querySelectorAll('.gl-testimonials__dot');
-  const btnPrev = document.querySelector('.gl-testimonials__btn--prev');
-  const btnNext = document.querySelector('.gl-testimonials__btn--next');
+  var testimonialsTrack = document.querySelector('.gl-testimonials__track');
+  var testimonialsBtnPrev = document.querySelector('.gl-testimonials__btn--prev');
+  var testimonialsBtnNext = document.querySelector('.gl-testimonials__btn--next');
+  var testimonialsDotsWrap = document.querySelector('.gl-testimonials__dots');
 
-  if (track) {
-    let current = 0;
-    const cards = track.querySelectorAll('.gl-testimonial-card');
-    const total = cards.length;
+  if (testimonialsTrack) {
+    var tCurrent = 0;
+    var tCards = testimonialsTrack.querySelectorAll('.gl-testimonial-card');
+    var tTotal = tCards.length;
 
-    function getMax() {
-      return Math.max(0, total - (window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3));
+    function tGetMax() {
+      return Math.max(0, tTotal - (window.innerWidth < 768 ? 1 : window.innerWidth < 1024 ? 2 : 3));
     }
 
-    function goTo(idx) {
-      current = Math.max(0, Math.min(idx, getMax()));
-      const cardWidth = cards[0] ? cards[0].offsetWidth : 0;
-      const gap = 28;
-      track.style.transform = 'translateX(-' + (current * (cardWidth + gap)) + 'px)';
-      dots.forEach(function (d, i) { d.classList.toggle('is-active', i === current); });
+    function buildTestimonialDots() {
+      if (!testimonialsDotsWrap) return;
+      testimonialsDotsWrap.innerHTML = '';
+      var max = tGetMax();
+      for (var i = 0; i <= max; i++) {
+        var dot = document.createElement('button');
+        dot.className = 'gl-testimonials__dot' + (i === tCurrent ? ' is-active' : '');
+        dot.setAttribute('aria-label', 'Відгук ' + (i + 1));
+        testimonialsDotsWrap.appendChild(dot);
+        (function (idx) {
+          dot.addEventListener('click', function () { tGoTo(idx); });
+        })(i);
+      }
     }
 
-    if (btnPrev) btnPrev.addEventListener('click', function () { goTo(current - 1); });
-    if (btnNext) btnNext.addEventListener('click', function () { goTo(current + 1); });
-    dots.forEach(function (d, i) { d.addEventListener('click', function () { goTo(i); }); });
+    function tGoTo(idx) {
+      var max = tGetMax();
+      // Infinite loop
+      if (idx < 0) idx = max;
+      if (idx > max) idx = 0;
+      tCurrent = idx;
+      var cardWidth = tCards[0] ? tCards[0].offsetWidth : 0;
+      testimonialsTrack.style.transform = 'translateX(-' + (tCurrent * (cardWidth + 28)) + 'px)';
+      if (testimonialsDotsWrap) {
+        testimonialsDotsWrap.querySelectorAll('.gl-testimonials__dot').forEach(function (d, i) {
+          d.classList.toggle('is-active', i === tCurrent);
+        });
+      }
+    }
+
+    if (testimonialsBtnPrev) testimonialsBtnPrev.addEventListener('click', function () { tGoTo(tCurrent - 1); });
+    if (testimonialsBtnNext) testimonialsBtnNext.addEventListener('click', function () { tGoTo(tCurrent + 1); });
 
     // Auto-play
-    function startAutoplay() {
-      return setInterval(function () { goTo(current + 1 > getMax() ? 0 : current + 1); }, 5000);
+    function tStartAutoplay() {
+      return setInterval(function () { tGoTo(tCurrent + 1); }, 5000);
     }
-    var autoplay = startAutoplay();
-    track.addEventListener('mouseenter', function () { clearInterval(autoplay); });
-    track.addEventListener('mouseleave', function () { autoplay = startAutoplay(); });
+    var tAutoplay = tStartAutoplay();
+    testimonialsTrack.addEventListener('mouseenter', function () { clearInterval(tAutoplay); });
+    testimonialsTrack.addEventListener('mouseleave', function () { tAutoplay = tStartAutoplay(); });
 
     // Touch swipe
-    var touchStartX = 0;
-    track.addEventListener('touchstart', function (e) { touchStartX = e.touches[0].clientX; }, { passive: true });
-    track.addEventListener('touchend', function (e) {
-      var diff = touchStartX - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 50) goTo(diff > 0 ? current + 1 : current - 1);
+    var tTouchStartX = 0;
+    testimonialsTrack.addEventListener('touchstart', function (e) { tTouchStartX = e.touches[0].clientX; }, { passive: true });
+    testimonialsTrack.addEventListener('touchend', function (e) {
+      var diff = tTouchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) tGoTo(diff > 0 ? tCurrent + 1 : tCurrent - 1);
     });
 
-    goTo(0);
+    // Resize handler
+    var tResizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(tResizeTimer);
+      tResizeTimer = setTimeout(function () {
+        buildTestimonialDots();
+        tGoTo(Math.min(tCurrent, tGetMax()));
+      }, 200);
+    }, { passive: true });
+
+    buildTestimonialDots();
+    tGoTo(0);
   }
 
   /* =========================================================================
