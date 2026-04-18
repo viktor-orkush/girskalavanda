@@ -18,7 +18,7 @@ if (!$hero_url) {
 
 // === Collect gallery images ===
 // Priority: images attached to gallery page → all recent images
-$gallery_imgs = get_transient( 'glav_gallery_page_imgs' );
+$gallery_imgs = get_transient( 'glav_gallery_page_imgs_v2' );
 
 if ( $gallery_imgs === false ) :
 $gallery_imgs = [];
@@ -40,9 +40,8 @@ foreach ((array)$attachments as $att) {
   }
 }
 
-// 2. If not enough, pull images from room types
-if (count($gallery_imgs) < 8) {
-  $rooms = get_posts([
+// 2. Pull images from room types (always)
+$rooms = get_posts([
     'post_type' => 'mphb_room_type',
     'posts_per_page' => -1,
     'post_status' => 'publish',
@@ -88,7 +87,6 @@ if (count($gallery_imgs) < 8) {
       }
     }
   }
-}
 
 // 3. Pull from banya / chan pages
 $service_pages = ['banya' => 'wellness', 'chan' => 'wellness'];
@@ -131,7 +129,7 @@ foreach ($service_pages as $slug => $cat) {
   }
 }
 
-// 4. Fill with recent media library images if still lacking
+// 4. Fill with recent media library images if still lacking (optional)
 if (count($gallery_imgs) < 12) {
   $existing_ids = array_column($gallery_imgs, 'id');
   $recent = get_posts([
@@ -191,7 +189,7 @@ foreach ($gallery_imgs as &$img) {
 }
 unset($img);
 
-set_transient( 'glav_gallery_page_imgs', $gallery_imgs, DAY_IN_SECONDS );
+set_transient( 'glav_gallery_page_imgs_v2', $gallery_imgs, DAY_IN_SECONDS );
 endif; // end transient cache block
 
 // === Category definitions ===

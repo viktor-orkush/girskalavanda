@@ -281,6 +281,7 @@ h4 {
   cursor: pointer;
   position: relative;   /* required for ripple + magnetic */
   overflow: hidden;     /* clips ripple to button shape */
+  -webkit-tap-highlight-color: transparent;
   /* transform is controlled by JS for magnetic — excluded from transition */
   transition: background var(--transition), color var(--transition),
               border-color var(--transition), box-shadow var(--transition),
@@ -310,34 +311,22 @@ h4 {
   /* re-enable transform animation for CSS hover (JS overrides inline for magnetic) */
   transition: background var(--transition), color var(--transition),
               border-color var(--transition), box-shadow var(--transition),
-              opacity var(--transition), transform var(--transition);
-}
-
-.gl-btn--primary::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--color-gold-light) 0%, #f0d78a 100%);
-  opacity: 0;
-  transition: opacity .3s ease;
-  border-radius: inherit;
+              opacity var(--transition), transform var(--transition),
+              filter var(--transition);
 }
 
 .gl-btn--primary:hover {
+  filter: brightness(1.08);
   box-shadow: var(--shadow-gold-md);
   transform: translateY(-3px) scale(1.02);
   color: var(--color-primary) !important;
   text-decoration: none;
 }
 
-.gl-btn--primary:hover::after {
-  opacity: 1;
-}
-
-.gl-btn--primary span,
-.gl-btn--primary {
-  position: relative;
-  z-index: 1;
+.gl-btn--primary:active {
+  filter: brightness(0.96);
+  transform: translateY(-1px) scale(0.99);
+  transition-duration: 0.1s;
 }
 
 /* Accent — Lavender */
