@@ -307,8 +307,6 @@ h4 {
   color: var(--color-primary) !important;
   border-color: var(--color-gold);
   box-shadow: var(--shadow-gold-sm);
-  position: relative;
-  overflow: hidden;
   /* re-enable transform animation for CSS hover (JS overrides inline for magnetic) */
   transition: background var(--transition), color var(--transition),
               border-color var(--transition), box-shadow var(--transition),
@@ -783,6 +781,7 @@ h4 {
 .gl-contact-hero {
   position: relative;
   min-height: 100vh;
+  min-height: 100svh; /* iOS Safari: excludes browser chrome */
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -909,6 +908,7 @@ h4 {
 .gl-hero {
   position: relative;
   min-height: 100vh;
+  min-height: 100svh; /* iOS Safari: excludes browser chrome */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -939,6 +939,14 @@ h4 {
 .gl-hero[style*="--gl-hero-bg"] .gl-hero__bg {
   background: none;
   background-color: transparent;
+}
+
+/* Мобільне фото: якщо задана змінна --gl-hero-bg-mobile — підміняємо фон */
+@media (max-width: 768px) {
+  .gl-hero[style*="--gl-hero-bg-mobile"] {
+    background-image: var(--gl-hero-bg-mobile);
+    background-position: center center;
+  }
 }
 
 /* Subtle grain texture */
@@ -1332,8 +1340,8 @@ h4 {
 }
 
 .gl-room-card__footer .gl-btn:hover {
-  background: var(--color-primary-dark, #2D5A1A);
-  border-color: var(--color-primary-dark, #2D5A1A);
+  background: var(--color-primary-light);
+  border-color: var(--color-primary-light);
   color: #fff !important;
   text-decoration: none;
 }
@@ -6348,6 +6356,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   background-position: center;
   position: relative;
   height: 100vh;
+  height: 100svh; /* iOS Safari: excludes browser chrome */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -7087,6 +7096,7 @@ a.gl-contact-card__value:hover {
   .gl-contact-hero {
     height: auto;
     min-height: 100vh;
+    min-height: 100svh; /* iOS Safari */
     padding-bottom: 0;
     justify-content: flex-start;
   }
@@ -7285,8 +7295,8 @@ a.gl-contact-card__value:hover {
 /* Open state — controlled by Astra body class */
 .ast-main-header-nav-open #ast-mobile-header .ast-mobile-header-content,
 .ast-main-header-nav-open .ast-mobile-header-content {
-  max-height: 90vh !important;
-  min-height: calc(100vh - 80px) !important;
+  max-height: 90svh !important;
+  min-height: calc(100svh - 80px) !important;
   opacity: 1 !important;
   visibility: visible !important;
   transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1),
@@ -8170,38 +8180,6 @@ a.gl-contact-card__value:hover {
 
 /* 4. Custom Cursor — see authoritative block further below */
 
-/* =========================================================================
-   WOW EFFECTS — Marquee Strip
-   ========================================================================= */
-.gl-marquee-wrap {
-  overflow: hidden;
-  background: var(--color-dark, #1a1f1c);
-  padding: 14px 0;
-  border-top: 1px solid rgba(200,169,81,0.15);
-  border-bottom: 1px solid rgba(200,169,81,0.15);
-}
-.gl-marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marqueeScroll 28s linear infinite;
-}
-.gl-marquee-wrap:hover .gl-marquee-track {
-  animation-play-state: paused;
-}
-.gl-marquee-text {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(200,169,81,0.55);
-  white-space: nowrap;
-  padding-right: 0;
-}
-@keyframes marqueeScroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
 
 /* =========================================================================
    WOW EFFECTS — Hero Bokeh Canvas
@@ -8317,16 +8295,4 @@ body.has-custom-cursor * { cursor: none !important; }
   body.has-custom-cursor * { cursor: auto !important; }
 }
 
-/* =========================================================================
-   WOW EFFECTS — Smooth image transform (for JS parallax)
-   ========================================================================= */
-.gl-room-card__img img,
-.gl-wellness-card__img img {
-  transition: transform 0.1s linear;
-  will-change: transform;
-}
-/* override — hover scale is now handled jointly with parallax */
-.gl-room-card:hover .gl-room-card__img img {
-  /* Keep transform from JS; ensure no conflict */
-  transition: transform 0.1s linear;
-}
+

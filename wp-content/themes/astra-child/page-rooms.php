@@ -195,10 +195,13 @@ endif; ?>
 
           <!-- Image -->
           <div class="gl-rooms-card__media">
-            <?php if ($thumb_url): ?>
+            <?php if ($thumb_id): ?>
             <a href="<?php echo esc_url($permalink); ?>" class="gl-rooms-card__img-link">
-              <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr(get_the_title($room_id)); ?>"
-                loading="lazy" />
+              <?php echo wp_get_attachment_image( $thumb_id, 'large', false, [
+                  'alt'     => esc_attr( get_the_title( $room_id ) ),
+                  'loading' => 'lazy',
+                  'sizes'   => '(max-width: 767px) 100vw, (max-width: 1023px) 100vw, 50vw',
+              ] ); ?>
               <div class="gl-rooms-card__img-overlay">
                 <span class="gl-rooms-card__img-overlay-text">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"

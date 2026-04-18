@@ -12,13 +12,24 @@ get_header();
        HERO
        ===================================================================== -->
   <?php
-  $hero_image = get_theme_mod( 'gl_hero_image', '' );
+  $hero_image        = get_theme_mod( 'gl_hero_image', '' );
   if ( ! $hero_image ) {
       $hero_image = get_the_post_thumbnail_url( get_the_ID(), 'full' );
   }
-  $has_photo  = ! empty( $hero_image );
+  $hero_image_mobile = get_theme_mod( 'gl_hero_image_mobile', '' );
+  $has_photo         = ! empty( $hero_image );
+  $has_mobile_photo  = ! empty( $hero_image_mobile );
   ?>
-  <section class="gl-hero" id="hero" <?php if ( $has_photo ) : ?> style="--gl-hero-bg: url('<?php echo esc_url( $hero_image ); ?>')"<?php endif; ?>>
+  <?php
+  $hero_style = '';
+  if ( $has_photo ) {
+      $hero_style .= "--gl-hero-bg: url('" . esc_url( $hero_image ) . "');";
+  }
+  if ( $has_mobile_photo ) {
+      $hero_style .= "--gl-hero-bg-mobile: url('" . esc_url( $hero_image_mobile ) . "');";
+  }
+  ?>
+  <section class="gl-hero" id="hero"<?php if ( $hero_style ) : ?> style="<?php echo esc_attr( $hero_style ); ?>"<?php endif; ?>>
 
     <!-- Фонове фото або градієнт -->
     <div class="gl-hero__bg"></div>
@@ -60,13 +71,6 @@ get_header();
 
   </section>
 
-  <!-- Marquee strip between hero and rooms -->
-  <div class="gl-marquee-wrap" aria-hidden="true">
-    <div class="gl-marquee-track">
-      <span class="gl-marquee-text">СХІДНИЦЯ&nbsp;&nbsp;&bull;&nbsp;&nbsp;КАРПАТИ&nbsp;&nbsp;&bull;&nbsp;&nbsp;ВІДПОЧИНОК&nbsp;&nbsp;&bull;&nbsp;&nbsp;БАНЯ&nbsp;&nbsp;&bull;&nbsp;&nbsp;ЧИСТЕ ПОВІТРЯ&nbsp;&nbsp;&bull;&nbsp;&nbsp;ГАРЯЧИЙ ЧАН&nbsp;&nbsp;&bull;&nbsp;&nbsp;ПРИРОДА&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
-      <span class="gl-marquee-text" aria-hidden="true">СХІДНИЦЯ&nbsp;&nbsp;&bull;&nbsp;&nbsp;КАРПАТИ&nbsp;&nbsp;&bull;&nbsp;&nbsp;ВІДПОЧИНОК&nbsp;&nbsp;&bull;&nbsp;&nbsp;БАНЯ&nbsp;&nbsp;&bull;&nbsp;&nbsp;ЧИСТЕ ПОВІТРЯ&nbsp;&nbsp;&bull;&nbsp;&nbsp;ГАРЯЧИЙ ЧАН&nbsp;&nbsp;&bull;&nbsp;&nbsp;ПРИРОДА&nbsp;&nbsp;&bull;&nbsp;&nbsp;</span>
-    </div>
-  </div>
 
   <!-- =====================================================================
        ROOMS CAROUSEL
@@ -104,10 +108,12 @@ get_header();
         ?>
             <article class="gl-room-card">
           <div class="gl-room-card__img">
-            <?php if ( $thumb_url ) : ?>
-              <img src="<?php echo esc_url( $thumb_url ); ?>"
-                   alt="<?php echo esc_attr( get_the_title( $room->ID ) ); ?>"
-                   loading="lazy" />
+            <?php if ( $thumb_id ) : ?>
+              <?php echo wp_get_attachment_image( $thumb_id, 'gl-room-card', false, [
+                  'alt'    => esc_attr( get_the_title( $room->ID ) ),
+                  'loading' => 'lazy',
+                  'sizes'  => '(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw',
+              ] ); ?>
             <?php else : ?>
               <div class="gl-room-card__img-placeholder">🛏️</div>
             <?php endif; ?>

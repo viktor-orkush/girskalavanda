@@ -5,18 +5,64 @@
  */
 
 // =============================================================================
+// SEO — noindex тонкого контенту MPHB booking-сторінок
+// =============================================================================
+
+/**
+ * Додає noindex до пошукових сторінок бронювання MPHB.
+ * URL типу /?mphb_room_type_id=123&check-in=2026-04-18 є тонким контентом —
+ * не потрібні в Google-індексі.
+ */
+add_filter( 'wp_robots', 'glav_noindex_mphb_booking_pages' );
+function glav_noindex_mphb_booking_pages( $robots ) {
+    // phpcs:disable WordPress.Security.NonceVerification.Recommended
+    if (
+        isset( $_GET['mphb_room_type_id'] ) ||
+        isset( $_GET['check-in'] )          ||
+        isset( $_GET['check-out'] )         ||
+        isset( $_GET['mphb_availability_search'] )
+    ) {
+        $robots['noindex'] = true;
+        unset( $robots['max-snippet'], $robots['max-image-preview'], $robots['max-video-preview'] );
+    }
+    // phpcs:enable
+    return $robots;
+}
+
+// =============================================================================
 // PERFORMANCE: LCP
 // =============================================================================
 
 /**
  * Preload the Hero Image for better LCP (Largest Contentful Paint).
+ * Outputs separate preload links for mobile (≤ 827px) and desktop,
+ * both with fetchpriority="high" so the browser starts loading immediately.
  */
 add_action( 'wp_head', 'glav_preload_hero_image', 1 );
-function  glav_preload_hero_image() {
+function glav_preload_hero_image() {
     $hero_image = get_theme_mod( 'gl_hero_image', '' );
-    if ( is_front_page() && $hero_image ) {
-        echo '<link rel="preload" as="image" href="' . esc_url( $hero_image ) . '" />';
+    if ( ! is_front_page() || ! $hero_image ) {
+        return;
     }
+
+    // Try to get attachment ID so we can serve a mobile-sized crop.
+    $attachment_id = attachment_url_to_postid( $hero_image );
+
+    if ( $attachment_id ) {
+        $mobile_src = wp_get_attachment_image_url( $attachment_id, 'gl-hero-mobile' );
+        $full_src   = wp_get_attachment_image_url( $attachment_id, 'full' ) ?: $hero_image;
+
+        if ( $mobile_src ) {
+            // Mobile: load the 828 × 1024 crop (saves ~1–3 MB on phones)
+            echo '<link rel="preload" as="image" href="' . esc_url( $mobile_src ) . '" media="(max-width: 827px)" fetchpriority="high" />' . "\n";
+            // Desktop: load the full-resolution image
+            echo '<link rel="preload" as="image" href="' . esc_url( $full_src ) . '" media="(min-width: 828px)" fetchpriority="high" />' . "\n";
+            return;
+        }
+    }
+
+    // Fallback: single preload without responsive splitting
+    echo '<link rel="preload" as="image" href="' . esc_url( $hero_image ) . '" fetchpriority="high" />' . "\n";
 }
 
 // =============================================================================
@@ -132,6 +178,21 @@ function glav_seo_meta_description() {
 }
 
 /**
+ * Geo meta tags for local SEO (Bing, Yandex, directories).
+ * Skipped if Yoast or RankMath is active.
+ */
+add_action( 'wp_head', 'glav_seo_geo_meta', 3 );
+function glav_seo_geo_meta() {
+    if ( defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) ) {
+        return;
+    }
+    echo '<meta name="geo.region"    content="UA-46" />' . "\n"; // Львівська обл.
+    echo '<meta name="geo.placename" content="Східниця" />' . "\n";
+    echo '<meta name="geo.position"  content="49.219197;23.35088" />' . "\n";
+    echo '<meta name="ICBM"          content="49.219197, 23.35088" />' . "\n";
+}
+
+/**
  * Open Graph + Twitter Card meta tags.
  * Skipped if Yoast or RankMath is active.
  */
@@ -193,7 +254,8 @@ function glav_seo_og_tags() {
 }
 
 /**
- * Apartment JSON-LD schema — outputs on all pages.
+ * LodgingBusiness JSON-LD schema — outputs on all pages.
+ * Uses LodgingBusiness (parent of Hotel) so Google can surface hotel rich results.
  */
 add_action( 'wp_head', 'glav_schema_lodging_business', 10 );
 function glav_schema_lodging_business() {
@@ -207,11 +269,11 @@ function glav_schema_lodging_business() {
 
     $schema = [
         '@context'      => 'https://schema.org',
-        '@type'         => 'Apartment',
-        '@id'           => home_url( '/#apartments' ),
-        'name'          => 'Апартаменти Гірська Лаванда',
-        'alternateName' => 'Girska Lavanda Apartments',
-        'description'   => 'Апартаменти з обслуговуванням у серці Карпат в Східниці. Оренда апартаментів для відпочинку, традиційна баня на дровах, гарячий чан серед природи.',
+        '@type'         => 'LodgingBusiness',
+        '@id'           => home_url( '/#hotel' ),
+        'name'          => 'Гірська Лаванда',
+        'alternateName' => 'Girska Lavanda',
+        'description'   => 'Заміський комплекс у серці Карпат в Східниці. Проживання, традиційна баня на дровах, гарячий чан серед природи.',
         'url'           => home_url( '/' ),
         'telephone'     => $phone ?: '',
         'address'       => [
@@ -227,8 +289,8 @@ function glav_schema_lodging_business() {
             'latitude'  => 49.219197,
             'longitude' => 23.35088,
         ],
-        'checkinTime'  => '14:00',
-        'checkoutTime' => '12:00',
+        'checkinTime'  => 'T14:00',
+        'checkoutTime' => 'T12:00',
         'priceRange'   => '₴₴',
         'amenityFeature' => [
             [ '@type' => 'LocationFeatureSpecification', 'name' => 'Free WiFi',    'value' => true ],
@@ -237,6 +299,15 @@ function glav_schema_lodging_business() {
             [ '@type' => 'LocationFeatureSpecification', 'name' => 'Hot tub',      'value' => true ],
         ],
     ];
+
+    if ( $phone ) {
+        $schema['contactPoint'] = [
+            '@type'       => 'ContactPoint',
+            'telephone'   => $phone,
+            'contactType' => 'reservations',
+            'areaServed'  => 'UA',
+        ];
+    }
 
     if ( $hero_image ) {
         $schema['image'] = $hero_image;
@@ -252,7 +323,7 @@ function glav_schema_lodging_business() {
 }
 
 /**
- * HotelRoom JSON-LD schema — only on single room type pages.
+ * ApartmentUnit JSON-LD schema — only on single room type pages.
  */
 add_action( 'wp_head', 'glav_schema_hotel_room', 10 );
 function glav_schema_hotel_room() {
@@ -272,11 +343,11 @@ function glav_schema_hotel_room() {
 
     $schema = [
         '@context'         => 'https://schema.org',
-        '@type'            => 'HotelRoom',
+        '@type'            => 'ApartmentUnit',
         'name'             => $title,
         'url'              => $url,
         'description'      => $excerpt,
-        'containedInPlace' => [ '@id' => home_url( '/#hotel' ) ],
+        'containedInPlace' => [ '@id' => home_url( '/#apartments' ) ],
     ];
 
     if ( $image ) {
@@ -1292,6 +1363,12 @@ function glav_theme_support() {
     add_theme_support( 'post-thumbnails' );
     add_theme_support( 'title-tag' );
     add_theme_support( 'html5', [ 'search-form', 'comment-form', 'gallery', 'caption' ] );
+
+    // Hero images: mobile portrait crop (2× for 414px wide screens) and medium desktop.
+    add_image_size( 'gl-hero-mobile', 828, 1024, true );
+    add_image_size( 'gl-hero-medium', 1440, 900, false );
+    // Room card thumbnails: uniform crop for carousel/list layouts.
+    add_image_size( 'gl-room-card', 640, 480, true );
 }
 
 // =============================================================================
@@ -1319,8 +1396,22 @@ function glav_customize_register( $wp_customize ) {
     ] );
     $wp_customize->add_control( new WP_Customize_Image_Control(
         $wp_customize, 'gl_hero_image', [
-            'label'   => 'Фонове фото Hero (рекомендовано 1920×1080)',
-            'section' => 'gl_hero',
+            'label'       => 'Фонове фото Hero (рекомендовано 1920×1080)',
+            'description' => 'Горизонтальне фото для десктопу.',
+            'section'     => 'gl_hero',
+        ]
+    ) );
+
+    // Hero фото для мобільних
+    $wp_customize->add_setting( 'gl_hero_image_mobile', [
+        'default'           => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ] );
+    $wp_customize->add_control( new WP_Customize_Image_Control(
+        $wp_customize, 'gl_hero_image_mobile', [
+            'label'       => 'Фонове фото Hero — мобільна версія',
+            'description' => 'Вертикальне фото для смартфонів (рекомендовано 800×1200). Якщо не задане — використовується десктопне.',
+            'section'     => 'gl_hero',
         ]
     ) );
 
