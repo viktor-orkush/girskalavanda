@@ -161,7 +161,8 @@ while ( have_posts() ) :
         ];
     }
 ?>
-<main id="main" class="gl-room-single">
+<div id="primary" class="content-area primary">
+  <main id="main" class="site-main gl-room-single">
 
   <!-- ==========================================================================
        HERO — bento gallery with overlaid info
@@ -173,7 +174,7 @@ while ( have_posts() ) :
     $extra_count = max( 0, count( $all_imgs ) - 5 );
     $all_srcs_json = wp_json_encode( array_map( function( $i ) { return $i['url']; }, $all_imgs ) );
   ?>
-  <section class="gl-room-hero-v2 gl-room-hero-v2--fullwidth">
+  <section class="gl-room-hero-v2">
 
     <!-- Full-width hero image -->
     <div class="gl-room-bento" data-gallery='<?php echo esc_attr( $all_srcs_json ); ?>'>
@@ -402,7 +403,9 @@ while ( have_posts() ) :
   <?php endif; ?>
 
 
+
 </main>
+</div><!-- #primary -->
 
 <!-- Lightbox -->
 <div class="gl-lightbox" role="dialog" aria-modal="true" aria-label="Перегляд фото">

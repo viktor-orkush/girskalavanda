@@ -25,7 +25,8 @@ if ($phone) {
 }
 $instagram = get_theme_mod('gl_instagram', 'https://www.instagram.com/girska_lavandaa/');
 $facebook = get_theme_mod('gl_facebook', 'https://facebook.com/girskalavanda');
-$maps_url = get_theme_mod('gl_maps_url', 'https://www.google.com/maps?cid=7330305559505295223');
+$maps_url = get_theme_mod('gl_maps_url', GL_MAPS_URL_DEFAULT);
+$maps_embed_url = get_theme_mod('gl_maps_embed_url', GL_MAPS_EMBED_DEFAULT);
 
 // Instagram DM link
 $instagram_dm = $instagram;
@@ -220,7 +221,7 @@ endif; ?>
         <div class="gl-contact-map gl-animate gl-animate--delay-2">
           <div class="gl-contact-map__wrapper">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2606!2d23.3509508!3d49.2191115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x473a358d09cdeecf%3A0x65ba7a1199625777!2z0JrQvtC80L%2FQu9C10LrRgSDQk9GW0YDRgdGM0LrQsCDQm9Cw0LLQsNC90LTQsA!5e0!3m2!1suk!2sua!4v1744905600000"
+              src="<?php echo esc_url($maps_embed_url); ?>"
               loading="lazy" referrerpolicy="no-referrer-when-downgrade"
               title="Розташування комплексу Гірська Лаванда — Східниця"></iframe>
           </div>

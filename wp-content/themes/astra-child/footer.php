@@ -16,7 +16,7 @@ $phone_disp = get_theme_mod('gl_phone_display', $phone);
 $instagram = get_theme_mod('gl_instagram', 'https://www.instagram.com/girska_lavandaa/');
 $facebook = get_theme_mod('gl_facebook', '');
 $telegram = get_theme_mod('gl_telegram', '');
-$maps_url = get_theme_mod('gl_maps_url', 'https://www.google.com/maps/place/Комплекс+Гірська+Лаванда/@49.2191115,23.3509508,17z/data=!3m1!4b1!4m6!3m5!1s0x473a358d09cdeecf:0x65ba7a1199625777!8m2!3d49.2191115!4d23.3509508');
+$maps_url = get_theme_mod('gl_maps_url', GL_MAPS_URL_DEFAULT);
 
 // Build social URLs
 $telegram_url = '';

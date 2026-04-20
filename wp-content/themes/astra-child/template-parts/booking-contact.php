@@ -26,7 +26,7 @@ $viber_url     = $args['viber_url']     ?? '';
 $instagram_dm  = $args['instagram_dm']  ?? '';
 ?>
 
-<div class="gl-booking-contact">
+<div id="gl-booking-contact" class="gl-booking-contact">
 
   <!-- Messengers -->
   <p class="gl-booking-contact__label">Напишіть нам для бронювання:</p>

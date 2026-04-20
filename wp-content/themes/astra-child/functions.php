@@ -4,6 +4,10 @@
  * functions.php — головний файл функцій
  */
 
+// Значення Google Maps за замовчуванням
+define('GL_MAPS_URL_DEFAULT', 'https://www.google.com/maps?cid=7330305559505295223');
+define('GL_MAPS_EMBED_DEFAULT', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2606!2d23.3509508!3d49.2191115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x473a358d09cdeecf%3A0x65ba7a1199625777!2z0JrQvtC80L%2FQu9C10LrRgSDQk9GW0YDRgdGM0LrQsCDQm9Cw0LLQsNC90LTQsA!5e0!3m2!1suk!2sua!4v1744905600000');
+
 // =============================================================================
 // SEO — noindex тонкого контенту MPHB booking-сторінок
 // =============================================================================
@@ -99,7 +103,7 @@ function glav_seo_document_title_parts( $title ) {
     }
 
     if ( is_front_page() || is_page_template( 'page-home.php' ) ) {
-        $title['title']   = 'Комлекс Гірська Лаванда в Східниці';
+        $title['title']   = 'Комплекс Гірська Лаванда в Східниці';
         $title['tagline'] = 'Проживання, баня та чан у Карпатах';
     } elseif ( is_page( 'banya' ) ) {
         $title['title'] = 'Баня в Карпатах · Традиційна баня на дровах';
@@ -1162,8 +1166,9 @@ function glav_sc_contacts( $atts ) {
 
           <div class="gl-contacts__map gl-animate gl-animate--delay-2">
             <!-- Карта: Гірська Лаванда, Східниця -->
+            <?php $maps_embed_url = get_theme_mod( 'gl_maps_embed_url', GL_MAPS_EMBED_DEFAULT ); ?>
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2606!2d23.3509508!3d49.2191115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x473a358d09cdeecf%3A0x65ba7a1199625777!2z0JrQvtC80L%2FQu9C10LrRgSDQk9GW0YDRgdGM0LrQsCDQm9Cw0LLQsNC90LTQsA!5e0!3m2!1suk!2sua!4v1744905600000"
+              src="<?php echo esc_url( $maps_embed_url ); ?>"
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
               title="Розташування комплексу Гірська Лаванда — Східниця"
@@ -1491,12 +1496,23 @@ function glav_customize_register( $wp_customize ) {
     ] );
 
     $wp_customize->add_setting( 'gl_maps_url', [
-        'default'           => 'https://www.google.com/maps/place/Комплекс+Гірська+Лаванда/@49.2191115,23.3509508,17z/data=!3m1!4b1!4m6!3m5!1s0x473a358d09cdeecf:0x65ba7a1199625777!8m2!3d49.2191115!4d23.3509508',
+        'default'           => GL_MAPS_URL_DEFAULT,
         'sanitize_callback' => 'esc_url_raw',
     ] );
     $wp_customize->add_control( 'gl_maps_url', [
         'label'       => 'Google Maps посилання',
-        'description' => 'Пряме посилання на Google Maps для апартаментів (використовується у футері та на сторінці контактів)',
+        'description' => 'Пряме посилання на Google Maps для апартаментів',
+        'section'     => 'gl_contacts',
+        'type'        => 'url',
+    ] );
+
+    $wp_customize->add_setting( 'gl_maps_embed_url', [
+        'default'           => GL_MAPS_EMBED_DEFAULT,
+        'sanitize_callback' => 'esc_url_raw',
+    ] );
+    $wp_customize->add_control( 'gl_maps_embed_url', [
+        'label'       => 'Google Maps Embed iframe URL',
+        'description' => 'URL для iframe карти (src="..." атрибут з Google Maps)',
         'section'     => 'gl_contacts',
         'type'        => 'url',
     ] );
@@ -1749,3 +1765,17 @@ function glav_floating_contact() {
     </div>
     <?php
 }
+
+// =============================================================================
+// LAYOUT: FORCE FULL-WIDTH STRETCHED for Room Pages
+// =============================================================================
+/**
+ * Forces Astra to use 'page-builder' (Full Width / Stretched) layout for single room types.
+ * This natively removes the .ast-container max-width and padding constraints.
+ */
+add_filter( 'astra_get_content_layout', function( $layout ) {
+    if ( is_singular( 'mphb_room_type' ) ) {
+        return 'page-builder';
+    }
+    return $layout;
+} );

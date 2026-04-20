@@ -2749,6 +2749,8 @@ body.page-template-page-home article.page {
   color: #fff !important;
   display: inline-block !important;
   width: auto !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 /* ── Navigation bar ── */
@@ -2969,24 +2971,39 @@ body.page-template-page-home article.page {
 /* Responsive: calendar section */
 @media (max-width: 768px) {
   .gl-room-calendar__widget {
-    gap: 16px;
+    gap: 12px;
+    padding: 12px 8px !important;
+  }
+
+  .gl-room-calendar .datepick {
+    padding: 12px 4px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .gl-room-calendar .datepick-month-row {
     flex-direction: column;
   }
 
+  /* Hide 2nd month on mobile to save space */
+  .gl-room-calendar .datepick-month:not(.first) {
+    display: none !important;
+  }
+
   .gl-room-calendar .datepick-month.first {
     border-right: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, .07) !important;
-    padding-bottom: 20px !important;
-    margin-bottom: 20px !important;
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 
   .gl-room-calendar span.mphb-date-cell {
-    width: 30px !important;
-    height: 30px !important;
-    font-size: 12px !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 13px !important;
   }
 
   .gl-room-mphb-attrs__inner .mphb-room-type-attributes,
@@ -4636,6 +4653,8 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   background: var(--color-white);
 }
 
+/* Bento gallery hero styles continue below... */
+
 /* ==========================================================================
    BENTO GALLERY HERO
    ========================================================================== */
@@ -4643,11 +4662,6 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   position: relative;
   overflow: hidden;
   background: var(--color-primary);
-}
-
-.gl-room-hero-v2--fullwidth {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
 }
 
 /* Bento grid container */
@@ -4901,12 +4915,14 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
 
 .gl-room-body__section {
   border-bottom: 1px solid var(--color-sand-dark);
-  padding-bottom: 40px;
+  padding-bottom: clamp(32px, 6vw, 56px);
+  margin-bottom: clamp(32px, 6vw, 56px);
 }
 
 .gl-room-body__section:last-child {
   border-bottom: none;
   padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 .gl-room-body__section-title {
@@ -5310,6 +5326,7 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   box-shadow: var(--shadow-md);
   padding: 32px;
   border: 1px solid var(--color-sand-dark);
+  text-align: center;
 }
 
 /* Calendar legend */
@@ -5553,12 +5570,19 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   /* Sidebar loses sticky */
   .gl-room-booking {
     position: static;
-    margin-top: 0;
+    margin-top: clamp(40px, 10vw, 64px);
   }
 
   /* Booking inner — attach to content naturally */
   .gl-room-booking__inner {
     border-radius: var(--radius-md);
+  }
+
+  .gl-room-booking__inner .gl-booking-contact__label,
+  .gl-room-booking__inner .gl-booking-contact__phone-label {
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
   }
 
   /* Bento: повна висота і на планшеті */
@@ -5581,18 +5605,13 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
   .gl-room-specs {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  /* Calendar widget */
-  .gl-room-calendar__widget {
-    padding: 20px 16px;
-  }
 }
 
 @media (max-width: 480px) {
 
   /* Hero info adjustment */
   .gl-room-bento__info {
-    bottom: 16px;
+    bottom: 100px;
     left: 16px;
     right: 16px;
   }
@@ -5601,8 +5620,38 @@ body:not(.ast-theme-transparent-header) .gl-banya-hero {
     font-size: clamp(24px, 8vw, 36px);
   }
 
-  /* Gallery overlay hidden on small screens */
+  /* Horizontal swipeable gallery overlay for mobile instead of hiding it */
   .gl-room-bento__gallery-overlay {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: absolute;
+    bottom: 24px;
+    left: 16px;
+    right: 16px;
+    top: auto;
+    width: calc(100% - 32px);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 12px;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+    z-index: 5;
+  }
+
+  .gl-room-bento__gallery-overlay::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gl-room-bento__side {
+    flex: 0 0 72px;
+    height: 52px;
+    scroll-snap-align: start;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .gl-room-bento__show-all {
     display: none;
   }
 
