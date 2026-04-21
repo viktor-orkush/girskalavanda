@@ -745,7 +745,7 @@ function glav_enqueue_assets() {
         'astra-child-style',
         get_stylesheet_directory_uri() . '/style.css',
         [ 'astra-theme-css' ],
-        wp_get_theme()->get( 'Version' )
+        filemtime( get_stylesheet_directory() . '/style.css' )
     );
 
     // Main JS
@@ -753,7 +753,7 @@ function glav_enqueue_assets() {
         'gl-main-js',
         get_stylesheet_directory_uri() . '/assets/js/main.js',
         [],
-        wp_get_theme()->get( 'Version' ),
+        filemtime( get_stylesheet_directory() . '/assets/js/main.js' ),
         true // load in footer
     );
     wp_script_add_data( 'gl-main-js', 'defer', true );
@@ -830,6 +830,30 @@ function glav_custom_hero_styles() {
 // =============================================================================
 add_filter( 'wp_nav_menu_items', 'glav_customize_header_menu', 10, 2 );
 function  glav_customize_header_menu( $items, $args ) {
+    // Helper: returns true if this <li> HTML string should be hidden from navigation.
+    // Matches by link text (in case title changes) AND by URL slug (robust fallback).
+    $is_hidden_item = function( $item ) {
+        $hidden_texts = [
+            '>Головна<', '>Home<',
+            '>Book Now<', '>Your Booking Detail<', '>Booking Confirmation<',
+            '>Booking Cancelled<', '>Booking Received<', '>Booking Error<',
+            '>Customer Cabinet<',
+        ];
+        foreach ( $hidden_texts as $needle ) {
+            if ( stripos( $item, $needle ) !== false ) return true;
+        }
+        // MPHB page slugs — stable even if admin renames the page
+        $hidden_slugs = [
+            '/book-now/', '/your-booking-detail/', '/booking-confirmation/',
+            '/booking-cancelled/', '/booking-received/', '/booking-error/',
+            '/customer-cabinet/',
+        ];
+        foreach ( $hidden_slugs as $slug ) {
+            if ( stripos( $item, 'href="' . home_url( $slug ) ) !== false
+              || stripos( $item, "href='" . home_url( $slug ) ) !== false ) return true;
+        }
+        return false;
+    };
     // 1. Add Phone Number (Primary and Mobile)
     if ( in_array( $args->theme_location, [ 'primary', 'mobile_menu' ], true ) ) {
         $phone      = get_theme_mod( 'gl_phone', '' );
@@ -867,10 +891,8 @@ function  glav_customize_header_menu( $items, $args ) {
             }
         }
 
-        // Remove "Home" / "Головна"
-        $menu_items = array_values( array_filter( $menu_items, function ( $item ) {
-            return stripos( $item, '>Головна<' ) === false && stripos( $item, '>Home<' ) === false;
-        } ) );
+        // Remove "Home" / "Головна" and MPHB system pages
+        $menu_items = array_values( array_filter( $menu_items, fn( $item ) => ! $is_hidden_item( $item ) ) );
 
         // Sort: Номери, Баня, Чан, Галерея, Контакти, Phone
         $mobile_order = [
@@ -920,10 +942,8 @@ function  glav_customize_header_menu( $items, $args ) {
             }
         }
 
-        // Remove "Home" / "Головна"
-        $menu_items = array_values( array_filter( $menu_items, function ( $item ) {
-            return stripos( $item, '>Головна<' ) === false && stripos( $item, '>Home<' ) === false;
-        } ) );
+        // Remove "Home" / "Головна" and MPHB system pages
+        $menu_items = array_values( array_filter( $menu_items, fn( $item ) => ! $is_hidden_item( $item ) ) );
 
         // 3. Reorder items: [Rooms], [Banya], [Chan] | LOGO | [Gallery], [Contact], [Phone]
         $order_map = [
