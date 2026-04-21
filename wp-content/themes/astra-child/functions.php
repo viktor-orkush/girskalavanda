@@ -1227,7 +1227,9 @@ function glav_sc_gallery_preview( $atts ) {
             'order'          => 'DESC',
         ] );
 
-        $images = [];
+        $images        = [];
+        $seen_basenames = [];
+        $seen_urls      = [];
         if ( ! empty( $all_images ) ) {
             foreach ( $all_images as $img ) {
                 $filename = basename( get_attached_file( $img->ID ) );
@@ -1235,6 +1237,20 @@ function glav_sc_gallery_preview( $atts ) {
                 if ( stripos( $filename, 'logo' ) !== false || stripos( $filename, 'cropped' ) !== false ) {
                     continue;
                 }
+                // Дедуплікація: видалити розширення, суфікс -scaled та -NNNxMMM
+                $base = pathinfo( $filename, PATHINFO_FILENAME );
+                $base = preg_replace( '/-\d+x\d+$/', '', $base );
+                $base = preg_replace( '/-scaled$/', '', $base );
+                if ( in_array( $base, $seen_basenames, true ) ) {
+                    continue;
+                }
+                // Дедуплікація за URL (другий рівень захисту)
+                $full_url = wp_get_attachment_image_url( $img->ID, 'full' );
+                if ( ! $full_url || in_array( $full_url, $seen_urls, true ) ) {
+                    continue;
+                }
+                $seen_basenames[] = $base;
+                $seen_urls[]      = $full_url;
                 $images[] = $img;
                 if ( count( $images ) >= 5 ) break;
             }

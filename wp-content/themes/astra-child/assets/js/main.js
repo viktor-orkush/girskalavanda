@@ -189,10 +189,10 @@
   });
 
   // Gallery items (home page preview)
-  var galleryEls = document.querySelectorAll('.gl-gallery__item[data-src], .gl-gallery__item img');
+  var galleryEls = document.querySelectorAll('.gl-gallery__item[data-src]');
   if (galleryEls.length) {
     var srcs = Array.from(galleryEls).map(function (el) {
-      return el.dataset.src || (el.tagName === 'IMG' ? el.src : (el.querySelector('img') ? el.querySelector('img').src : ''));
+      return el.dataset.src;
     }).filter(Boolean);
 
     galleryEls.forEach(function (el, i) {
