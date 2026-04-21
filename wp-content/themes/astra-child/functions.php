@@ -20,16 +20,37 @@ define('GL_MAPS_EMBED_DEFAULT', 'https://www.google.com/maps/embed?pb=!1m18!1m12
 add_filter( 'wp_robots', 'glav_noindex_mphb_booking_pages' );
 function glav_noindex_mphb_booking_pages( $robots ) {
     // phpcs:disable WordPress.Security.NonceVerification.Recommended
-    if (
+    $has_booking_params = (
         isset( $_GET['mphb_room_type_id'] ) ||
         isset( $_GET['check-in'] )          ||
         isset( $_GET['check-out'] )         ||
         isset( $_GET['mphb_availability_search'] )
-    ) {
+    );
+    // phpcs:enable
+
+    $booking_slugs = [
+        'book-now', 'your-booking-detail', 'booking-confirmation',
+        'booking-cancelled', 'booking-received', 'booking-error',
+        'customer-cabinet', 'booking', 'checkout',
+    ];
+
+    if ( $has_booking_params || is_page( $booking_slugs ) ) {
         $robots['noindex'] = true;
         unset( $robots['max-snippet'], $robots['max-image-preview'], $robots['max-video-preview'] );
     }
-    // phpcs:enable
+    return $robots;
+}
+
+/**
+ * Allow Google to show full text snippets and large image previews in SERP.
+ * Only applied to indexable pages (skipped when noindex is already set).
+ */
+add_filter( 'wp_robots', 'glav_seo_robots_snippet_hints' );
+function glav_seo_robots_snippet_hints( $robots ) {
+    if ( ! isset( $robots['noindex'] ) ) {
+        $robots['max-snippet']       = '-1';
+        $robots['max-image-preview'] = 'large';
+    }
     return $robots;
 }
 
@@ -140,28 +161,26 @@ function glav_seo_document_title_separator( $sep ) {
 }
 
 /**
- * Meta description tag per page type.
- * Skipped if Yoast or RankMath is active.
+ * Returns the SEO description for the current page/post.
+ * Single source of truth — used by both meta description and OG tags.
  */
-add_action( 'wp_head', 'glav_seo_meta_description', 3 );
-function glav_seo_meta_description() {
-    if ( defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) ) {
-        return;
-    }
-
-    $desc = '';
-
+function glav_seo_get_description() {
     if ( is_front_page() || is_page_template( 'page-home.php' ) ) {
-        $desc = 'Комплекс Гірська Лаванда в Східниці — проживання в Карпатах, традиційна баня та гарячий чан. Бронювання онлайн.';
-    } elseif ( is_page( 'banya' ) || is_page( 'chan' ) ) {
-        $desc = 'Приватна традиційна баня на дровах в Східниці — парна, хамам, міні-басейн. Від 2 500 ₴/сеанс. Бронювання онлайн.';
-    } elseif ( is_page( 'rooms' ) ) {
-        $desc = 'Номери Гірська Лаванда в Східниці, Карпати — апартаменти та стандартні номери з видом на ліс. Онлайн бронювання.';
-    } elseif ( is_page( 'gallery' ) ) {
-        $desc = 'Фотогалерея комплексу Гірська Лаванда в Східниці — номери, апартаменти, баня, чан та карпатські краєвиди.';
-    } elseif ( is_page( 'contact' ) ) {
-        $desc = 'Контакти комплексу Гірська Лаванда — Східниця, Львівська область. Телефон, адреса, карта проїзду.';
-    } elseif ( is_singular( 'mphb_room_type' ) ) {
+        return 'Комплекс Гірська Лаванда в Східниці — відпочинок та апартаменти в оренду в Карпатах, традиційна баня та гарячий чан. Бронювання онлайн.';
+    }
+    if ( is_page( 'banya' ) || is_page( 'chan' ) ) {
+        return 'Приватна традиційна баня на дровах в Східниці — парна, хамам, міні-басейн. Від 2 500 ₴/сеанс. Бронювання онлайн.';
+    }
+    if ( is_page( 'rooms' ) ) {
+        return 'Номери Гірська Лаванда в Східниці, Карпати — апартаменти та стандартні номери з видом на ліс. Онлайн бронювання.';
+    }
+    if ( is_page( 'gallery' ) ) {
+        return 'Фотогалерея комплексу Гірська Лаванда в Східниці — номери, апартаменти, баня, чан та карпатські краєвиди.';
+    }
+    if ( is_page( 'contact' ) ) {
+        return 'Контакти комплексу Гірська Лаванда — Східниця, Львівська область. Телефон, адреса, карта проїзду.';
+    }
+    if ( is_singular( 'mphb_room_type' ) ) {
         $id       = get_the_ID();
         $capacity = get_post_meta( $id, 'mphb_adults_capacity', true );
         $size     = get_post_meta( $id, 'mphb_size', true );
@@ -171,11 +190,21 @@ function glav_seo_meta_description() {
             $size     ? $size . ' м²'        : '',
             $price    ? 'від ' . $price . ' ₴/ніч' : '',
         ] );
-        $desc = get_the_title() . ' — комплекс Гірська Лаванда, Східниця.' . ( $parts ? ' ' . implode( ', ', $parts ) . '.' : '' );
-    } else {
-        $desc = get_bloginfo( 'description' );
+        return get_the_title() . ' — комплекс Гірська Лаванда, Східниця.' . ( $parts ? ' ' . implode( ', ', $parts ) . '.' : '' );
     }
+    return get_bloginfo( 'description' );
+}
 
+/**
+ * Meta description tag per page type.
+ * Skipped if Yoast or RankMath is active.
+ */
+add_action( 'wp_head', 'glav_seo_meta_description', 1 );
+function glav_seo_meta_description() {
+    if ( defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) ) {
+        return;
+    }
+    $desc = glav_seo_get_description();
     if ( $desc ) {
         echo '<meta name="description" content="' . esc_attr( $desc ) . '" />' . "\n";
     }
@@ -213,27 +242,10 @@ function glav_seo_og_tags() {
     $url   = is_singular() ? get_permalink() : ( is_front_page() ? home_url( '/' ) : get_pagenum_link() );
     $type  = is_singular( 'mphb_room_type' ) ? 'article' : 'website';
     $image = $default_img;
-    $desc  = get_bloginfo( 'description' );
+    $desc  = glav_seo_get_description();
 
-    if ( is_front_page() || is_page_template( 'page-home.php' ) ) {
-        $desc = 'Комплекс Гірська Лаванда в Східниці — відпочинок та апартаменти в оренду в Карпатах, традиційна баня та гарячий чан. Бронювання онлайн.';
-    } elseif ( is_page( 'banya' ) || is_page( 'chan' ) ) {
-        $desc  = 'Приватна традиційна баня на дровах в Східниці — парна, хамам, міні-басейн. Від 2 500 ₴/сеанс.';
+    if ( ( is_page( 'banya' ) || is_page( 'chan' ) || is_singular( 'mphb_room_type' ) ) && has_post_thumbnail() ) {
         $image = get_the_post_thumbnail_url( get_the_ID(), 'full' ) ?: $default_img;
-    } elseif ( is_page( 'rooms' ) ) {
-        $desc = 'Номери Гірська Лаванда в Східниці, Карпати — оренда апартаментів для відпочинку з видом на ліс.';
-    } elseif ( is_singular( 'mphb_room_type' ) ) {
-        $id       = get_the_ID();
-        $capacity = get_post_meta( $id, 'mphb_adults_capacity', true );
-        $size     = get_post_meta( $id, 'mphb_size', true );
-        $price    = glav_get_room_price( $id );
-        $parts    = array_filter( [
-            $capacity ? $capacity . ' гост.' : '',
-            $size     ? $size . ' м²'        : '',
-            $price    ? 'від ' . $price . ' ₴/ніч' : '',
-        ] );
-        $desc  = get_the_title() . ' — комплекс Гірська Лаванда, Східниця.' . ( $parts ? ' ' . implode( ', ', $parts ) . '.' : '' );
-        $image = get_the_post_thumbnail_url( $id, 'full' ) ?: $default_img;
     }
 
     ?>
@@ -279,7 +291,6 @@ function glav_schema_lodging_business() {
         'alternateName' => 'Girska Lavanda',
         'description'   => 'Заміський комплекс у серці Карпат в Східниці. Проживання, традиційна баня на дровах, гарячий чан серед природи.',
         'url'           => home_url( '/' ),
-        'telephone'     => $phone ?: '',
         'address'       => [
             '@type'           => 'PostalAddress',
             'streetAddress'   => 'с. Східниця',
@@ -313,9 +324,7 @@ function glav_schema_lodging_business() {
         ];
     }
 
-    if ( $hero_image ) {
-        $schema['image'] = $hero_image;
-    }
+    $schema['image'] = $hero_image ?: home_url( '/wp-content/uploads/2025/07/hero-hotel.jpg' );
     if ( $same_as ) {
         $schema['sameAs'] = $same_as;
     }
@@ -712,8 +721,8 @@ function glav_preload_fonts() {
     $base = get_stylesheet_directory_uri() . '/assets/fonts/';
     $fonts = [
         'cormorant-garamond-v16-latin_cyrillic-regular.woff2',
-        'nunito-sans-v15-latin_cyrillic-regular.woff2',
-        'nunito-sans-v15-latin_cyrillic-600.woff2',
+        'nunito-sans-v19-cyrillic.woff2',
+        'nunito-sans-v19-latin.woff2',
     ];
     foreach ( $fonts as $font ) {
         echo '<link rel="preload" href="' . esc_url( $base . $font ) . '" as="font" type="font/woff2" crossorigin>' . "\n";
