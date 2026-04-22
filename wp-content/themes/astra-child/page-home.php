@@ -194,7 +194,7 @@ get_header();
             $banya_page = get_page_by_path( 'banya' ) ?: get_page_by_path( 'bania' );
             $banya_img  = $banya_page ? get_the_post_thumbnail_url( $banya_page->ID, 'large' ) : '';
             if ( $banya_img ) : ?>
-              <img src="<?php echo esc_url( $banya_img ); ?>" alt="Традиційна баня" loading="lazy" />
+              <img src="<?php echo esc_url( $banya_img ); ?>" alt="Традиційна баня" loading="lazy" width="1024" height="683" />
             <?php else : ?>
               <div class="gl-wellness-card__img-placeholder">🔥</div>
             <?php endif; ?>
@@ -228,7 +228,7 @@ get_header();
             $final_hamam_img = $hamam_img ?: $banya_img;
             
             if ( $final_hamam_img ) : ?>
-              <img src="<?php echo esc_url( $final_hamam_img ); ?>" alt="Хамам" loading="lazy" />
+              <img src="<?php echo esc_url( $final_hamam_img ); ?>" alt="Хамам" loading="lazy" width="1024" height="683" />
             <?php else : ?>
               <div class="gl-wellness-card__img-placeholder">🧖</div>
             <?php endif; ?>
@@ -259,7 +259,7 @@ get_header();
             $chan_page = get_page_by_path( 'chan' );
             $chan_img  = $chan_page ? get_the_post_thumbnail_url( $chan_page->ID, 'large' ) : '';
             if ( $chan_img ) : ?>
-              <img src="<?php echo esc_url( $chan_img ); ?>" alt="Гарячий чан" loading="lazy" />
+              <img src="<?php echo esc_url( $chan_img ); ?>" alt="Гарячий чан" loading="lazy" width="1024" height="683" />
             <?php else : ?>
               <div class="gl-wellness-card__img-placeholder">🌊</div>
             <?php endif; ?>

@@ -132,7 +132,7 @@ endif; ?>
             </div>
             <div class="gl-contact-strip__text">
               <span class="gl-contact-strip__label">Адреса</span>
-              <span class="gl-contact-strip__value">с. Східниця, Львівська обл.</span>
+              <span class="gl-contact-strip__value">пгт. Східниця, Львівська обл.</span>
             </div>
           </a>
 
@@ -206,8 +206,9 @@ endif; ?>
             <div class="gl-contact-card__content">
               <h3 class="gl-contact-card__title">Адреса</h3>
               <p class="gl-contact-card__value">
-                с. Східниця, Бориславська громада,<br>
-                Львівська область, Україна
+                Львівська область, Дрогобицький район,<br>
+                Східницька територіальна громада,<br>
+                вулиця Шевченко, 162-Н
               </p>
               <p class="gl-contact-card__hint">GPS: 49.2192° N, 23.3509° E</p>
             </div>

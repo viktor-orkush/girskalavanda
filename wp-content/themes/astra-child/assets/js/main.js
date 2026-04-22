@@ -525,7 +525,7 @@
         r:      Math.random() * 130 + 40,       // base radius 40–170px
         rAmp:   Math.random() * 20 + 5,         // pulse amplitude
         rFreq:  Math.random() * 0.0006 + 0.0003,// pulse speed
-        a:      Math.random() * 0.13 + 0.05,    // opacity 5–18%
+        a:      Math.random() * 0.08 + 0.03,    // opacity 3–11%
         vx:     (Math.random() - 0.5) * 0.18,
         vy:     (Math.random() - 0.5) * 0.12,
         col:    col,
@@ -536,7 +536,7 @@
     function initFog() {
       resizeFog();
       bokehOrbs = [];
-      for (var i = 0; i < 22; i++) { bokehOrbs.push(makeOrb()); }
+      for (var i = 0; i < 8; i++) { bokehOrbs.push(makeOrb()); }
     }
 
     function drawFog() {
@@ -624,20 +624,41 @@
     document.body.classList.add('has-custom-cursor');
 
     var curX = -100, curY = -100, ringX = -100, ringY = -100;
+    var _ringRafId = null, _cursorMovedAt = 0;
+
+    function _startRingRaf() {
+      if (_ringRafId) return;
+      (function animateRing() {
+        ringX += (curX - ringX) * 0.13;
+        ringY += (curY - ringY) * 0.13;
+        // Bug fix 3: CSS margin handles centering
+        glCursorRing.style.transform = 'translate(' + ringX + 'px,' + ringY + 'px)';
+        // Stop rAF after 2 s of cursor inactivity — saves CPU/GPU when user is idle
+        if (Date.now() - _cursorMovedAt > 2000) {
+          _ringRafId = null;
+          return;
+        }
+        _ringRafId = requestAnimationFrame(animateRing);
+      })();
+    }
 
     document.addEventListener('mousemove', function (e) {
       curX = e.clientX; curY = e.clientY;
+      _cursorMovedAt = Date.now();
       // Bug fix 3: CSS margin handles centering — just translate to exact cursor pos
       glCursor.style.transform = 'translate(' + curX + 'px,' + curY + 'px)';
+      _startRingRaf();
     });
 
-    (function animateRing() {
-      ringX += (curX - ringX) * 0.13;
-      ringY += (curY - ringY) * 0.13;
-      // Bug fix 3: CSS margin handles centering
-      glCursorRing.style.transform = 'translate(' + ringX + 'px,' + ringY + 'px)';
-      requestAnimationFrame(animateRing);
-    })();
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden && _ringRafId) {
+        cancelAnimationFrame(_ringRafId);
+        _ringRafId = null;
+      } else if (!document.hidden) {
+        _cursorMovedAt = Date.now();
+        _startRingRaf();
+      }
+    });
 
     document.addEventListener('mouseleave', function () {
       glCursor.style.opacity = '0'; glCursorRing.style.opacity = '0';
