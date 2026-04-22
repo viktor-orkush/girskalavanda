@@ -284,6 +284,9 @@ h4 {
               border-color var(--transition), box-shadow var(--transition),
               opacity var(--transition);
 }
+.gl-btn:hover {
+  box-shadow: 0 0 20px rgba(200, 169, 81, 0.4);
+}
 
 /* ── Liquid Ripple ─────────────────────────────────────── */
 .gl-ripple {
@@ -8269,79 +8272,6 @@ a.gl-contact-card__value:hover {
   opacity: 1;
 }
 
-/* =========================================================================
-   WOW EFFECTS — Custom Cursor (complete overhaul)
-   ========================================================================= */
-.gl-cursor,
-.gl-cursor-follower {
-  position: fixed;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 99999;
-  top: 0; left: 0;
-  will-change: transform;
-}
-/* Bug fix 1: Hide native cursor on desktop when custom cursor is active */
-body.has-custom-cursor,
-body.has-custom-cursor * { cursor: none !important; }
 
-.gl-cursor {
-  width: 10px;
-  height: 10px;
-  /* Bug fix 3: negative margin auto-centers dot at translate(curX, curY) */
-  margin: -5px 0 0 -5px;
-  background: var(--color-accent, #C8A951);
-  transition: width 0.25s, height 0.25s, margin 0.25s,
-              background-color 0.25s, mix-blend-mode 0.25s, opacity 0.25s;
-}
-.gl-cursor-follower {
-  width: 36px;
-  height: 36px;
-  /* Bug fix 3: negative margin auto-centers ring */
-  margin: -18px 0 0 -18px;
-  border: 1.5px solid rgba(200,169,81, 0.45);
-  background: transparent;
-  transition: width 0.35s cubic-bezier(0.16,1,0.3,1),
-              height 0.35s cubic-bezier(0.16,1,0.3,1),
-              margin 0.35s cubic-bezier(0.16,1,0.3,1),
-              opacity 0.35s,
-              border-color 0.35s;
-}
-/* Hover on links/buttons */
-.gl-cursor.is-active {
-  width: 48px;
-  height: 48px;
-  margin: -24px 0 0 -24px; /* re-center for 48px */
-  background: rgba(255,255,255,0.9);
-  mix-blend-mode: difference;
-}
-.gl-cursor-follower.is-active {
-  width: 64px;
-  height: 64px;
-  margin: -32px 0 0 -32px; /* re-center for 64px */
-  opacity: 0.3;
-}
-/* Magnetic state */
-.gl-cursor.is-magnetic {
-  width: 6px;
-  height: 6px;
-  margin: -3px 0 0 -3px; /* re-center for 6px */
-  background: var(--color-accent, #C8A951);
-  mix-blend-mode: normal;
-}
-.gl-cursor-follower.is-magnetic {
-  width: 52px;
-  height: 52px;
-  margin: -26px 0 0 -26px; /* re-center for 52px */
-  border-color: var(--color-accent, #C8A951);
-  border-width: 2px;
-  opacity: 0.8;
-}
-/* Hide cursor elements on touch/mobile, restore native cursor */
-@media (hover: none), (max-width: 768px) {
-  .gl-cursor, .gl-cursor-follower { display: none !important; }
-  body.has-custom-cursor,
-  body.has-custom-cursor * { cursor: auto !important; }
-}
 
 

@@ -611,80 +611,10 @@
   });
 
   /* =========================================================================
-     CUSTOM CURSOR + MAGNETIC BUTTONS
-     (desktop only — touch devices are excluded by CSS and matchMedia)
+     MAGNETIC BUTTONS
+     (desktop only — touch devices are excluded by matchMedia)
      ========================================================================= */
   if (window.matchMedia && window.matchMedia('(pointer: fine)').matches) {
-    var glCursor    = document.createElement('div');
-    var glCursorRing = document.createElement('div');
-    glCursor.className     = 'gl-cursor';
-    glCursorRing.className = 'gl-cursor-follower';
-    document.body.appendChild(glCursor);
-    document.body.appendChild(glCursorRing);
-    document.body.classList.add('has-custom-cursor');
-
-    var curX = -100, curY = -100, ringX = -100, ringY = -100;
-    var _ringRafId = null, _cursorMovedAt = 0;
-
-    function _startRingRaf() {
-      if (_ringRafId) return;
-      (function animateRing() {
-        ringX += (curX - ringX) * 0.13;
-        ringY += (curY - ringY) * 0.13;
-        // Bug fix 3: CSS margin handles centering
-        glCursorRing.style.transform = 'translate(' + ringX + 'px,' + ringY + 'px)';
-        // Stop rAF after 2 s of cursor inactivity — saves CPU/GPU when user is idle
-        if (Date.now() - _cursorMovedAt > 2000) {
-          _ringRafId = null;
-          return;
-        }
-        _ringRafId = requestAnimationFrame(animateRing);
-      })();
-    }
-
-    document.addEventListener('mousemove', function (e) {
-      curX = e.clientX; curY = e.clientY;
-      _cursorMovedAt = Date.now();
-      // Bug fix 3: CSS margin handles centering — just translate to exact cursor pos
-      glCursor.style.transform = 'translate(' + curX + 'px,' + curY + 'px)';
-      _startRingRaf();
-    });
-
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden && _ringRafId) {
-        cancelAnimationFrame(_ringRafId);
-        _ringRafId = null;
-      } else if (!document.hidden) {
-        _cursorMovedAt = Date.now();
-        _startRingRaf();
-      }
-    });
-
-    document.addEventListener('mouseleave', function () {
-      glCursor.style.opacity = '0'; glCursorRing.style.opacity = '0';
-    });
-    document.addEventListener('mouseenter', function () {
-      glCursor.style.opacity = '1'; glCursorRing.style.opacity = '1';
-    });
-
-    document.addEventListener('mouseover', function (e) {
-      if (e.target.closest('a, button, [role="button"], label, input')) {
-        glCursor.classList.add('is-active');
-        glCursorRing.classList.add('is-active');
-      }
-    });
-    // Bug fix 2: use relatedTarget to avoid flickering when moving between
-    // child elements of a link (mouseout fires for every child traversal)
-    document.addEventListener('mouseout', function (e) {
-      var from = e.target.closest('a, button, [role="button"], label, input');
-      var to   = e.relatedTarget ? e.relatedTarget.closest('a, button, [role="button"], label, input') : null;
-      if (from && from !== to) {
-        glCursor.classList.remove('is-active');
-        glCursorRing.classList.remove('is-active');
-      }
-    });
-
-    // Magnetic pull — all buttons (instant follow, elastic spring-back)
     document.querySelectorAll('.gl-btn').forEach(function (btn) {
       btn.addEventListener('mouseenter', function () {
         // Kill CSS transition for transform — button follows cursor instantly
@@ -696,8 +626,6 @@
         var dx = (e.clientX - (r.left + r.width  / 2)) * 0.32;
         var dy = (e.clientY - (r.top  + r.height / 2)) * 0.32;
         btn.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(1.04)';
-        glCursor.classList.add('is-magnetic');
-        glCursorRing.classList.add('is-magnetic');
       });
 
       btn.addEventListener('mouseleave', function () {
@@ -705,8 +633,6 @@
         btn.style.transition = 'transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
         btn.style.transform = '';
         setTimeout(function () { btn.style.transition = ''; }, 600);
-        glCursor.classList.remove('is-magnetic');
-        glCursorRing.classList.remove('is-magnetic');
       });
     });
   }
