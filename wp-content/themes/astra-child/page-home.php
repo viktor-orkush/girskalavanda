@@ -49,7 +49,7 @@ get_header();
         <?php echo nl2br( esc_html( $hero_title ) ); ?>
       </h1>
       <p class="gl-hero__subtitle gl-animate gl-animate--blur gl-animate--delay-1"><?php echo esc_html( $hero_subtitle ); ?></p>
-      <p class="gl-hero__desc gl-animate gl-animate--blur gl-animate--delay-2">Затишний відпочинок серед карпатських сосен. Традиційна баня, гарячий чан просто неба — все для справжнього відновлення</p>
+      <p class="gl-hero__desc gl-animate gl-animate--blur gl-animate--delay-2">Затишний відпочинок серед карпатських сосен. Баня на дровах, гарячий чан просто неба — все для справжнього відновлення</p>
 
       <div class="gl-hero__actions gl-animate gl-animate--blur gl-animate--delay-3">
         <a href="/rooms/" class="gl-btn gl-btn--primary">
@@ -182,7 +182,7 @@ get_header();
       <div class="gl-wellness__header gl-animate gl-animate--scale">
         <span class="gl-section-label">Оздоровлення</span>
         <h2 class="gl-section-title">Баня та Чан</h2>
-        <p class="gl-section-subtitle">Справжнє карпатське оздоровлення — традиційна баня і чан просто неба</p>
+        <p class="gl-section-subtitle">Справжнє карпатське оздоровлення — баня на дровах і чан просто неба</p>
       </div>
 
       <div class="gl-wellness__grid">
@@ -194,14 +194,14 @@ get_header();
             $banya_page = get_page_by_path( 'banya' ) ?: get_page_by_path( 'bania' );
             $banya_img  = $banya_page ? get_the_post_thumbnail_url( $banya_page->ID, 'large' ) : '';
             if ( $banya_img ) : ?>
-              <img src="<?php echo esc_url( $banya_img ); ?>" alt="Традиційна баня" loading="lazy" width="1024" height="683" />
+              <img src="<?php echo esc_url( $banya_img ); ?>" alt="Баня на дровах" loading="lazy" width="1024" height="683" />
             <?php else : ?>
               <div class="gl-wellness-card__img-placeholder">🔥</div>
             <?php endif; ?>
           </div>
           <div class="gl-wellness-card__body">
             <div class="gl-wellness-card__icon">🧖</div>
-            <h3 class="gl-wellness-card__title">Традиційна Баня</h3>
+            <h3 class="gl-wellness-card__title">Баня на дровах</h3>
             <p class="gl-wellness-card__desc">Справжня дерев'яна баня з карпатського дуба. Жар, пара, аромат трав — відчуй справжнє очищення тіла і душі.</p>
             <div class="gl-wellness-card__features">
               <span class="gl-wellness-card__feature-tag">до 8 осіб</span>

@@ -105,7 +105,7 @@ $icon_thermo = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stro
       <div class="gl-container">
         <p class="gl-banya-hero__label">Оздоровлення · Гірська Лаванда</p>
         <h1 class="gl-banya-hero__title">Гарячий<em>Чан</em></h1>
-        <p class="gl-banya-hero__subtitle">На дровах · Під відкритим небом · Східниця, Карпати</p>
+        <p class="gl-banya-hero__subtitle">На дровах · Під відкритим небом · Східниця</p>
         <p class="gl-banya-hero__desc">
           Дерев'яний чан з гарячою водою просто неба — зіркове небо, свіже карпатське повітря та тепло природного вогню.
           Незабутній досвід для тіла і душі.

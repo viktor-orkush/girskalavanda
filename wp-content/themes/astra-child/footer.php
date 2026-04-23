@@ -60,7 +60,7 @@ if ($phone) {
         </a>
         <p class="gl-footer__tagline">Комплекс відпочинку · Східниця · Карпати</p>
         <p class="gl-footer__desc">
-          Затишний відпочинок серед карпатських сосен. Традиційна баня, гарячий чан просто неба та мальовничі гірські
+          Затишний відпочинок серед карпатських сосен. Баня на дровах, гарячий чан просто неба та мальовничі гірські
           краєвиди.
         </p>
 
@@ -74,7 +74,7 @@ if ($phone) {
         <h4 class="gl-footer__heading">Послуги</h4>
         <ul class="gl-footer__links">
           <li><a href="<?php echo esc_url(home_url('/rooms/')); ?>">Проживання</a></li>
-          <li><a href="<?php echo esc_url(home_url('/banya/')); ?>">Традиційна баня</a></li>
+          <li><a href="<?php echo esc_url(home_url('/banya/')); ?>">Баня на дровах</a></li>
           <li><a href="<?php echo esc_url(home_url('/banya/')); ?>">Хамам</a></li>
           <li><a href="<?php echo esc_url(home_url('/chan/')); ?>">Гарячий чан</a></li>
         </ul>

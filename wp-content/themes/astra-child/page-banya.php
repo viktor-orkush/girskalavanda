@@ -16,8 +16,8 @@ if (!$hero_url) {
   $hero_url = $uploads['baseurl'] . '/2025/07/chan.jpg';
 }
 $hero_alt    = $hero_id
-  ? (get_post_meta($hero_id, '_wp_attachment_image_alt', true) ?: 'Традиційна баня на дровах у Карпатах — Гірська Лаванда')
-  : 'Традиційна дерев\'яна баня на дровах у Карпатах — Гірська Лаванда, Східниця';
+  ? (get_post_meta($hero_id, '_wp_attachment_image_alt', true) ?: 'Баня на дровах у Східниці — Гірська Лаванда')
+  : 'Баня на дровах у Східниці — Гірська Лаванда, Карпати';
 $hero_srcset = $hero_id ? wp_get_attachment_image_srcset($hero_id, 'full') : '';
 
 // === Gallery — images attached to this page ===
@@ -59,7 +59,7 @@ if (function_exists('glav_render_image_schema')) {
     $schema_images[] = [
       'url' => $hero_url,
       'alt' => $hero_alt,
-      'name' => 'Традиційна Баня на дровах у Східниці',
+      'name' => 'Баня на дровах у Східниці',
       'description' => 'Автентична приватна дерев\'яна баня з цілющою парою та купіллю — відпочинок у Карпатах.',
     ];
   }
@@ -115,8 +115,8 @@ $icon_lock = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke
     <div class="gl-banya-hero__content">
       <div class="gl-container">
         <p class="gl-banya-hero__label">Оздоровлення · Гірська Лаванда</p>
-        <h1 class="gl-banya-hero__title">Традиційна <em>Баня</em></h1>
-        <p class="gl-banya-hero__subtitle">На дровах · Приватна · Східниця, Карпати</p>
+        <h1 class="gl-banya-hero__title">Баня на <em>дровах</em></h1>
+        <p class="gl-banya-hero__subtitle">На дровах · Приватна · Східниця</p>
         <p class="gl-banya-hero__desc">
           Справжня дерев'яна баня з карпатських порід дерева — жар, пара і аромат трав для справжнього відновлення тіла
           і духу.
@@ -193,7 +193,7 @@ endif; ?>
           >
           <div class="gl-banya-about__img-badge">
             <span class="gl-banya-about__img-badge-icon">🔥</span>
-            <span>Традиційна баня<br>на дровах</span>
+            <span>Справжня баня<br>на дровах</span>
           </div>
         </div>
 
@@ -202,7 +202,7 @@ endif; ?>
           <h2 class="gl-banya-about__title">Комплекс для приватного відпочинку в Східниці</h2>
           <p class="gl-banya-about__desc">
             Наш банний комплекс — це закрита приватна територія з усім необхідним для повноцінного відпочинку.
-            Традиційна дерев'яна баня, хамам, купальня, альтанка та мангальна зона — ідеальне поєднання для відновлення
+            Баня на дровах, хамам, купальня, альтанка та мангальна зона — ідеальне поєднання для відновлення
             і радості.
           </p>
           <p class="gl-banya-about__desc">
@@ -388,7 +388,7 @@ endif; ?>
           <div class="gl-banya-price-card__badge">Найпопулярніше</div>
           <div class="gl-banya-price-card__icon">🔥</div>
           <h3 class="gl-banya-price-card__title">Баня</h3>
-          <p class="gl-banya-price-card__desc">Традиційна парна на дровах з купіллю, альтанкою та мангальною зоною</p>
+          <p class="gl-banya-price-card__desc">Парна на дровах з купіллю, альтанкою та мангальною зоною</p>
           <div class="gl-banya-price-card__price">
             <span class="gl-banya-price-card__from">від</span>
             <span class="gl-banya-price-card__amount">2&nbsp;500</span>
