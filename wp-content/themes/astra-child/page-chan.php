@@ -181,7 +181,7 @@ endif; ?>
 
         <div class="gl-banya-about__text gl-animate gl-animate--delay-1">
           <span class="gl-section-label">Про наш чан</span>
-          <h2 class="gl-banya-about__title">Автентичний карпатський чан в Східниці</h2>
+          <h2 class="gl-banya-about__title">Автентичний чан у Східниці</h2>
           <p class="gl-banya-about__desc">
             Карпатський чан — це великий дерев'яний резервуар з гарячою водою просто неба,
             підігрітий натуральними дровами. Традиція, яка здавна дарувала здоров'я та
@@ -414,7 +414,7 @@ endif; ?>
       <div class="gl-contact-faq__list gl-animate gl-animate--delay-1" style="flex-direction: column;">
         <details class="gl-faq-item">
           <summary class="gl-faq-item__question">
-            <span>Скільки коштує чан у Карпатах (Східниці)?</span>
+            <span>Скільки коштує чан у Східниці?</span>
             <span class="gl-faq-item__toggle"></span>
           </summary>
           <div class="gl-faq-item__answer">
@@ -492,7 +492,7 @@ endif; ?>
       <div class="gl-banya-rooms__header gl-center gl-animate">
         <span class="gl-section-label">Комплекс Гірська Лаванда</span>
         <h2 class="gl-section-title">Залишіться на ніч</h2>
-        <p class="gl-section-subtitle">Продовжте відпочинок після чану — оберіть затишний номер серед карпатських сосен</p>
+        <p class="gl-section-subtitle">Продовжте відпочинок після чану — оберіть затишний номер у Східниці</p>
       </div>
       <div class="gl-banya-rooms__grid">
         <?php foreach ($chan_rooms as $room):

@@ -14,7 +14,7 @@
 if (!defined('ABSPATH'))
     exit;
 
-$title = $args['title'] ?? 'Готові до відпочинку<br>в Карпатах?';
+$title = $args['title'] ?? 'Готові до відпочинку<br>у Східниці?';
 $subtitle = $args['subtitle'] ?? '';
 $wa_msg = $args['wa_msg'] ?? 'Добрий день! Хочу забронювати номер.';
 $extra_btn = $args['extra_btn'] ?? null;

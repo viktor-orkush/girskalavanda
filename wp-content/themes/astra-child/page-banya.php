@@ -282,7 +282,7 @@ endif; ?>
             <?php echo $icon_fire; ?>
           </div>
           <h3 class="gl-banya-feature-card__title">Парна</h3>
-          <p class="gl-banya-feature-card__desc">Традиційна дерев'яна парна на дровах. Жар до 120°C, пара м'яка і
+          <p class="gl-banya-feature-card__desc">Справжня дерев'яна парна на дровах. Жар до 120°C, пара м'яка і
             ароматна.</p>
         </div>
 
@@ -449,11 +449,11 @@ endif; ?>
       <div class="gl-contact-faq__list gl-animate gl-animate--delay-1" style="flex-direction: column;">
         <details class="gl-faq-item">
           <summary class="gl-faq-item__question">
-            <span>Скільки коштує баня в Карпатах (Східниці)?</span>
+            <span>Скільки коштує баня у Східниці?</span>
             <span class="gl-faq-item__toggle"></span>
           </summary>
           <div class="gl-faq-item__answer">
-            <p>Вартість оренди нашої приватної бані починається від 2 500 ₴ за сеанс (мінімум 2 години). У вартість входить традиційна парна на дровах, кімната відпочинку та закрита територія.</p>
+            <p>Вартість оренди нашої приватної бані починається від 2 500 ₴ за сеанс (мінімум 2 години). У вартість входить парна на дровах, кімната відпочинку та закрита територія.</p>
           </div>
         </details>
 
@@ -527,7 +527,7 @@ endif; ?>
       <div class="gl-banya-rooms__header gl-center gl-animate">
         <span class="gl-section-label">Комплекс Гірська Лаванда</span>
         <h2 class="gl-section-title">Залишіться на ніч</h2>
-        <p class="gl-section-subtitle">Продовжте відпочинок після бані — оберіть затишний номер серед карпатських сосен</p>
+        <p class="gl-section-subtitle">Продовжте відпочинок після бані — оберіть затишний номер у Східниці</p>
       </div>
       <div class="gl-banya-rooms__grid">
         <?php foreach ($banya_rooms as $room):
@@ -571,7 +571,7 @@ endif; ?>
        ====================================================================== -->
   <?php get_template_part('template-parts/section-ready', null, [
   'title' => 'Забронюйте баню зараз',
-  'subtitle' => 'Традиційна дерев\'яна баня для вашого оздоровлення та релаксу',
+  'subtitle' => 'Справжня дерев\'яна баня для вашого оздоровлення та релаксу',
   'wa_msg' => 'Добрий день! Хочу забронювати баню.'
 ]); ?>
 

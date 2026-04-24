@@ -42,21 +42,21 @@ get_header();
       </div>
 
       <?php
-      $hero_title    = get_theme_mod( 'gl_hero_title', "Гірська Лаванда" );
-      $hero_subtitle = get_theme_mod( 'gl_hero_subtitle', 'Заміський комплекс · Східниця · Карпати' );
+      $hero_title    = get_theme_mod( 'gl_hero_title', "Комплекс відпочинку Гірська Лаванда Східниця" );
+      $hero_subtitle = get_theme_mod( 'gl_hero_subtitle', 'Заміський комплекс · Східниця' );
       ?>
       <h1 class="gl-hero__title gl-text-reveal">
         <?php echo nl2br( esc_html( $hero_title ) ); ?>
       </h1>
       <p class="gl-hero__subtitle gl-animate gl-animate--blur gl-animate--delay-1"><?php echo esc_html( $hero_subtitle ); ?></p>
-      <p class="gl-hero__desc gl-animate gl-animate--blur gl-animate--delay-2">Затишний відпочинок серед карпатських сосен. Баня на дровах, гарячий чан просто неба — все для справжнього відновлення</p>
+      <p class="gl-hero__desc gl-animate gl-animate--blur gl-animate--delay-2">Шукаєте де зупинитись у Східниці? Затишна садиба серед карпатських сосен, оренда апартаментів з видом на гори, баня на дровах та чан — все для вашого відпочинку.</p>
 
       <div class="gl-hero__actions gl-animate gl-animate--blur gl-animate--delay-3">
         <a href="/rooms/" class="gl-btn gl-btn--primary">
-          Забронювати номер
+          Забронювати апартаменти
         </a>
         <a href="#rooms" class="gl-btn gl-btn--outline">
-          Переглянути номери
+          Переглянути апартаменти
         </a>
       </div>
     </div>
@@ -78,9 +78,9 @@ get_header();
   <section class="gl-section gl-rooms gl-section--white" id="rooms">
     <div class="gl-container">
       <div class="gl-rooms__header gl-animate gl-animate--blur">
-        <span class="gl-section-label">Номери</span>
-        <h2 class="gl-section-title gl-text-reveal">Оберіть свій номер</h2>
-        <p class="gl-section-subtitle">Кожен номер — окрема атмосфера затишку і комфорту в серці Карпат</p>
+        <span class="gl-section-label">Варіанти проживання</span>
+        <h2 class="gl-section-title gl-text-reveal">Оберіть апартаменти у Східниці</h2>
+        <p class="gl-section-subtitle">Кожен номер — окрема атмосфера затишку і комфорту в серці Карпат. Зняти житло у Східниці ще ніколи не було так просто.</p>
       </div>
 
       <div class="gl-rooms__carousel" id="rooms-carousel">
@@ -179,9 +179,9 @@ get_header();
        ===================================================================== -->
   <section class="gl-section gl-wellness" id="wellness">
     <div class="gl-container">
-      <div class="gl-wellness__header gl-animate gl-animate--scale">
+      <div class="gl-wellness__header gl-animate gl-animate--blur">
         <span class="gl-section-label">Оздоровлення</span>
-        <h2 class="gl-section-title">Баня та Чан</h2>
+        <h2 class="gl-section-title">Відпочинок з баньою та чаном</h2>
         <p class="gl-section-subtitle">Справжнє карпатське оздоровлення — баня на дровах і чан просто неба</p>
       </div>
 
@@ -302,6 +302,11 @@ get_header();
        GALLERY PREVIEW — shortcode
        ===================================================================== -->
   <?php echo do_shortcode( '[gl_gallery_preview]' ); ?>
+
+  <!-- =====================================================================
+       FAQ — shortcode
+       ===================================================================== -->
+  <?php echo do_shortcode( '[gl_faq_home]' ); ?>
 
 
   </main>

@@ -158,7 +158,7 @@ endif; ?>
       <div class="gl-rooms-listing__header gl-animate">
         <span class="gl-section-label">Номери</span>
         <h2 class="gl-section-title">Оберіть свій номер</h2>
-        <p class="gl-section-subtitle">Кожен номер — окрема атмосфера затишку і комфорту в серці Карпат</p>
+        <p class="gl-section-subtitle">Кожен номер — окрема атмосфера затишку і комфорту в серці Східниці</p>
       </div>
 
       <?php if (!empty($rooms)): ?>

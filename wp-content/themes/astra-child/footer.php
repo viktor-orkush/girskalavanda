@@ -2,7 +2,7 @@
 /**
  * Custom Footer — Гірська Лаванда
  *
- * Overrides Astra's default footer with a branded hotel footer.
+ * Overrides Astra's default footer with a branded complex footer.
  *
  * @package Astra Child
  */
@@ -58,7 +58,7 @@ if ($phone) {
         <a href="<?php echo esc_url(home_url('/')); ?>" class="gl-footer__logo">
           Гірська<span>Лаванда</span>
         </a>
-        <p class="gl-footer__tagline">Комплекс відпочинку · Східниця · Карпати</p>
+        <p class="gl-footer__tagline">Комплекс відпочинку · Східниця</p>
         <p class="gl-footer__desc">
           Затишний відпочинок серед карпатських сосен. Баня на дровах, гарячий чан просто неба та мальовничі гірські
           краєвиди.

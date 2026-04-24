@@ -152,7 +152,7 @@ if (count($gallery_imgs) < 12) {
     if ($lg) {
       // Auto-categorize based on filename
       $fname = strtolower(basename($full));
-      $auto_cat = 'hotel';
+      $auto_cat = 'complex';
       if (preg_match('/room|номер|standart|apart|suite/i', $fname)) {
         $auto_cat = 'rooms';
       }
@@ -184,7 +184,7 @@ if (count($gallery_imgs) < 12) {
 // Ensure all items have a category
 foreach ($gallery_imgs as &$img) {
   if (empty($img['category'])) {
-    $img['category'] = 'hotel';
+    $img['category'] = 'complex';
   }
 }
 unset($img);
@@ -195,7 +195,7 @@ endif; // end transient cache block
 // === Category definitions ===
 $categories = [
   'all' => ['label' => 'Всі фото', 'icon' => '📷'],
-  'hotel' => ['label' => 'Комплекс', 'icon' => '🏨'],
+  'complex' => ['label' => 'Комплекс', 'icon' => '🏨'],
   'rooms' => ['label' => 'Номери', 'icon' => '🛏️'],
   'wellness' => ['label' => 'Баня та Чан', 'icon' => '🧖'],
   'nature' => ['label' => 'Природа', 'icon' => '🌲'],
@@ -324,12 +324,12 @@ else: ?>
         <!-- Fallback placeholders -->
         <?php
   $placeholders = [
-    ['icon' => '🏨', 'title' => 'Комплекс', 'gradient' => 'linear-gradient(135deg,#1C3A0E,#4a8c3f)', 'cat' => 'hotel'],
+    ['icon' => '🏨', 'title' => 'Комплекс', 'gradient' => 'linear-gradient(135deg,#1C3A0E,#4a8c3f)', 'cat' => 'complex'],
     ['icon' => '🛏️', 'title' => 'Номери', 'gradient' => 'linear-gradient(135deg,#5C1F00,#9B3A0E)', 'cat' => 'rooms'],
     ['icon' => '🌲', 'title' => 'Природа', 'gradient' => 'linear-gradient(135deg,#2D5A1A,#4a8c3f)', 'cat' => 'nature'],
     ['icon' => '🧖', 'title' => 'Баня', 'gradient' => 'linear-gradient(135deg,#0E2147,#1A3D7C)', 'cat' => 'wellness'],
     ['icon' => '🏔️', 'title' => 'Карпати', 'gradient' => 'linear-gradient(135deg,#1C3A0E,#2D5A1A)', 'cat' => 'nature'],
-    ['icon' => '🌸', 'title' => 'Лаванда', 'gradient' => 'linear-gradient(135deg,#C8A951,#9B3A0E)', 'cat' => 'hotel'],
+    ['icon' => '🌸', 'title' => 'Лаванда', 'gradient' => 'linear-gradient(135deg,#C8A951,#9B3A0E)', 'cat' => 'complex'],
     ['icon' => '🔥', 'title' => 'Чан', 'gradient' => 'linear-gradient(135deg,#7B2500,#C0440E)', 'cat' => 'wellness'],
     ['icon' => '🏡', 'title' => 'Тераса', 'gradient' => 'linear-gradient(135deg,#1C3A0E,#C8A951)', 'cat' => 'rooms'],
   ];

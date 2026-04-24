@@ -7015,7 +7015,8 @@ a.gl-contact-card__value:hover {
   margin-bottom: 56px;
 }
 
-.gl-contact-faq__list {
+.gl-contact-faq__list,
+.gl-faq-home__list {
   max-width: 780px;
   margin: 0 auto;
   display: flex;
