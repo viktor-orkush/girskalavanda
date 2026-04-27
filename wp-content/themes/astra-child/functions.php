@@ -139,6 +139,20 @@ function glav_translate_mphb_strings( $translated_text, $text, $domain ) {
 }
 
 /**
+ * Hreflang tags — tells Google the site language is Ukrainian.
+ * Fixes "Translate this page" appearing in search snippets.
+ */
+add_action( 'wp_head', 'glav_hreflang_tags', 1 );
+function glav_hreflang_tags() {
+    if ( defined( 'WPSEO_VERSION' ) || defined( 'RANK_MATH_VERSION' ) ) {
+        return;
+    }
+    $url = esc_url( home_url( '/' ) );
+    echo '<link rel="alternate" hreflang="uk" href="' . $url . '" />' . "\n";
+    echo '<link rel="alternate" hreflang="x-default" href="' . $url . '" />' . "\n";
+}
+
+/**
  * Canonical URL tag — prevents duplicate content from MPHB booking URL params.
  * Skipped if Yoast or RankMath is active.
  */
@@ -168,7 +182,7 @@ function glav_seo_document_title_parts( $title ) {
     }
 
     if ( is_front_page() || is_page_template( 'page-home.php' ) ) {
-        $title['title'] = 'Комплекс відпочинку Східниця | Апартаменти Гірська Лаванда';
+        $title['title'] = 'Гірська Лаванда — відпочинок у Східниці | Апартаменти, Баня, Чан';
         unset( $title['tagline'], $title['site'] );
     } elseif ( is_page( 'banya' ) ) {
         $title['title'] = 'Баня на дровах у Східниці | Гірська Лаванда';
@@ -215,7 +229,7 @@ function glav_seo_get_description() {
     }
 
     if ( is_front_page() || is_page_template( 'page-home.php' ) ) {
-        return 'Заміський комплекс Гірська Лаванда пропонує ідеальний відпочинок у Східниці. До ваших послуг оренда апартаментів, баня на дровах та гарячий чан.';
+        return 'Гірська Лаванда — комплекс відпочинку в Східниці. Номери, апартаменти, баня на дровах, гарячий чан.';
     }
     if ( is_page( 'banya' ) ) {
         return 'Оренда бані у Східниці: приватна баня на дровах з парною та міні-басейном у заміському комплексі Гірська Лаванда. Від 2 500 ₴/сеанс. Бронювання онлайн.';
@@ -460,53 +474,106 @@ function glav_schema_hotel_room() {
  */
 add_action( 'wp_head', 'glav_schema_banya', 10 );
 function glav_schema_banya() {
-    if ( ! is_page( 'banya' ) && ! is_page( 'chan' ) ) {
-        return;
-    }
-
-    $schema = [
-        '@context'    => 'https://schema.org',
-        '@type'       => 'Service',
-        'name'        => 'Баня на дровах у Східниці — Гірська Лаванда',
-        'description' => 'Приватна баня на дровах у Східниці. Парна, хамам, міні-басейн, гарячий дерев\'яний чан під відкритим небом.',
-        'provider'    => [ '@id' => home_url( '/#apartments' ) ],
-        'areaServed'  => [ '@type' => 'City', 'name' => 'Східниця' ],
-        'url'         => get_permalink(),
-        'hasOfferCatalog' => [
-            '@type' => 'OfferCatalog',
-            'name'  => 'Послуги бані',
-            'itemListElement' => [
-                [
-                    '@type'       => 'Offer',
-                    'itemOffered' => [
-                        '@type'       => 'Service',
-                        'name'        => 'Баня (парна на дровах)',
-                        'description' => 'Парна на дровах, до 8 осіб',
-                    ],
-                    'price'         => '2500',
-                    'priceCurrency' => 'UAH',
-                    'priceSpecification' => [
-                        '@type'         => 'UnitPriceSpecification',
+    if ( is_page( 'banya' ) ) {
+        $schema = [
+            '@context'    => 'https://schema.org',
+            '@type'       => 'Service',
+            'name'        => 'Баня на дровах у Східниці — Гірська Лаванда',
+            'description' => 'Приватна баня на дровах у Східниці. Парна, хамам, міні-басейн. Оренда для компанії до 8 осіб.',
+            'provider'    => [ '@id' => home_url( '/#apartments' ) ],
+            'areaServed'  => [ '@type' => 'City', 'name' => 'Східниця' ],
+            'url'         => get_permalink(),
+            'hasOfferCatalog' => [
+                '@type' => 'OfferCatalog',
+                'name'  => 'Послуги бані',
+                'itemListElement' => [
+                    [
+                        '@type'       => 'Offer',
+                        'itemOffered' => [
+                            '@type'       => 'Service',
+                            'name'        => 'Баня (парна на дровах)',
+                            'description' => 'Парна на дровах, до 8 осіб',
+                        ],
                         'price'         => '2500',
                         'priceCurrency' => 'UAH',
-                        'unitText'      => 'session',
-                        'minPrice'      => '2500',
+                        'priceSpecification' => [
+                            '@type'         => 'UnitPriceSpecification',
+                            'price'         => '2500',
+                            'priceCurrency' => 'UAH',
+                            'unitText'      => 'session',
+                            'minPrice'      => '2500',
+                        ],
                     ],
-                ],
-                [
-                    '@type'       => 'Offer',
-                    'itemOffered' => [
-                        '@type'       => 'Service',
-                        'name'        => 'Хамам',
-                        'description' => 'Турецька парна з вологою парою',
+                    [
+                        '@type'       => 'Offer',
+                        'itemOffered' => [
+                            '@type'       => 'Service',
+                            'name'        => 'Хамам',
+                            'description' => 'Турецька парна з вологою парою',
+                        ],
+                        'price'         => '3000',
+                        'priceCurrency' => 'UAH',
                     ],
-                    'price'         => '3000',
-                    'priceCurrency' => 'UAH',
                 ],
             ],
+        ];
+        echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n";
+    } elseif ( is_page( 'chan' ) ) {
+        $schema = [
+            '@context'    => 'https://schema.org',
+            '@type'       => 'Service',
+            'name'        => 'Гарячий чан у Східниці — Гірська Лаванда',
+            'description' => 'Оренда гарячого чану просто неба серед карпатських сосен у Східниці. Ідеально для романтичного відпочинку або компанії.',
+            'provider'    => [ '@id' => home_url( '/#apartments' ) ],
+            'areaServed'  => [ '@type' => 'City', 'name' => 'Східниця' ],
+            'url'         => get_permalink(),
+            'hasOfferCatalog' => [
+                '@type' => 'OfferCatalog',
+                'name'  => 'Послуги чану',
+                'itemListElement' => [
+                    [
+                        '@type'       => 'Offer',
+                        'itemOffered' => [
+                            '@type'       => 'Service',
+                            'name'        => 'Гарячий чан',
+                            'description' => 'Гарячий чугунний чан під відкритим небом, до 8 осіб',
+                        ],
+                        'price'         => '2500',
+                        'priceCurrency' => 'UAH',
+                        'priceSpecification' => [
+                            '@type'         => 'UnitPriceSpecification',
+                            'price'         => '2500',
+                            'priceCurrency' => 'UAH',
+                            'unitText'      => 'session',
+                            'minPrice'      => '2500',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n";
+    }
+}
+
+/**
+ * WebSite JSON-LD — enables Google Sitelinks Searchbox.
+ */
+add_action( 'wp_head', 'glav_schema_website', 10 );
+function glav_schema_website() {
+    if ( ! is_front_page() ) {
+        return;
+    }
+    $schema = [
+        '@context' => 'https://schema.org',
+        '@type'    => 'WebSite',
+        'url'      => home_url( '/' ),
+        'name'     => 'Гірська Лаванда',
+        'potentialAction' => [
+            '@type'       => 'SearchAction',
+            'target'      => home_url( '/?s={search_term_string}' ),
+            'query-input' => 'required name=search_term_string',
         ],
     ];
-
     echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n";
 }
 
@@ -672,6 +739,8 @@ function glav_sc_faq_home( $atts ) {
     <?php
     return ob_get_clean();
 }
+
+/**
  * BreadcrumbList JSON-LD schema.
  */
 add_action( 'wp_head', 'glav_schema_breadcrumb', 10 );
