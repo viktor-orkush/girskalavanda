@@ -17,7 +17,7 @@ if (!$hero_url) {
 }
 $hero_alt    = $hero_id
   ? (get_post_meta($hero_id, '_wp_attachment_image_alt', true) ?: 'Баня на дровах у Східниці — Гірська Лаванда')
-  : 'Баня на дровах у Східниці — Гірська Лаванда, Карпати';
+  : 'Баня на дровах у Східниці — Гірська Лаванда';
 $hero_srcset = $hero_id ? wp_get_attachment_image_srcset($hero_id, 'full') : '';
 
 // === Gallery — images attached to this page ===
@@ -52,7 +52,7 @@ if (empty($gallery_imgs)) {
   }
 }
 
-// === ImageObject JSON-LD Schema ===
+// === JSON-LD Schema (Images, FAQ, Service) ===
 if (function_exists('glav_render_image_schema')) {
   $schema_images = [];
   if ($hero_url) {
@@ -60,7 +60,7 @@ if (function_exists('glav_render_image_schema')) {
       'url' => $hero_url,
       'alt' => $hero_alt,
       'name' => 'Баня на дровах у Східниці',
-      'description' => 'Автентична приватна дерев\'яна баня з цілющою парою та купіллю — відпочинок у Карпатах.',
+      'description' => 'Автентична приватна дерев\'яна баня з цілющою парою та купіллю — відпочинок у Східниці.',
     ];
   }
   $count = 0;
@@ -76,6 +76,90 @@ if (function_exists('glav_render_image_schema')) {
   }
   glav_render_image_schema($schema_images);
 }
+
+// FAQ Schema
+$faq_schema = [
+  "@context" => "https://schema.org",
+  "@type" => "FAQPage",
+  "mainEntity" => [
+    [
+      "@type" => "Question",
+      "name" => "Скільки коштує баня у Східниці?",
+      "acceptedAnswer" => [
+        "@type" => "Answer",
+        "text" => "Вартість оренди нашої приватної бані починається від 2 500 ₴ за сеанс (мінімум 2 години). У вартість входить парна на дровах, кімната відпочинку та закрита територія."
+      ]
+    ],
+    [
+      "@type" => "Question",
+      "name" => "Чи можна приїжджати в баню з дітьми?",
+      "acceptedAnswer" => [
+        "@type" => "Answer",
+        "text" => "Так, звичайно! Наша закрита територія цілком безпечна для дітей, а в кімнаті відпочинку є все необхідне для комфортного перебування всією сім'єю."
+      ]
+    ],
+    [
+      "@type" => "Question",
+      "name" => "Скільки людей вміщує баня?",
+      "acceptedAnswer" => [
+        "@type" => "Answer",
+        "text" => "Парна та кімната відпочинку комфортно вміщують компанію до 8 осіб одночасно."
+      ]
+    ],
+    [
+      "@type" => "Question",
+      "name" => "Що входить у вартість оренди бані?",
+      "acceptedAnswer" => [
+        "@type" => "Answer",
+        "text" => "У вартість входить: парна на дровах, міні-басейн (купіль) з холодною водою, кімната відпочинку з телевізором та міні-кухнею, а також безкоштовний паркінг на закритій території."
+      ]
+    ],
+    [
+      "@type" => "Question",
+      "name" => "Чи працює баня взимку?",
+      "acceptedAnswer" => [
+        "@type" => "Answer",
+        "text" => "Так, наш комплекс відпочинку працює цілий рік — 365 днів на рік у будь-яку погоду."
+      ]
+    ],
+    [
+      "@type" => "Question",
+      "name" => "Чи можна у вас замовити хамам?",
+      "acceptedAnswer" => [
+        "@type" => "Answer",
+        "text" => "Так, поруч із традиційною парною є хамам. Це окрема додаткова послуга, вартість якої становить від 3 000 ₴ за сеанс."
+      ]
+    ]
+  ]
+];
+
+// Service Schema
+$service_schema = [
+  "@context" => "https://schema.org",
+  "@type" => "Service",
+  "name" => "Оренда приватної бані в Східниці",
+  "provider" => [
+    "@type" => "LocalBusiness",
+    "name" => "Гірська Лаванда",
+    "image" => $hero_url
+  ],
+  "areaServed" => [
+    "@type" => "City",
+    "name" => "Східниця"
+  ],
+  "description" => "Приватна баня на дровах з міні-басейном, хамамом та кімнатою відпочинку.",
+  "offers" => [
+    "@type" => "Offer",
+    "price" => "2500.00",
+    "priceCurrency" => "UAH",
+    "description" => "Сеанс від 2 годин для компанії до 8 осіб"
+  ]
+];
+?>
+<script type="application/ld+json"><?php echo json_encode($faq_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?></script>
+<script type="application/ld+json"><?php echo json_encode($service_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?></script>
+
+<?php
 
 // === Contact info ===
 $contact = glav_get_contact_info('Добрий день! Хочу забронювати баню.');
@@ -115,7 +199,7 @@ $icon_lock = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke
     <div class="gl-banya-hero__content">
       <div class="gl-container">
         <p class="gl-banya-hero__label">Оздоровлення · Гірська Лаванда</p>
-        <h1 class="gl-banya-hero__title">Баня на <em>дровах</em></h1>
+        <h1 class="gl-banya-hero__title">Баня на дровах <em>у Східниці</em></h1>
         <p class="gl-banya-hero__subtitle">На дровах · Приватна · Східниця</p>
         <p class="gl-banya-hero__desc">
           Справжня дерев'яна баня з карпатських порід дерева — жар, пара і аромат трав для справжнього відновлення тіла
@@ -130,7 +214,7 @@ $icon_lock = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke
           </div>
           <a href="#booking-section-ready" class="gl-btn gl-btn--gold">Забронювати</a>
           <?php if ($phone): ?>
-          <a href="tel:<?php echo esc_attr($phone); ?>" class="gl-btn gl-btn--outline-white">
+          <a href="tel:<?php echo esc_attr($phone); ?>" class="gl-btn gl-btn--outline-white" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(4px);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               aria-hidden="true">
               <path
@@ -345,7 +429,7 @@ endif; ?>
     <div class="gl-container">
       <div class="gl-banya-gallery__header gl-center gl-animate">
         <span class="gl-section-label">Фотогалерея</span>
-        <h2 class="gl-section-title">Наш комплекс</h2>
+        <h2 class="gl-section-title">Фото нашої бані у Східниці</h2>
       </div>
     </div>
     <div class="gl-banya-gallery__strip gl-animate gl-animate--delay-1">
@@ -378,7 +462,7 @@ endif; ?>
     <div class="gl-container">
       <div class="gl-banya-prices__header gl-center gl-animate">
         <span class="gl-section-label">Вартість</span>
-        <h2 class="gl-section-title">Ціни та умови</h2>
+        <h2 class="gl-section-title">Ціна оренди бані та хамаму у Східниці</h2>
         <p class="gl-section-subtitle">Баня та хамам — окремі послуги. Ціна включає весь час оренди</p>
       </div>
 
@@ -443,13 +527,13 @@ endif; ?>
     <div class="gl-container">
       <div class="gl-contact-faq__header gl-animate">
         <span class="gl-section-label">Часті питання</span>
-        <h2 class="gl-section-title">Відповіді на ваші запитання</h2>
+        <h2 class="gl-section-title">Часті питання про баню на дровах</h2>
       </div>
 
       <div class="gl-contact-faq__list gl-animate gl-animate--delay-1" style="flex-direction: column;">
         <details class="gl-faq-item">
           <summary class="gl-faq-item__question">
-            <span>Скільки коштує баня у Східниці?</span>
+            <h3 style="margin:0; font-size:inherit; font-weight:inherit;">Скільки коштує баня у Східниці?</h3>
             <span class="gl-faq-item__toggle"></span>
           </summary>
           <div class="gl-faq-item__answer">
@@ -459,7 +543,7 @@ endif; ?>
 
         <details class="gl-faq-item">
           <summary class="gl-faq-item__question">
-            <span>Чи можна приїжджати в баню з дітьми?</span>
+            <h3 style="margin:0; font-size:inherit; font-weight:inherit;">Чи можна приїжджати в баню з дітьми?</h3>
             <span class="gl-faq-item__toggle"></span>
           </summary>
           <div class="gl-faq-item__answer">
@@ -469,7 +553,7 @@ endif; ?>
 
         <details class="gl-faq-item">
           <summary class="gl-faq-item__question">
-            <span>Скільки людей вміщує баня?</span>
+            <h3 style="margin:0; font-size:inherit; font-weight:inherit;">Скільки людей вміщує баня?</h3>
             <span class="gl-faq-item__toggle"></span>
           </summary>
           <div class="gl-faq-item__answer">
@@ -479,7 +563,7 @@ endif; ?>
 
         <details class="gl-faq-item">
           <summary class="gl-faq-item__question">
-            <span>Що входить у вартість оренди бані?</span>
+            <h3 style="margin:0; font-size:inherit; font-weight:inherit;">Що входить у вартість оренди бані?</h3>
             <span class="gl-faq-item__toggle"></span>
           </summary>
           <div class="gl-faq-item__answer">
@@ -489,7 +573,7 @@ endif; ?>
 
         <details class="gl-faq-item">
           <summary class="gl-faq-item__question">
-            <span>Чи працює баня взимку?</span>
+            <h3 style="margin:0; font-size:inherit; font-weight:inherit;">Чи працює баня взимку?</h3>
             <span class="gl-faq-item__toggle"></span>
           </summary>
           <div class="gl-faq-item__answer">
@@ -499,7 +583,7 @@ endif; ?>
 
         <details class="gl-faq-item">
           <summary class="gl-faq-item__question">
-            <span>Чи можна у вас замовити хамам?</span>
+            <h3 style="margin:0; font-size:inherit; font-weight:inherit;">Чи можна у вас замовити хамам?</h3>
             <span class="gl-faq-item__toggle"></span>
           </summary>
           <div class="gl-faq-item__answer">

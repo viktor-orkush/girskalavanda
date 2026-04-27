@@ -56,7 +56,7 @@ if (empty($gallery_imgs)) {
   }
 }
 
-// === ImageObject JSON-LD Schema ===
+// === JSON-LD Schema (Images, FAQ, Service) ===
 if (function_exists('glav_render_image_schema')) {
   $schema_images = [];
   if ($hero_url) {
@@ -79,6 +79,90 @@ if (function_exists('glav_render_image_schema')) {
   }
   glav_render_image_schema($schema_images);
 }
+
+// FAQ Schema
+$faq_schema = [
+  "@context" => "https://schema.org",
+  "@type" => "FAQPage",
+  "mainEntity" => [
+    [
+      "@type" => "Question",
+      "name" => "Скільки коштує чан у Східниці?",
+      "acceptedAnswer" => [
+        "@type" => "Answer",
+        "text" => "Оренда гарячого чану просто неба коштує від 2 500 ₴ за сеанс (мінімум 2 години). У ціну також входить користування кімнатою відпочинку та закритою територією."
+      ]
+    ],
+    [
+      "@type" => "Question",
+      "name" => "Чи можна купатися в чані з дітьми?",
+      "acceptedAnswer" => [
+        "@type" => "Answer",
+        "text" => "Так, відпочинок у чані чудово підходить для сімей з дітьми. Вода нагрівається до комфортної і безпечної температури 38–42°C."
+      ]
+    ],
+    [
+      "@type" => "Question",
+      "name" => "Скільки людей вміщує чан?",
+      "acceptedAnswer" => [
+        "@type" => "Answer",
+        "text" => "Наш просторий чан розрахований на комфортний відпочинок компанії до 8 осіб."
+      ]
+    ],
+    [
+      "@type" => "Question",
+      "name" => "Що входить до оренди чану?",
+      "acceptedAnswer" => [
+        "@type" => "Answer",
+        "text" => "До вартості входить: закритий від сторонніх гарячий чан з підігрівом на дровах, кімната відпочинку з ТБ, міні-кухня, душ, роздягальня та безкоштовний паркінг."
+      ]
+    ],
+    [
+      "@type" => "Question",
+      "name" => "Чи працює чан узимку?",
+      "acceptedAnswer" => [
+        "@type" => "Answer",
+        "text" => "Так! Купання в гарячому чані під відкритим небом взимку в оточенні снігу — це один із найкращих видів релаксу у Східниці."
+      ]
+    ],
+    [
+      "@type" => "Question",
+      "name" => "Чи можна додати в чан цілющі трави?",
+      "acceptedAnswer" => [
+        "@type" => "Answer",
+        "text" => "Звичайно. За вашим бажанням ми можемо додати цілющі карпатські трави для ароматерапії та кращого оздоровчого ефекту."
+      ]
+    ]
+  ]
+];
+
+// Service Schema
+$service_schema = [
+  "@context" => "https://schema.org",
+  "@type" => "Service",
+  "name" => "Оренда чану в Східниці",
+  "provider" => [
+    "@type" => "LocalBusiness",
+    "name" => "Гірська Лаванда",
+    "image" => $hero_url
+  ],
+  "areaServed" => [
+    "@type" => "City",
+    "name" => "Східниця"
+  ],
+  "description" => "Гарячий чан на відкритому повітрі підігрітий дровами. Ідеальний спосіб відпочити та оздоровитись у Східниці.",
+  "offers" => [
+    "@type" => "Offer",
+    "price" => "2500.00",
+    "priceCurrency" => "UAH",
+    "description" => "Сеанс від 2 годин для компанії до 8 осіб"
+  ]
+];
+?>
+<script type="application/ld+json"><?php echo json_encode($faq_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?></script>
+<script type="application/ld+json"><?php echo json_encode($service_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?></script>
+
+<?php
 
 // === Contact info ===
 $contact = glav_get_contact_info('Добрий день! Хочу забронювати чан.');
@@ -104,7 +188,7 @@ $icon_thermo = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stro
     <div class="gl-banya-hero__content">
       <div class="gl-container">
         <p class="gl-banya-hero__label">Оздоровлення · Гірська Лаванда</p>
-        <h1 class="gl-banya-hero__title">Гарячий<em>Чан</em></h1>
+        <h1 class="gl-banya-hero__title">Гарячий <em>Чан у Східниці</em></h1>
         <p class="gl-banya-hero__subtitle">На дровах · Під відкритим небом · Східниця</p>
         <p class="gl-banya-hero__desc">
           Чавунний чан з гарячою водою просто неба — зіркове небо, свіже карпатське повітря та тепло природного вогню.
@@ -119,7 +203,7 @@ $icon_thermo = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stro
           </div>
           <a href="#booking-section-ready" class="gl-btn gl-btn--gold">Забронювати</a>
           <?php if ($phone): ?>
-          <a href="tel:<?php echo esc_attr($phone); ?>" class="gl-btn gl-btn--outline-white">
+          <a href="tel:<?php echo esc_attr($phone); ?>" class="gl-btn gl-btn--outline-white" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(4px);">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               aria-hidden="true">
               <path
@@ -254,7 +338,7 @@ endif; ?>
     <div class="gl-container">
       <div class="gl-banya-features__header gl-center gl-animate">
         <span class="gl-section-label">Переваги</span>
-        <h2 class="gl-section-title">Чому варто спробувати чан</h2>
+        <h2 class="gl-section-title">Чому варто спробувати чан у Східниці</h2>
         <p class="gl-section-subtitle">Користь для здоров'я та незабутні враження</p>
       </div>
 
@@ -329,7 +413,7 @@ endif; ?>
     <div class="gl-container">
       <div class="gl-banya-gallery__header gl-center gl-animate">
         <span class="gl-section-label">Фотогалерея</span>
-        <h2 class="gl-section-title">Наш чан</h2>
+        <h2 class="gl-section-title">Фото нашого чану у Східниці</h2>
       </div>
     </div>
     <div class="gl-banya-gallery__strip gl-animate gl-animate--delay-1">
@@ -362,7 +446,7 @@ endif; ?>
     <div class="gl-container">
       <div class="gl-banya-prices__header gl-center gl-animate">
         <span class="gl-section-label">Вартість</span>
-        <h2 class="gl-section-title">Ціни та умови</h2>
+        <h2 class="gl-section-title">Ціна оренди чану у Східниці</h2>
         <p class="gl-section-subtitle">Оберіть варіант, що підходить саме вам</p>
       </div>
 
@@ -408,13 +492,13 @@ endif; ?>
     <div class="gl-container">
       <div class="gl-contact-faq__header gl-animate">
         <span class="gl-section-label">Часті питання</span>
-        <h2 class="gl-section-title">Відповіді на ваші запитання</h2>
+        <h2 class="gl-section-title">Часті питання про відпочинок у чані</h2>
       </div>
 
       <div class="gl-contact-faq__list gl-animate gl-animate--delay-1" style="flex-direction: column;">
         <details class="gl-faq-item">
           <summary class="gl-faq-item__question">
-            <span>Скільки коштує чан у Східниці?</span>
+            <h3 style="margin:0; font-size:inherit; font-weight:inherit;">Скільки коштує чан у Східниці?</h3>
             <span class="gl-faq-item__toggle"></span>
           </summary>
           <div class="gl-faq-item__answer">
@@ -424,7 +508,7 @@ endif; ?>
 
         <details class="gl-faq-item">
           <summary class="gl-faq-item__question">
-            <span>Чи можна купатися в чані з дітьми?</span>
+            <h3 style="margin:0; font-size:inherit; font-weight:inherit;">Чи можна купатися в чані з дітьми?</h3>
             <span class="gl-faq-item__toggle"></span>
           </summary>
           <div class="gl-faq-item__answer">
@@ -434,7 +518,7 @@ endif; ?>
 
         <details class="gl-faq-item">
           <summary class="gl-faq-item__question">
-            <span>Скільки людей вміщує чан?</span>
+            <h3 style="margin:0; font-size:inherit; font-weight:inherit;">Скільки людей вміщує чан?</h3>
             <span class="gl-faq-item__toggle"></span>
           </summary>
           <div class="gl-faq-item__answer">
@@ -444,7 +528,7 @@ endif; ?>
 
         <details class="gl-faq-item">
           <summary class="gl-faq-item__question">
-            <span>Що входить до оренди чану?</span>
+            <h3 style="margin:0; font-size:inherit; font-weight:inherit;">Що входить до оренди чану?</h3>
             <span class="gl-faq-item__toggle"></span>
           </summary>
           <div class="gl-faq-item__answer">
@@ -454,17 +538,17 @@ endif; ?>
 
         <details class="gl-faq-item">
           <summary class="gl-faq-item__question">
-            <span>Чи працює чан узимку?</span>
+            <h3 style="margin:0; font-size:inherit; font-weight:inherit;">Чи працює чан узимку?</h3>
             <span class="gl-faq-item__toggle"></span>
           </summary>
           <div class="gl-faq-item__answer">
-            <p>Так! Купання в гарячому чані під відкритим небом взимку в оточенні снігу — це один із найкращих видів релаксу в Карпатах.</p>
+            <p>Так! Купання в гарячому чані під відкритим небом взимку в оточенні снігу — це один із найкращих видів релаксу у Східниці.</p>
           </div>
         </details>
 
         <details class="gl-faq-item">
           <summary class="gl-faq-item__question">
-            <span>Чи можна додати в чан цілющі трави?</span>
+            <h3 style="margin:0; font-size:inherit; font-weight:inherit;">Чи можна додати в чан цілющі трави?</h3>
             <span class="gl-faq-item__toggle"></span>
           </summary>
           <div class="gl-faq-item__answer">
