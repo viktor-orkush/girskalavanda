@@ -49,14 +49,14 @@ get_header();
         <?php echo nl2br( esc_html( $hero_title ) ); ?>
       </h1>
       <p class="gl-hero__subtitle gl-animate gl-animate--blur gl-animate--delay-1"><?php echo esc_html( $hero_subtitle ); ?></p>
-      <p class="gl-hero__desc gl-animate gl-animate--blur gl-animate--delay-2">Шукаєте де зупинитись у Східниці? Затишна садиба серед карпатських сосен, оренда апартаментів з видом на гори, баня на дровах та чан — все для вашого відпочинку.</p>
+      <p class="gl-hero__desc gl-animate gl-animate--blur gl-animate--delay-2">Затишний заміський комплекс серед соснового лісу у Східниці. Апартаменти, номери, баня на дровах та гарячий чан — ваш ідеальний відпочинок.</p>
 
       <div class="gl-hero__actions gl-animate gl-animate--blur gl-animate--delay-3">
         <a href="/rooms/" class="gl-btn gl-btn--primary">
-          Забронювати апартаменти
+          Забронювати
         </a>
         <a href="#rooms" class="gl-btn gl-btn--outline">
-          Переглянути апартаменти
+          Дізнатись більше
         </a>
       </div>
     </div>
@@ -80,7 +80,7 @@ get_header();
       <div class="gl-rooms__header gl-animate gl-animate--blur">
         <span class="gl-section-label">Варіанти проживання</span>
         <h2 class="gl-section-title gl-text-reveal">Оберіть апартаменти у Східниці</h2>
-        <p class="gl-section-subtitle">Кожен номер — окрема атмосфера затишку і комфорту в серці Карпат. Зняти житло у Східниці ще ніколи не було так просто.</p>
+        <p class="gl-section-subtitle">Кожен номер — окрема атмосфера затишку і комфорту в серці Східниці. Зняти житло у Східниці ще ніколи не було так просто.</p>
       </div>
 
       <div class="gl-rooms__carousel" id="rooms-carousel">
@@ -117,7 +117,7 @@ get_header();
             <?php else : ?>
               <div class="gl-room-card__img-placeholder">🛏️</div>
             <?php endif; ?>
-            <span class="gl-room-card__badge">Карпати</span>
+            <span class="gl-room-card__badge">Східниця</span>
           </div>
           <div class="gl-room-card__body">
             <h3 class="gl-room-card__name"><?php echo esc_html( get_the_title( $room->ID ) ); ?></h3>
@@ -181,8 +181,8 @@ get_header();
     <div class="gl-container">
       <div class="gl-wellness__header gl-animate gl-animate--blur">
         <span class="gl-section-label">Оздоровлення</span>
-        <h2 class="gl-section-title">Відпочинок з баньою та чаном</h2>
-        <p class="gl-section-subtitle">Справжнє карпатське оздоровлення — баня на дровах і чан просто неба</p>
+        <h2 class="gl-section-title">Відпочинок з баньою та чаном у Східниці</h2>
+        <p class="gl-section-subtitle">Справжнє оздоровлення у Східниці — баня на дровах і гарячий чан просто неба</p>
       </div>
 
       <div class="gl-wellness__grid">
@@ -202,7 +202,7 @@ get_header();
           <div class="gl-wellness-card__body">
             <div class="gl-wellness-card__icon">🧖</div>
             <h3 class="gl-wellness-card__title">Баня на дровах</h3>
-            <p class="gl-wellness-card__desc">Справжня дерев'яна баня з карпатського дуба. Жар, пара, аромат трав — відчуй справжнє очищення тіла і душі.</p>
+            <p class="gl-wellness-card__desc">Справжня дерев'яна баня на дровах. Жар, пара, аромат трав — відчуй справжнє очищення тіла і душі у Східниці.</p>
             <div class="gl-wellness-card__features">
               <span class="gl-wellness-card__feature-tag">до 8 осіб</span>
               <span class="gl-wellness-card__feature-tag">від 2 годин</span>
@@ -267,7 +267,7 @@ get_header();
           <div class="gl-wellness-card__body">
             <div class="gl-wellness-card__icon">🌿</div>
             <h3 class="gl-wellness-card__title">Гарячий Чан</h3>
-            <p class="gl-wellness-card__desc">Дерев'яний чан з гарячою водою просто неба. Зіркове небо, свіже карпатське повітря та тепло природного вогню — незабутній досвід.</p>
+            <p class="gl-wellness-card__desc">Чавунний чан з гарячою водою просто неба. Зіркове небо, свіже повітря Східниці та тепло природного вогню — незабутній досвід.</p>
             <div class="gl-wellness-card__features">
               <span class="gl-wellness-card__feature-tag">до 8 осіб</span>
               <span class="gl-wellness-card__feature-tag">від 2 годин</span>

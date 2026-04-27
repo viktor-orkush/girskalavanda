@@ -182,7 +182,7 @@ function glav_seo_document_title_parts( $title ) {
     }
 
     if ( is_front_page() || is_page_template( 'page-home.php' ) ) {
-        $title['title'] = 'Гірська Лаванда — відпочинок у Східниці | Апартаменти, Баня, Чан';
+        $title['title'] = 'Гірська Лаванда — апартаменти у Східниці | Баня, Хамам, Чан, Номери';
         unset( $title['tagline'], $title['site'] );
     } elseif ( is_page( 'banya' ) ) {
         $title['title'] = 'Баня на дровах у Східниці | Гірська Лаванда';
@@ -229,13 +229,13 @@ function glav_seo_get_description() {
     }
 
     if ( is_front_page() || is_page_template( 'page-home.php' ) ) {
-        return 'Гірська Лаванда — комплекс відпочинку в Східниці. Номери, апартаменти, баня на дровах, гарячий чан.';
+        return 'Комплекс Гірська Лаванда у Східниці — апартаменти з видом на гори, баня на дровах, хамам і гарячий чан. Відпочинок у Східниці цілий рік. Бронюйте онлайн!';
     }
     if ( is_page( 'banya' ) ) {
         return 'Оренда бані у Східниці: приватна баня на дровах з парною та міні-басейном у заміському комплексі Гірська Лаванда. Від 2 500 ₴/сеанс. Бронювання онлайн.';
     }
     if ( is_page( 'chan' ) ) {
-        return 'Оренда чану у Східниці: гарячий чан просто неба серед карпатських сосен для справжнього релаксу. Відпочинок з баньою та чаном у комплексі Гірська Лаванда.';
+        return 'Оренда чану у Східниці: гарячий чан просто неба серед соснового лісу для справжнього релаксу. Відпочинок з баньою та чаном у комплексі Гірська Лаванда.';
     }
     if ( is_page( 'rooms' ) ) {
         return 'Номери Гірська Лаванда в Східниці — апартаменти та стандартні номери з видом на ліс. Онлайн бронювання.';
@@ -353,7 +353,7 @@ function glav_schema_lodging_business() {
     $schema = [
         '@context'      => 'https://schema.org',
         '@type'         => 'LodgingBusiness',
-        '@id'           => home_url( '/#hotel' ),
+        '@id'           => home_url( '/#lodging' ),
         'name'          => 'Гірська Лаванда',
         'alternateName' => 'Girska Lavanda',
         'description'   => 'Заміський комплекс у серці Східниці. Проживання, баня на дровах, гарячий чан серед природи.',
@@ -392,6 +392,13 @@ function glav_schema_lodging_business() {
     }
 
     $schema['image'] = $hero_image ?: home_url( '/wp-content/uploads/2025/07/hero-hotel.jpg' );
+    $schema['aggregateRating'] = [
+        '@type'       => 'AggregateRating',
+        'ratingValue' => '5',
+        'reviewCount' => '2',
+        'bestRating'  => '5',
+        'worstRating' => '1',
+    ];
     if ( $same_as ) {
         $schema['sameAs'] = $same_as;
     }
@@ -427,7 +434,7 @@ function glav_schema_hotel_room() {
         'name'             => $title,
         'url'              => $url,
         'description'      => $excerpt,
-        'containedInPlace' => [ '@id' => home_url( '/#apartments' ) ],
+        'containedInPlace' => [ '@id' => home_url( '/#lodging' ) ],
     ];
 
     if ( $image ) {
@@ -480,7 +487,7 @@ function glav_schema_banya() {
             '@type'       => 'Service',
             'name'        => 'Баня на дровах у Східниці — Гірська Лаванда',
             'description' => 'Приватна баня на дровах у Східниці. Парна, хамам, міні-басейн. Оренда для компанії до 8 осіб.',
-            'provider'    => [ '@id' => home_url( '/#apartments' ) ],
+            'provider'    => [ '@id' => home_url( '/#lodging' ) ],
             'areaServed'  => [ '@type' => 'City', 'name' => 'Східниця' ],
             'url'         => get_permalink(),
             'hasOfferCatalog' => [
@@ -523,8 +530,8 @@ function glav_schema_banya() {
             '@context'    => 'https://schema.org',
             '@type'       => 'Service',
             'name'        => 'Гарячий чан у Східниці — Гірська Лаванда',
-            'description' => 'Оренда гарячого чану просто неба серед карпатських сосен у Східниці. Ідеально для романтичного відпочинку або компанії.',
-            'provider'    => [ '@id' => home_url( '/#apartments' ) ],
+            'description' => 'Оренда гарячого чану просто неба серед соснового лісу у Східниці. Ідеально для романтичного відпочинку або компанії.',
+            'provider'    => [ '@id' => home_url( '/#lodging' ) ],
             'areaServed'  => [ '@type' => 'City', 'name' => 'Східниця' ],
             'url'         => get_permalink(),
             'hasOfferCatalog' => [
@@ -536,7 +543,7 @@ function glav_schema_banya() {
                         'itemOffered' => [
                             '@type'       => 'Service',
                             'name'        => 'Гарячий чан',
-                            'description' => 'Гарячий чугунний чан під відкритим небом, до 8 осіб',
+                            'description' => 'Гарячий чавунний чан під відкритим небом, до 8 осіб',
                         ],
                         'price'         => '2500',
                         'priceCurrency' => 'UAH',
@@ -717,7 +724,7 @@ function glav_sc_faq_home( $atts ) {
       <div class="gl-container">
         <div class="gl-section-header gl-animate">
           <span class="gl-section-label">FAQ</span>
-          <h2 class="gl-section-title">Часті питання</h2>
+          <h2 class="gl-section-title">Часті питання про відпочинок у Східниці</h2>
           <p class="gl-section-desc">Відповіді на популярні запитання наших гостей</p>
         </div>
 
@@ -1293,12 +1300,12 @@ function glav_clear_gallery_transients() {
 add_shortcode( 'gl_advantages', 'glav_sc_advantages' );
 function glav_sc_advantages( $atts ) {
     $advantages = [
-        [ 'icon' => '🌲', 'title' => 'Карпатський ліс',    'desc' => 'Комплекс оточений вічнозеленими карпатськими соснами. Чисте гірське повітря просто за вашими вікнами' ],
-        [ 'icon' => '🧖', 'title' => 'Баня та Чан',        'desc' => 'Баня на дровах і гарячий чан просто неба — справжнє карпатське оздоровлення для тіла і душі' ],
-        [ 'icon' => '🏔️', 'title' => 'Вид на гори',       'desc' => 'Мальовничі карпатські краєвиди і ліс прямо з вікна вашого номера — кожен ранок як на листівці' ],
+        [ 'icon' => '🌲', 'title' => 'Сосновий ліс',       'desc' => 'Комплекс оточений вічнозеленими соснами. Чисте гірське повітря Східниці просто за вашими вікнами' ],
+        [ 'icon' => '🧖', 'title' => 'Баня та Чан',        'desc' => 'Баня на дровах і гарячий чан просто неба — справжнє оздоровлення у Східниці для тіла і душі' ],
+        [ 'icon' => '🏔️', 'title' => 'Вид на гори',       'desc' => 'Мальовничі гірські краєвиди і ліс прямо з вікна вашого номера — кожен ранок як на листівці' ],
         [ 'icon' => '🅿️', 'title' => 'Паркінг',           'desc' => 'Безкоштовна охоронювана парковка на території комплексу. Зручно для тих, хто приїжджає на авто' ],
         [ 'icon' => '💧', 'title' => 'Мінеральні джерела',   'desc' => 'Всього за 10-15 хвилин прогулянки знаходяться найвідоміші мінеральні джерела Східниці (Нафтуся, №18, №2с)' ],
-        [ 'icon' => '💆', 'title' => 'Тиша і спокій',      'desc' => 'Ніяких клубів і гучних заходів. Тільки природа, відпочинок і атмосфера справжнього карпатського затишку' ],
+        [ 'icon' => '💆', 'title' => 'Тиша і спокій',      'desc' => 'Ніяких клубів і гучних заходів. Тільки природа, відпочинок і атмосфера справжнього затишку у Східниці' ],
     ];
 
     ob_start();
@@ -1307,8 +1314,8 @@ function glav_sc_advantages( $atts ) {
       <div class="gl-container">
         <div class="gl-advantages__header gl-animate gl-animate--blur">
           <span class="gl-section-label">Чому обирають нас</span>
-          <h2 class="gl-section-title">Наші переваги</h2>
-          <p class="gl-section-subtitle">Все для вашого ідеального відпочинку в серці Східниці</p>
+          <h2 class="gl-section-title">Переваги відпочинку в Гірській Лаванді</h2>
+          <p class="gl-section-subtitle">Все для вашого ідеального відпочинку в Східниці</p>
         </div>
         <div class="gl-advantages__grid">
           <?php foreach ( $advantages as $i => $adv ) : ?>
@@ -1470,7 +1477,7 @@ function glav_sc_gallery_preview( $atts ) {
       <div class="gl-container">
         <div class="gl-gallery__header gl-animate gl-animate--blur">
           <span class="gl-section-label">Фото</span>
-          <h2 class="gl-section-title">Галерея</h2>
+          <h2 class="gl-section-title">Фото комплексу Гірська Лаванда</h2>
           <p class="gl-section-subtitle">Поглянь на Гірську Лаванду очима гостей</p>
         </div>
 
@@ -1544,7 +1551,7 @@ function glav_sc_testimonials( $atts ) {
             'date'   => 'Грудень 2025',
             'init'   => 'А',
             'stars'  => 5,
-            'text'   => 'Провели тут новорічні свята — і не пожалкували. Карпатська природа, тиша, неймовірний хамам. Відчуваєш справжній відпочинок. Дякуємо команді за увагу до деталей!',
+            'text'   => 'Провели тут новорічні свята — і не пожалкували. Природа Східниці, тиша, неймовірний хамам. Відчуваєш справжній відпочинок. Дякуємо команді за увагу до деталей!',
         ],
         [
             'name'   => 'Тетяна К.',
@@ -1558,7 +1565,7 @@ function glav_sc_testimonials( $atts ) {
             'date'   => 'Серпень 2025',
             'init'   => 'Р',
             'stars'  => 5,
-            'text'   => 'Ідеальне місце для відновлення сил. Повна тиша, чисте гірське повітря і справжня карпатська атмосфера. Баня на дровах з березовими віниками — окремий вид мистецтва.',
+            'text'   => 'Ідеальне місце для відновлення сил. Повна тиша, чисте гірське повітря Східниці і атмосфера справжнього затишку. Баня на дровах з березовими віниками — окремий вид мистецтва.',
         ],
     ];
 
@@ -1568,7 +1575,7 @@ function glav_sc_testimonials( $atts ) {
       <div class="gl-container">
         <div class="gl-testimonials__header gl-animate gl-animate--blur">
           <span class="gl-section-label">Відгуки</span>
-          <h2 class="gl-section-title">Що кажуть гості</h2>
+          <h2 class="gl-section-title">Відгуки гостей про Гірську Лаванду</h2>
           <p class="gl-section-subtitle">Щирі враження тих, хто вже відпочив у Гірській Лаванді</p>
         </div>
 
