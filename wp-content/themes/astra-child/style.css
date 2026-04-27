@@ -8273,6 +8273,44 @@ a.gl-contact-card__value:hover {
   opacity: 1;
 }
 
+/* ==========================================================================
+   CONTACT PAGE AUGMENTATIONS
+   ========================================================================== */
 
+.gl-contact-inline-channels {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+}
 
+.gl-contact-inline-channel {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--ch-color);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
+.gl-contact-inline-channel:hover {
+  transform: scale(1.15);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .3);
+  text-decoration: none;
+  color: #fff;
+}
+
+.gl-contact-inline-channel-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gl-contact-inline-channel-icon svg {
+  width: 24px;
+  height: 24px;
+}
