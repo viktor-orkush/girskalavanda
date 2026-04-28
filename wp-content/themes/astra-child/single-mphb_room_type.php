@@ -164,9 +164,48 @@ while ( have_posts() ) :
 <div id="primary" class="content-area primary">
   <main id="main" class="site-main gl-room-single">
 
+  <?php
+    // === Schema.org Apartment ===
+    $schema_apartment = [
+      '@context' => 'https://schema.org',
+      '@type' => 'Apartment',
+      'name' => get_the_title($room_id),
+      'description' => wp_strip_all_tags($raw_content ?: get_the_excerpt($room_id)),
+      'image' => array_map(function($i) { return $i['url']; }, $all_imgs),
+      'numberOfRooms' => 1,
+      'occupancy' => [
+        '@type' => 'QuantitativeValue',
+        'value' => $adults + $children
+      ]
+    ];
+    if ($price > 0) {
+      $schema_apartment['offers'] = [
+        '@type' => 'Offer',
+        'price' => $price,
+        'priceCurrency' => 'UAH',
+        'url' => get_permalink($room_id)
+      ];
+    }
+    if (!empty($amenities)) {
+      $schema_apartment['amenityFeature'] = array_map(function($a) {
+        return ['@type' => 'LocationFeatureSpecification', 'name' => $a, 'value' => true];
+      }, $amenities);
+    }
+  ?>
+  <script type="application/ld+json"><?php echo wp_json_encode($schema_apartment); ?></script>
+
   <!-- ==========================================================================
        HERO — bento gallery with overlaid info
        ========================================================================== -->
+  <div class="gl-container">
+    <nav class="gl-breadcrumbs" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="<?php echo home_url('/'); ?>">Головна</a></li>
+        <li><a href="<?php echo home_url('/rooms/'); ?>">Номери та Апартаменти</a></li>
+        <li aria-current="page"><?php the_title(); ?></li>
+      </ol>
+    </nav>
+  </div>
   <?php
     // Prepare gallery: main + up to 4 side images
     $main_img  = ! empty( $all_imgs[0] ) ? $all_imgs[0] : null;
@@ -183,7 +222,7 @@ while ( have_posts() ) :
       <?php if ( $main_img ) : ?>
       <div class="gl-room-bento__main gl-room-bento__cell" data-index="0">
         <img src="<?php echo esc_url( $main_img['url'] ); ?>"
-             alt="<?php echo esc_attr( get_the_title() ); ?>"
+             alt="Апартаменти &laquo;<?php echo esc_attr( get_the_title() ); ?>&raquo; у Східниці — Інтер'єр"
              loading="eager" />
         <div class="gl-room-bento__main-overlay"></div>
 
@@ -233,7 +272,7 @@ while ( have_posts() ) :
           <?php foreach ( $side_imgs as $si => $simg ) : ?>
           <div class="gl-room-bento__side gl-room-bento__cell" data-index="<?php echo $si + 1; ?>">
             <img src="<?php echo esc_url( $simg['sm'] ); ?>"
-                 alt="<?php echo esc_attr( get_the_title() ); ?> — фото <?php echo $si + 2; ?>"
+                 alt="Апартаменти &laquo;<?php echo esc_attr( get_the_title() ); ?>&raquo; у Східниці — фото <?php echo $si + 2; ?>"
                  loading="eager" />
             <div class="gl-room-bento__zoom">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -279,7 +318,7 @@ while ( have_posts() ) :
         <!-- 1. DESCRIPTION — "Про номер" -->
         <?php if ( $desc_html ) : ?>
         <div class="gl-room-body__section gl-animate">
-          <h2 class="gl-room-body__section-title">Про номер</h2>
+          <h2 class="gl-room-body__section-title">Про номер <?php echo esc_html(get_the_title()); ?></h2>
           <div class="gl-room-body__desc">
             <?php echo $desc_html; ?>
           </div>
@@ -358,6 +397,53 @@ while ( have_posts() ) :
 
     </div><!-- /.gl-room-body__grid -->
   </section><!-- /body -->
+
+  <!-- ==========================================================================
+       SIMILAR ROOMS
+       ========================================================================== -->
+  <section class="gl-similar-rooms gl-section gl-section--white">
+    <div class="gl-container">
+      <div class="gl-rooms-listing__header gl-animate">
+        <h2 class="gl-section-title">Інші номери та апартаменти</h2>
+      </div>
+      <div class="gl-similar-rooms__grid">
+        <?php
+        $other_rooms = get_posts([
+          'post_type' => 'mphb_room_type',
+          'posts_per_page' => 3,
+          'post__not_in' => [$room_id],
+          'orderby' => 'rand'
+        ]);
+        if (!empty($other_rooms)):
+          foreach($other_rooms as $other_room):
+            $other_id = $other_room->ID;
+            $t_id = get_post_thumbnail_id($other_id);
+            $t_url = $t_id ? wp_get_attachment_image_url($t_id, 'large') : '';
+            $other_price = function_exists('glav_get_room_price') ? glav_get_room_price($other_id) : 0;
+        ?>
+        <a href="<?php echo esc_url(get_permalink($other_id)); ?>" class="gl-similar-room-card gl-animate">
+          <div class="gl-similar-room-card__img">
+            <?php if($t_url): ?>
+              <img src="<?php echo esc_url($t_url); ?>" alt="<?php echo esc_attr(get_the_title($other_id)); ?>" loading="lazy"/>
+            <?php else: ?>
+              <div class="gl-similar-room-card__placeholder">🛏️</div>
+            <?php endif; ?>
+          </div>
+          <div class="gl-similar-room-card__content">
+            <h3 class="gl-similar-room-card__title"><?php echo get_the_title($other_id); ?></h3>
+            <?php if($other_price > 0): ?>
+              <span class="gl-similar-room-card__price">від <?php echo number_format($other_price, 0, '', ' '); ?> ₴</span>
+            <?php endif; ?>
+          </div>
+        </a>
+        <?php 
+          endforeach; 
+          wp_reset_postdata(); 
+        endif; 
+        ?>
+      </div>
+    </div>
+  </section>
 
 
   <!-- ==========================================================================

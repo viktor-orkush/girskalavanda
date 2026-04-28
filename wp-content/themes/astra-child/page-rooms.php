@@ -80,7 +80,36 @@ if ($ig_raw) {
   $instagram_dm = $ig_user ? 'https://ig.me/m/' . $ig_user : $ig_raw;
 }
 ?>
+<?php
+// === Prepare Schema.org ItemList ===
+$schema_items = [];
+foreach ($rooms as $index => $r) {
+  $p = function_exists('glav_get_room_price') ? glav_get_room_price($r->ID) : 0;
+  $schema_items[] = [
+    '@type' => 'ListItem',
+    'position' => $index + 1,
+    'item' => [
+      '@type' => 'Apartment',
+      'url' => get_permalink($r->ID),
+      'name' => get_the_title($r->ID),
+      'image' => get_the_post_thumbnail_url($r->ID, 'full') ?: '',
+      'offers' => [
+        '@type' => 'Offer',
+        'price' => $p,
+        'priceCurrency' => 'UAH'
+      ]
+    ]
+  ];
+}
+$schema_json = wp_json_encode([
+  '@context' => 'https://schema.org',
+  '@type' => 'ItemList',
+  'name' => 'Апартаменти та Номери у Східниці — Гірська Лаванда',
+  'itemListElement' => $schema_items
+]);
+?>
 <main id="main" class="gl-rooms-page">
+  <script type="application/ld+json"><?php echo $schema_json; ?></script>
 
   <!-- ======================================================================
        HERO
@@ -90,10 +119,9 @@ if ($ig_raw) {
 
     <div class="gl-rooms-hero__content">
       <div class="gl-container">
-        <p class="gl-rooms-hero__label">Розміщення · Комплексу Гірська Лаванда</p>
-        <h1 class="gl-rooms-hero__title">Наші <em>Номери</em></h1>
-        <p class="gl-rooms-hero__subtitle">Затишні номери серед карпатських сосен — від компактних до розкішних
-          двоповерхових апартаментів з терасою</p>
+        <p class="gl-rooms-hero__label">Розміщення · Комплекс Гірська Лаванда</p>
+        <h1 class="gl-rooms-hero__title">Наші <em>Апартаменти</em> у Східниці</h1>
+        <p class="gl-rooms-hero__subtitle">Затишні апартаменти та номери серед Східницьких сосен — від компактних до розкішних двоповерхових з терасою</p>
         <div class="gl-rooms-hero__actions">
           <a href="#rooms-list" class="gl-btn gl-btn--gold">Переглянути номери</a>
           <?php if ($phone): ?>
@@ -156,9 +184,9 @@ endif; ?>
   <section class="gl-section gl-rooms-listing gl-section--white" id="rooms-list">
     <div class="gl-container">
       <div class="gl-rooms-listing__header gl-animate">
-        <span class="gl-section-label">Номери</span>
-        <h2 class="gl-section-title">Оберіть свій номер</h2>
-        <p class="gl-section-subtitle">Кожен номер — окрема атмосфера затишку і комфорту в серці Східниці</p>
+        <span class="gl-section-label">Варіанти розміщення</span>
+        <h2 class="gl-section-title">Доступні номери та апартаменти в Гірська Лаванда</h2>
+        <p class="gl-section-subtitle">Кожен варіант — окрема атмосфера затишку і комфорту в серці Східниці</p>
       </div>
 
       <?php if (!empty($rooms)): ?>

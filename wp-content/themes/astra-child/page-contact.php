@@ -66,7 +66,7 @@ $icon_check = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path
     <div class="gl-contact-hero__content">
       <div class="gl-container">
         <p class="gl-contact-hero__label">Гірська Лаванда · Східниця</p>
-        <h1 class="gl-contact-hero__title">Контакти апартаментів<br><em>Гірська Лаванда</em></h1>
+        <h1 class="gl-contact-hero__title">Контакти <br><em>апартаментів</em> Східниця</h1>
         <p class="gl-contact-hero__subtitle">Ми завжди раді допомогти з бронюванням та відповісти на ваші запитання</p>
 
         <div class="gl-contact-hero__actions">
