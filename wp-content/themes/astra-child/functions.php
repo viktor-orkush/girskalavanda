@@ -931,19 +931,25 @@ function glav_sitemap_exclude_mphb_pages($args, $post_type)
 }
 
 /**
- * Sitemap: override lastmod for /banya/ and /chan/ to today's date
- * so Google re-crawls them after recent content updates (FAQ, schema).
+ * Sitemap: override lastmod for pages and room types to the last deploy date
+ * if the deploy date is newer than the post's modification date.
+ * This ensures Google re-crawls content after theme/code updates.
  */
 add_filter('wp_sitemaps_posts_entry', 'glav_sitemap_fix_lastmod', 10, 3);
 function glav_sitemap_fix_lastmod($entry, $post, $post_type)
 {
-    if ('page' !== $post_type) {
+    if (!in_array($post_type, ['page', 'mphb_room_type'], true)) {
         return $entry;
     }
 
-    $refresh_slugs = ['banya', 'chan'];
-    if (in_array($post->post_name, $refresh_slugs, true)) {
-        $entry['lastmod'] = gmdate('c'); // current UTC date in ISO 8601
+    $deploy_date = get_option('glav_last_deploy_date');
+    if ($deploy_date) {
+        $post_modified = mysql2date('U', $post->post_modified_gmt, false);
+        $deploy_ts = strtotime($deploy_date);
+
+        if ($deploy_ts > $post_modified) {
+            $entry['lastmod'] = date('c', $deploy_ts);
+        }
     }
 
     return $entry;
